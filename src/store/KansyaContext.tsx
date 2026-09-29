@@ -22,6 +22,16 @@ import {
 } from './defaultData';
 import { getConstructionPhase, getProjectProgress } from '../utils/calculations';
 import { triggerSuccessHaptic, triggerMediumHaptic, triggerLightHaptic } from '../utils/haptics';
+import {
+  generateSquadInviteCode,
+  syncCollabGoalToCloud,
+  joinCloudSquadByCode,
+  recordCloudDeposit,
+  getStoredSupabaseConfig,
+  saveSupabaseConfig,
+  isSupabaseConfigured,
+  SupabaseConfig,
+} from '../services/supabaseService';
 
 const STORAGE_KEYS = {
   PROJECTS: '@kansya_projects_v1',
@@ -136,6 +146,12 @@ interface KansyaContextType {
   respondToInvite: (goalId: string, accept: boolean) => Promise<void>;
   addCollabDeposit: (goalId: string, amount: number, note?: string) => Promise<void>;
   dismissCollabNotification: () => void;
+  joinCollabByCode: (
+    inviteCode: string
+  ) => Promise<{ success: boolean; goal?: CollabGoal; error?: string }>;
+  supabaseConfig: SupabaseConfig;
+  updateSupabaseConfig: (config: SupabaseConfig) => Promise<void>;
+  isCloudSyncActive: boolean;
 }
 
 const KansyaContext = createContext<KansyaContextType | undefined>(undefined);
@@ -157,6 +173,11 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
   const [collabGoals, setCollabGoals] = useState<CollabGoal[]>([]);
   const [collabNotifications, setCollabNotifications] = useState<CollabNotification[]>([]);
   const [activeCollabNotification, setActiveCollabNotification] = useState<CollabNotification | null>(null);
+  const [supabaseConfig, setSupabaseConfigState] = useState<SupabaseConfig>({
+    url: '',
+    anonKey: '',
+    isEnabled: false,
+  });
 
   // Load from AsyncStorage
   useEffect(() => {
@@ -173,6 +194,7 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
           savedCollab,
           savedNotifs,
           savedTheme,
+          storedSupabase,
         ] = await Promise.all([
           AsyncStorage.getItem(STORAGE_KEYS.PROJECTS),
           AsyncStorage.getItem(STORAGE_KEYS.DEPOSITS),
@@ -184,6 +206,7 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
           AsyncStorage.getItem(STORAGE_KEYS.COLLAB_GOALS),
           AsyncStorage.getItem(STORAGE_KEYS.COLLAB_NOTIFICATIONS),
           AsyncStorage.getItem(STORAGE_KEYS.THEME),
+          getStoredSupabaseConfig(),
         ]);
 
         if (savedProjs) setProjects(JSON.parse(savedProjs));
@@ -196,6 +219,7 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
         if (savedCollab) setCollabGoals(JSON.parse(savedCollab));
         if (savedNotifs) setCollabNotifications(JSON.parse(savedNotifs));
         if (savedTheme === 'light' || savedTheme === 'dark') setThemeState(savedTheme);
+        if (storedSupabase) setSupabaseConfigState(storedSupabase);
       } catch (err) {
         console.warn('Failed to load Kansya storage:', err);
       } finally {
@@ -204,6 +228,11 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
     }
     loadData();
   }, []);
+
+  const updateSupabaseConfig = async (newConfig: SupabaseConfig) => {
+    setSupabaseConfigState(newConfig);
+    await saveSupabaseConfig(newConfig);
+  };
 
   // Save changes to AsyncStorage
   const saveProjects = async (data: WishlistProject[]) => {
@@ -450,6 +479,8 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
       createdAt: new Date().toISOString(),
     };
 
+    const inviteCode = generateSquadInviteCode(title.trim());
+
     const newGoal: CollabGoal = {
       id: `collab-${Date.now()}`,
       title: title.trim(),
@@ -457,6 +488,7 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
       currentAmount: 0,
       createdBy: creatorUser.username,
       createdAt: new Date().toISOString(),
+      inviteCode,
       members: [
         {
           username: creatorUser.username,
@@ -474,7 +506,66 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
     setCollabGoals(nextGoals);
     await AsyncStorage.setItem(STORAGE_KEYS.COLLAB_GOALS, JSON.stringify(nextGoals));
     triggerSuccessHaptic();
+
+    if (isSupabaseConfigured()) {
+      syncCollabGoalToCloud(newGoal).catch(() => {});
+    }
+
     return newGoal;
+  };
+
+  const joinCollabByCode = async (
+    code: string
+  ): Promise<{ success: boolean; goal?: CollabGoal; error?: string }> => {
+    const cleanCode = code.trim().toUpperCase();
+    if (!cleanCode) return { success: false, error: 'Please enter a valid Squad Code' };
+
+    const user = currentUser || { username: 'saver', fullName: 'Saver' };
+
+    // 1. Check local goals first
+    const existingLocal = collabGoals.find((g) => g.inviteCode?.toUpperCase() === cleanCode);
+    if (existingLocal) {
+      if (existingLocal.members.some((m) => m.username.toLowerCase() === user.username.toLowerCase())) {
+        return { success: true, goal: existingLocal };
+      }
+      const updatedMembers: CollabMember[] = [
+        ...existingLocal.members,
+        {
+          username: user.username.toLowerCase(),
+          name: user.fullName,
+          role: 'member',
+          totalContributed: 0,
+        },
+      ];
+      const updatedGoal: CollabGoal = { ...existingLocal, members: updatedMembers };
+      const nextGoals = collabGoals.map((g) => (g.id === existingLocal.id ? updatedGoal : g));
+      setCollabGoals(nextGoals);
+      await AsyncStorage.setItem(STORAGE_KEYS.COLLAB_GOALS, JSON.stringify(nextGoals));
+      triggerSuccessHaptic();
+      return { success: true, goal: updatedGoal };
+    }
+
+    // 2. Query Supabase cloud if enabled
+    if (isSupabaseConfigured()) {
+      const cloudRes = await joinCloudSquadByCode(cleanCode, {
+        username: user.username.toLowerCase(),
+        fullName: user.fullName,
+      });
+      if (cloudRes.success && cloudRes.goal) {
+        const nextGoals = [cloudRes.goal, ...collabGoals.filter((g) => g.id !== cloudRes.goal!.id)];
+        setCollabGoals(nextGoals);
+        await AsyncStorage.setItem(STORAGE_KEYS.COLLAB_GOALS, JSON.stringify(nextGoals));
+        triggerSuccessHaptic();
+        return { success: true, goal: cloudRes.goal };
+      } else {
+        return { success: false, error: cloudRes.error || 'Squad not found in cloud' };
+      }
+    }
+
+    return {
+      success: false,
+      error: `Squad code "${cleanCode}" not found. (To sync across different phones, connect your Supabase database in Settings).`,
+    };
   };
 
   const inviteToCollabGoal = async (
@@ -644,6 +735,15 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
       AsyncStorage.setItem(STORAGE_KEYS.COLLAB_GOALS, JSON.stringify(nextGoals)),
       AsyncStorage.setItem(STORAGE_KEYS.COLLAB_NOTIFICATIONS, JSON.stringify(nextNotifs)),
     ]);
+
+    if (isSupabaseConfigured()) {
+      recordCloudDeposit(
+        goalId,
+        { username: actor.username, fullName: actor.fullName },
+        amount,
+        note
+      ).catch(() => {});
+    }
   };
 
   const dismissCollabNotification = () => {
@@ -864,6 +964,10 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
         respondToInvite,
         addCollabDeposit,
         dismissCollabNotification,
+        joinCollabByCode,
+        supabaseConfig,
+        updateSupabaseConfig,
+        isCloudSyncActive: isSupabaseConfigured(),
       }}
     >
       {children}

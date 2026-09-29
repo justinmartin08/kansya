@@ -97,6 +97,7 @@ export interface CollabGoal {
   pendingInvites: CollabPendingInvite[];
   deposits: CollabDeposit[];
   colorTheme?: string;
+  inviteCode?: string; // 6-char Squad Code, e.g. "BORA-924"
 }
 
 export interface CollabNotification {

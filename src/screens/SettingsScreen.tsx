@@ -20,12 +20,14 @@ import {
   Sun,
   Moon,
   Edit3,
+  Cloud,
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useKansya } from '../store/KansyaContext';
 import { AllowanceModal } from '../components/modals/AllowanceModal';
 import { TrophyRoomModal } from '../components/modals/TrophyRoomModal';
 import { ProfileModal } from '../components/modals/ProfileModal';
+import { SupabaseConfigModal } from '../components/modals/SupabaseConfigModal';
 import { TactilePressable } from '../components/ui/TactilePressable';
 import { AvatarBadge } from '../utils/avatars';
 import { getThemeColors } from '../utils/theme';
@@ -43,6 +45,7 @@ export const SettingsScreen: React.FC = () => {
     theme,
     isDark,
     toggleTheme,
+    isCloudSyncActive,
   } = useKansya();
 
   const colors = getThemeColors(theme);
@@ -51,6 +54,7 @@ export const SettingsScreen: React.FC = () => {
   const [allowanceModalVisible, setAllowanceModalVisible] = useState(false);
   const [trophyModalVisible, setTrophyModalVisible] = useState(false);
   const [profileModalVisible, setProfileModalVisible] = useState(false);
+  const [supabaseModalVisible, setSupabaseModalVisible] = useState(false);
 
   const unlockedCount = trophies.filter((t) => !!t.unlockedAt).length;
 
@@ -216,6 +220,34 @@ export const SettingsScreen: React.FC = () => {
           <ChevronRight size={18} color={colors.textMuted} />
         </TactilePressable>
 
+        {/* Section: Hybrid Cloud & Collaboration */}
+        <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>HYBRID CLOUD & COLLABORATION</Text>
+        <TactilePressable
+          style={[
+            styles.settingCard,
+            {
+              backgroundColor: colors.surfaceCard,
+              borderColor: colors.border,
+            },
+          ]}
+          onPress={() => setSupabaseModalVisible(true)}
+          activeScale={0.97}
+          haptic
+        >
+          <View style={styles.settingLeft}>
+            <View style={[styles.iconCircle, { backgroundColor: isCloudSyncActive ? 'rgba(56, 189, 248, 0.15)' : (isDark ? '#162234' : '#F1F5F9') }]}>
+              <Cloud size={18} color={isCloudSyncActive ? '#38BDF8' : colors.textMuted} />
+            </View>
+            <View>
+              <Text style={[styles.settingTitle, { color: colors.textPrimary }]}>Supabase Squad Sync (Option 3)</Text>
+              <Text style={[styles.settingSubtitle, { color: isCloudSyncActive ? '#38BDF8' : colors.textSecondary }]}>
+                {isCloudSyncActive ? 'Live Cloud Sync Active' : 'Offline Local Mode (Tap to configure)'}
+              </Text>
+            </View>
+          </View>
+          <ChevronRight size={18} color={colors.textMuted} />
+        </TactilePressable>
+
         {/* Section: Account Actions */}
         <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>ACCOUNT ACTIONS</Text>
         <TactilePressable
@@ -274,6 +306,11 @@ export const SettingsScreen: React.FC = () => {
       <ProfileModal
         visible={profileModalVisible}
         onClose={() => setProfileModalVisible(false)}
+      />
+
+      <SupabaseConfigModal
+        visible={supabaseModalVisible}
+        onClose={() => setSupabaseModalVisible(false)}
       />
     </SafeAreaView>
   );

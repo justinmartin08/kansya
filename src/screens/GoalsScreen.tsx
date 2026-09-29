@@ -26,11 +26,13 @@ import {
   Plane,
   MapPin,
   Calendar,
+  KeyRound,
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useKansya } from '../store/KansyaContext';
 import { NewProjectModal } from '../components/modals/NewProjectModal';
 import { QuickDepositModal } from '../components/modals/QuickDepositModal';
+import { JoinSquadModal } from '../components/modals/JoinSquadModal';
 import { ProgressiveCoin } from '../components/illustrations/ProgressiveCoin';
 import { TactilePressable } from '../components/ui/TactilePressable';
 import { formatPHP, getProjectProgress } from '../utils/calculations';
@@ -55,6 +57,8 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
     respondToInvite,
     addCollabDeposit,
     dismissCollabNotification,
+    joinCollabByCode,
+    isCloudSyncActive,
     theme,
     isDark,
   } = useKansya();
@@ -71,6 +75,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
 
   // Collab Squad Modals State
   const [newCollabModalVisible, setNewCollabModalVisible] = useState(false);
+  const [joinSquadModalVisible, setJoinSquadModalVisible] = useState(false);
   const [collabTitle, setCollabTitle] = useState('');
   const [collabTargetStr, setCollabTargetStr] = useState('');
   const [inviteModalGoalId, setInviteModalGoalId] = useState<string | null>(null);
@@ -409,15 +414,26 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                 <Text style={[styles.headerSubtitle, { color: colors.accentEmerald }]}>SHARED DUO & GROUP GOALS</Text>
                 <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Collab Squad</Text>
               </View>
-              <TactilePressable
-                style={styles.addBtn}
-                onPress={() => setNewCollabModalVisible(true)}
-                activeScale={0.97}
-                haptic
-              >
-                <Plus size={15} color="#0B111E" strokeWidth={3} />
-                <Text style={styles.addBtnText}>New Squad Goal</Text>
-              </TactilePressable>
+              <View style={styles.headerButtonsRow}>
+                <TouchableOpacity
+                  style={[styles.joinCodeBtn, { backgroundColor: isDark ? '#162234' : '#F1F5F9', borderColor: colors.border }]}
+                  onPress={() => setJoinSquadModalVisible(true)}
+                  activeOpacity={0.8}
+                >
+                  <KeyRound size={13} color={colors.accentEmerald} />
+                  <Text style={[styles.joinCodeBtnText, { color: colors.textPrimary }]}>Join Code</Text>
+                </TouchableOpacity>
+
+                <TactilePressable
+                  style={styles.addBtn}
+                  onPress={() => setNewCollabModalVisible(true)}
+                  activeScale={0.97}
+                  haptic
+                >
+                  <Plus size={15} color="#0B111E" strokeWidth={3} />
+                  <Text style={styles.addBtnText}>New Goal</Text>
+                </TactilePressable>
+              </View>
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.listContent}>
@@ -492,6 +508,13 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                           <Text style={[styles.collabGoalSubtitle, { color: colors.textSecondary }]}>
                             Created by @{goal.createdBy} · {goal.members.length} Squad {goal.members.length === 1 ? 'Member' : 'Members'}
                           </Text>
+                          {goal.inviteCode ? (
+                            <View style={[styles.squadCodePill, { backgroundColor: isDark ? '#162234' : '#F1F5F9', borderColor: colors.border }]}>
+                              <KeyRound size={11} color={colors.accentEmerald} />
+                              <Text style={[styles.squadCodeLabel, { color: colors.textSecondary }]}>SQUAD CODE: </Text>
+                              <Text style={[styles.squadCodeValue, { color: colors.accentEmerald }]}>{goal.inviteCode}</Text>
+                            </View>
+                          ) : null}
                         </View>
                         <View style={styles.collabActionsRow}>
                           <TouchableOpacity
@@ -798,6 +821,12 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
           </View>
         </KeyboardAvoidingView>
       </Modal>
+
+      {/* Modal: Join Collab Squad with Code */}
+      <JoinSquadModal
+        visible={joinSquadModalVisible}
+        onClose={() => setJoinSquadModalVisible(false)}
+      />
 
       {/* Modal: Squad Deposit */}
       <Modal
@@ -1295,6 +1324,45 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#94A3B8',
     fontWeight: '600',
+  },
+  headerButtonsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  joinCodeBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  joinCodeBtnText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  squadCodePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 1,
+    marginTop: 6,
+  },
+  squadCodeLabel: {
+    fontSize: 9.5,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  squadCodeValue: {
+    fontSize: 10.5,
+    fontWeight: '800',
+    letterSpacing: 1,
   },
   collabGoalCard: {
     backgroundColor: '#121B2A',
