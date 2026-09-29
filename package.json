@@ -1,0 +1,32 @@
+{
+  "name": "kansya",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "@expo/metro-runtime": "~57.0.16",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "expo": "~57.0.25",
+    "expo-haptics": "~57.0.3",
+    "expo-status-bar": "~57.0.1",
+    "expo-system-ui": "~57.0.4",
+    "lucide-react-native": "^1.48.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-svg": "15.15.4",
+    "react-native-web": "^0.21.2"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "test": "npx tsx tests/calculations.test.ts && npx tsx tests/edge_cases.test.ts && npx tsx tests/milestones_and_bugs.test.ts && npx tsx tests/verification_r1_r5.test.ts && npx tsx tests/ui_and_sound_overhaul.test.ts && npx tsx tests/auth_collab_and_clean_slate.test.ts && npx tsx tests/profile_theme_and_offline.test.ts"
+  },
+  "private": true
+}
