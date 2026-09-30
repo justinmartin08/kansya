@@ -26,6 +26,7 @@ import {
   ArrowUpRight,
   ArrowDownLeft,
   Bell,
+  Sparkles,
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useKansya } from '../store/KansyaContext';
@@ -41,6 +42,7 @@ import { AllowanceModal } from '../components/modals/AllowanceModal';
 import { TrophyRoomModal } from '../components/modals/TrophyRoomModal';
 import { MilestoneModal } from '../components/modals/MilestoneModal';
 import { ProfileModal } from '../components/modals/ProfileModal';
+import { HistoryModal } from '../components/modals/HistoryModal';
 import { AvatarBadge } from '../utils/avatars';
 import { getThemeColors, KansyaDesign } from '../utils/theme';
 import { formatPHP, getProjectProgress } from '../utils/calculations';
@@ -88,6 +90,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [allowanceModalVisible, setAllowanceModalVisible] = useState(false);
   const [trophyModalVisible, setTrophyModalVisible] = useState(false);
   const [profileModalVisible, setProfileModalVisible] = useState(false);
+  const [historyModalVisible, setHistoryModalVisible] = useState(false);
   const [isBalanceHidden, setIsBalanceHidden] = useState(false);
 
   // Active display projects: if user has projects, use them; otherwise provide the Kansya showcase
@@ -362,7 +365,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             style={styles.quickActionItem}
           >
             <View style={[styles.quickActionCircle, { backgroundColor: '#102820', borderColor: '#142F26' }]}>
-              <Plus size={20} color="#55D99A" strokeWidth={2.4} />
+              <Sparkles size={20} color="#55D99A" strokeWidth={2.4} />
             </View>
             <Text style={[styles.quickActionLabel, { color: colors.textPrimary }]}>
               Add Savings
@@ -400,7 +403,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           {/* Quick Action 4: History */}
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => (onNavigateTab ? onNavigateTab('savings') : null)}
+            onPress={() => setHistoryModalVisible(true)}
             style={styles.quickActionItem}
           >
             <View style={[styles.quickActionCircle, { backgroundColor: '#102820', borderColor: '#142F26' }]}>
@@ -507,7 +510,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </Text>
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => (onNavigateTab ? onNavigateTab('savings') : null)}
+              onPress={() => setHistoryModalVisible(true)}
               style={styles.viewAllAction}
             >
               <Text style={styles.viewAllActionText}>View all</Text>
@@ -594,6 +597,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <ProfileModal
         visible={profileModalVisible}
         onClose={() => setProfileModalVisible(false)}
+      />
+
+      {/* History Ledger Modal */}
+      <HistoryModal
+        visible={historyModalVisible}
+        onClose={() => setHistoryModalVisible(false)}
       />
 
       {/* Milestone Celebration Modal */}

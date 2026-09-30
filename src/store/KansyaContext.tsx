@@ -19,6 +19,7 @@ import {
   INITIAL_DEPOSITS,
   INITIAL_ALLOWANCE,
   INITIAL_TROPHIES,
+  KANSYA_MOCKUP_PROJECTS,
 } from './defaultData';
 import { getConstructionPhase, getProjectProgress } from '../utils/calculations';
 import { triggerSuccessHaptic, triggerMediumHaptic, triggerLightHaptic } from '../utils/haptics';
@@ -106,7 +107,8 @@ interface KansyaContextType {
     title: string,
     targetPrice: number,
     category?: WishlistProject['category'],
-    manualDailyAllocation?: number
+    manualDailyAllocation?: number,
+    initialSavedAmount?: number
   ) => Promise<WishlistProject>;
   updateProject: (id: string, updates: Partial<WishlistProject>) => Promise<void>;
   deleteProject: (id: string) => Promise<void>;
@@ -754,8 +756,17 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
   const addDeposit = async (projectId: string, amount: number, note?: string) => {
     if (amount <= 0) return;
 
-    const project = projects.find((p) => p.id === projectId);
-    if (!project) return;
+    let currentProjects = projects;
+    let project = currentProjects.find((p) => p.id === projectId);
+    if (!project) {
+      const mockup = KANSYA_MOCKUP_PROJECTS.find((p) => p.id === projectId);
+      if (mockup) {
+        currentProjects = [...KANSYA_MOCKUP_PROJECTS];
+        project = mockup;
+      } else {
+        return;
+      }
+    }
 
     const oldPhase = getConstructionPhase(project.currentAmount, project.targetPrice);
     const newAmount = project.currentAmount + amount;
@@ -778,7 +789,7 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
       timestamp: new Date().toISOString(),
     };
 
-    const updatedProjects = projects.map((p) => {
+    const updatedProjects = currentProjects.map((p) => {
       if (p.id === projectId) {
         return {
           ...p,
@@ -857,14 +868,16 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
   const createProject = async (
     title: string,
     targetPrice: number,
-    category: WishlistProject['category'] = 'game',
-    manualDailyAllocation?: number
+    category: WishlistProject['category'] = 'gadget',
+    manualDailyAllocation?: number,
+    initialSavedAmount?: number
   ): Promise<WishlistProject> => {
+    const startAmount = Math.max(0, initialSavedAmount || 0);
     const newProject: WishlistProject = {
       id: `proj-${Date.now()}`,
       title: title.trim(),
       targetPrice: Math.max(1, targetPrice),
-      currentAmount: 0,
+      currentAmount: startAmount,
       category,
       manualDailyAllocation: manualDailyAllocation && manualDailyAllocation > 0 ? manualDailyAllocation : undefined,
       createdAt: new Date().toISOString(),
@@ -874,6 +887,17 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
     const nextProjects = [...projects, newProject];
     await saveProjects(nextProjects);
     setActiveProjectId(newProject.id);
+
+    if (startAmount > 0) {
+      const initDeposit: DepositEntry = {
+        id: `dep-${Date.now()}`,
+        projectId: newProject.id,
+        amount: startAmount,
+        note: 'Initial savings',
+        timestamp: new Date().toISOString(),
+      };
+      await saveDeposits([initDeposit, ...deposits]);
+    }
 
     const nextTrophies = [...trophies];
     const deedIdx = nextTrophies.findIndex((t) => t.id === 'phase_0');
@@ -886,12 +910,20 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateProject = async (id: string, updates: Partial<WishlistProject>) => {
-    const nextProjects = projects.map((p) => (p.id === id ? { ...p, ...updates } : p));
+    let currentProjects = projects;
+    if (!currentProjects.some((p) => p.id === id) && KANSYA_MOCKUP_PROJECTS.some((p) => p.id === id)) {
+      currentProjects = [...KANSYA_MOCKUP_PROJECTS];
+    }
+    const nextProjects = currentProjects.map((p) => (p.id === id ? { ...p, ...updates } : p));
     await saveProjects(nextProjects);
   };
 
   const deleteProject = async (id: string) => {
-    const nextProjects = projects.filter((p) => p.id !== id);
+    let currentProjects = projects;
+    if (!currentProjects.some((p) => p.id === id) && KANSYA_MOCKUP_PROJECTS.some((p) => p.id === id)) {
+      currentProjects = [...KANSYA_MOCKUP_PROJECTS];
+    }
+    const nextProjects = currentProjects.filter((p) => p.id !== id);
     const nextDeposits = deposits.filter((d) => d.projectId !== id);
     await Promise.all([saveProjects(nextProjects), saveDeposits(nextDeposits)]);
     if (activeProjectId === id) {

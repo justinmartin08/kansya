@@ -21,6 +21,8 @@ import {
   ArrowUpRight,
   Bookmark,
   X,
+  Edit2,
+  Archive,
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useKansya } from '../store/KansyaContext';
@@ -29,7 +31,7 @@ import { formatPHP, getProjectProgress } from '../utils/calculations';
 import { WishlistProject } from '../types';
 import { PROJECT_IMAGES, getProjectImage } from '../utils/projectImages';
 import { KANSYA_MOCKUP_PROJECTS } from '../store/defaultData';
-import { KProgressBar, KBadge } from '../components/design/DesignSystem';
+import { KProgressBar, KBadge, KEmptyState } from '../components/design/DesignSystem';
 import { QuickDepositModal } from '../components/modals/QuickDepositModal';
 
 interface WishlistScreenProps {
@@ -69,6 +71,9 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
   // Selected item for action sheet & deposit
   const [actionItem, setActionItem] = useState<WishlistProject | null>(null);
   const [depositItem, setDepositItem] = useState<WishlistProject | null>(null);
+  const [editItem, setEditItem] = useState<WishlistProject | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editPrice, setEditPrice] = useState('');
 
   // Combined list of projects: user-created or default Kansya mockup items
   const allItems: WishlistProject[] = projects.length > 0 ? projects : KANSYA_MOCKUP_PROJECTS;
@@ -101,6 +106,31 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
     if (onOpenProjectDetail) {
       onOpenProjectDetail(item.id);
     }
+  };
+
+  const handleOpenEdit = (item: WishlistProject) => {
+    setEditItem(item);
+    setEditTitle(item.title);
+    setEditPrice(item.targetPrice.toString());
+    setActionItem(null);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editItem) return;
+    const price = parseInt(editPrice.replace(/[^0-9]/g, ''), 10);
+    if (!editTitle.trim() || !price || price <= 0) return;
+    await updateProject(editItem.id, {
+      title: editTitle.trim(),
+      targetPrice: price,
+    });
+    setEditItem(null);
+  };
+
+  const handleArchiveItem = async (item: WishlistProject) => {
+    await updateProject(item.id, {
+      completedAt: item.completedAt ? undefined : new Date().toISOString(),
+    });
+    setActionItem(null);
   };
 
   const handleMarkPurchased = async (item: WishlistProject) => {
@@ -226,74 +256,83 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
         {/* 4. WISHLIST ITEM CARDS */}
         {/* ================================================================ */}
         <View style={styles.itemsListContainer}>
-          {filteredItems.map((item) => {
-            const { clampedPercent } = getProjectProgress(item.currentAmount, item.targetPrice);
-            const isInProgress = item.currentAmount > 0;
-            const imgSource = getProjectImage(item.imageKey, item.category);
+          {filteredItems.length === 0 ? (
+            <KEmptyState
+              title="Nothing here yet."
+              subtitle="What's something you've been wanting?"
+              actionTitle="Add to wishlist"
+              onAction={() => setAddModalVisible(true)}
+            />
+          ) : (
+            filteredItems.map((item) => {
+              const { clampedPercent } = getProjectProgress(item.currentAmount, item.targetPrice);
+              const isInProgress = item.currentAmount > 0;
+              const imgSource = getProjectImage(item.imageKey, item.category);
 
-            return (
-              <TouchableOpacity
-                key={item.id}
-                activeOpacity={0.88}
-                onPress={() => {
-                  if (onOpenProjectDetail) {
-                    onOpenProjectDetail(item.id);
-                  }
-                }}
-                style={[
-                  styles.itemCard,
-                  { backgroundColor: '#0D211B', borderColor: '#142F26' },
-                ]}
-              >
-                {/* Thumbnail */}
-                <View style={styles.itemThumbWrapper}>
-                  <Image source={imgSource} style={styles.itemThumb} />
-                </View>
-
-                {/* Details Column */}
-                <View style={styles.itemInfoCol}>
-                  <View style={styles.itemHeaderLine}>
-                    <Text style={[styles.itemTitle, { color: colors.textPrimary }]} numberOfLines={1}>
-                      {item.title}
-                    </Text>
-
-                    <View style={styles.itemRightRow}>
-                      <KBadge
-                        label={isInProgress ? 'In Progress' : 'Not Started'}
-                        variant={isInProgress ? 'progress' : 'notStarted'}
-                      />
-                      <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={() => setActionItem(item)}
-                        style={styles.moreBtn}
-                        accessibilityLabel="More actions"
-                      >
-                        <MoreVertical size={16} color="#667A71" />
-                      </TouchableOpacity>
-                    </View>
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  activeOpacity={0.88}
+                  onPress={() => {
+                    if (onOpenProjectDetail) {
+                      onOpenProjectDetail(item.id);
+                    }
+                  }}
+                  style={[
+                    styles.itemCard,
+                    { backgroundColor: '#0D211B', borderColor: '#142F26' },
+                  ]}
+                >
+                  {/* Thumbnail */}
+                  <View style={styles.itemThumbWrapper}>
+                    <Image source={imgSource} style={styles.itemThumb} />
                   </View>
 
-                  <Text style={[styles.itemPriceText, { color: colors.textSecondary }]}>
-                    {formatPHP(item.currentAmount)} / {formatPHP(item.targetPrice)}
-                  </Text>
+                  {/* Details Column */}
+                  <View style={styles.itemInfoCol}>
+                    <View style={styles.itemHeaderLine}>
+                      <Text style={[styles.itemTitle, { color: colors.textPrimary }]} numberOfLines={1}>
+                        {item.title}
+                      </Text>
 
-                  {/* Progress Bar + % */}
-                  <View style={styles.itemProgressRow}>
-                    <View style={styles.itemProgressBarWrap}>
-                      <KProgressBar
-                        progress={clampedPercent}
-                        height={4}
-                        color={isInProgress ? '#55D99A' : '#142F26'}
-                      />
+                      <View style={styles.itemRightRow}>
+                        <KBadge
+                          label={item.completedAt ? 'Purchased' : isInProgress ? 'In Progress' : 'Not Started'}
+                          variant={item.completedAt ? 'completed' : isInProgress ? 'progress' : 'notStarted'}
+                        />
+                        <TouchableOpacity
+                          activeOpacity={0.7}
+                          onPress={() => setActionItem(item)}
+                          style={styles.moreBtn}
+                          accessibilityLabel="More actions"
+                        >
+                          <MoreVertical size={16} color="#667A71" />
+                        </TouchableOpacity>
+                      </View>
                     </View>
-                    <Text style={[styles.itemPercentText, { color: isInProgress ? '#55D99A' : '#667A71' }]}>
-                      {clampedPercent}%
+
+                    <Text style={[styles.itemPriceText, { color: colors.textSecondary }]}>
+                      {formatPHP(item.currentAmount)} / {formatPHP(item.targetPrice)}
                     </Text>
+
+                    {/* Progress Bar + % */}
+                    <View style={styles.itemProgressRow}>
+                      <View style={styles.itemProgressBarWrap}>
+                        <KProgressBar
+                          progress={clampedPercent}
+                          height={4}
+                          color={isInProgress ? '#55D99A' : '#142F26'}
+                        />
+                      </View>
+                      <Text style={[styles.itemPercentText, { color: isInProgress ? '#55D99A' : '#667A71' }]}>
+                        {clampedPercent}%
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
+                </TouchableOpacity>
+              );
+            })
+          )}
         </View>
 
         {/* ================================================================ */}
@@ -381,6 +420,79 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
       </Modal>
 
       {/* ================================================================ */}
+      {/* EDIT WISHLIST ITEM MODAL */}
+      {/* ================================================================ */}
+      {editItem && (
+        <Modal
+          visible={true}
+          transparent
+          animationType="slide"
+          statusBarTranslucent={true}
+          onRequestClose={() => setEditItem(null)}
+        >
+          <KeyboardAvoidingView
+            behavior="padding"
+            style={styles.modalOverlay}
+          >
+            <TouchableOpacity
+              style={styles.modalBackdrop}
+              activeOpacity={1}
+              onPress={() => setEditItem(null)}
+            />
+
+            <View style={styles.sheetContent}>
+              <View style={styles.sheetHeader}>
+                <Text style={styles.sheetTitle}>Edit Wishlist Item</Text>
+                <TouchableOpacity
+                  onPress={() => setEditItem(null)}
+                  style={styles.sheetCloseBtn}
+                >
+                  <X size={18} color="#9AAFA5" />
+                </TouchableOpacity>
+              </View>
+
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={styles.sheetBody}
+              >
+                <Text style={styles.fieldLabel}>Item Name</Text>
+                <TextInput
+                  style={styles.inputField}
+                  placeholder="e.g. Gaming Laptop"
+                  placeholderTextColor="#667A71"
+                  value={editTitle}
+                  onChangeText={setEditTitle}
+                />
+
+                <Text style={styles.fieldLabel}>Target Price (₱)</Text>
+                <TextInput
+                  style={styles.inputField}
+                  placeholder="e.g. 50000"
+                  placeholderTextColor="#667A71"
+                  keyboardType="numeric"
+                  value={editPrice}
+                  onChangeText={setEditPrice}
+                />
+
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  onPress={handleSaveEdit}
+                  disabled={!editTitle.trim() || !editPrice.trim()}
+                  style={[
+                    styles.createItemBtn,
+                    (!editTitle.trim() || !editPrice.trim()) && styles.createItemBtnDisabled,
+                  ]}
+                >
+                  <Text style={styles.createItemBtnText}>Save Changes</Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </View>
+          </KeyboardAvoidingView>
+        </Modal>
+      )}
+
+      {/* ================================================================ */}
       {/* ACTION SHEET MODAL FOR ITEM */}
       {/* ================================================================ */}
       {actionItem && (
@@ -427,7 +539,17 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
                 <Text style={styles.actionSheetRowText}>Focus as Active Goal</Text>
               </TouchableOpacity>
 
-              {/* Action 3: Mark as Purchased */}
+              {/* Action 3: Edit Item */}
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => handleOpenEdit(actionItem)}
+                style={styles.actionSheetRow}
+              >
+                <Edit2 size={18} color="#55D99A" />
+                <Text style={styles.actionSheetRowText}>Edit Item</Text>
+              </TouchableOpacity>
+
+              {/* Action 4: Mark as Purchased */}
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => handleMarkPurchased(actionItem)}
@@ -437,7 +559,19 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
                 <Text style={styles.actionSheetRowText}>Mark as Purchased</Text>
               </TouchableOpacity>
 
-              {/* Action 4: Delete */}
+              {/* Action 5: Archive / Unarchive */}
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => handleArchiveItem(actionItem)}
+                style={styles.actionSheetRow}
+              >
+                <Archive size={18} color="#9AAFA5" />
+                <Text style={styles.actionSheetRowText}>
+                  {actionItem.completedAt ? 'Restore from Archive' : 'Archive Item'}
+                </Text>
+              </TouchableOpacity>
+
+              {/* Action 6: Delete */}
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => handleDeleteItem(actionItem)}

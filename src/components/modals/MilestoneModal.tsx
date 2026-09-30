@@ -1,41 +1,11 @@
 import React from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import {
-  Sparkles,
-  ArrowRight,
-  Check,
-  Flag,
-  Compass,
-  Layers,
-  Hammer,
-  Home,
-  Palette,
-  Award,
-} from 'lucide-react-native';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Sparkles, CheckCircle2 } from 'lucide-react-native';
 import { ConstructionPhase, WishlistProject } from '../../types';
-import { ConfettiCannon } from '../ConfettiCannon';
-import { formatPHP, getProjectProgress } from '../../utils/calculations';
-
-function getPhaseIconComponent(badgeIcon: string) {
-  switch (badgeIcon) {
-    case 'flag':
-      return Flag;
-    case 'compass':
-      return Compass;
-    case 'layers':
-      return Layers;
-    case 'hammer':
-      return Hammer;
-    case 'home':
-      return Home;
-    case 'palette':
-      return Palette;
-    case 'sparkles':
-      return Sparkles;
-    default:
-      return Award;
-  }
-}
+import { formatPHP } from '../../utils/calculations';
+import { PROJECT_IMAGES } from '../../utils/projectImages';
+import { KansyaDesign } from '../../utils/theme';
+import { useKansya } from '../../store/KansyaContext';
 
 interface MilestoneModalProps {
   visible: boolean;
@@ -43,6 +13,7 @@ interface MilestoneModalProps {
   phase: ConstructionPhase;
   isCompletion: boolean;
   onClose: () => void;
+  onOpenNewGoal?: () => void;
 }
 
 export const MilestoneModal: React.FC<MilestoneModalProps> = ({
@@ -51,9 +22,16 @@ export const MilestoneModal: React.FC<MilestoneModalProps> = ({
   phase,
   isCompletion,
   onClose,
+  onOpenNewGoal,
 }) => {
-  const { clampedPercent } = getProjectProgress(project.currentAmount, project.targetPrice);
-  const IconComponent = getPhaseIconComponent(phase.badgeIcon);
+  const { updateProject } = useKansya();
+
+  const handleMarkPurchased = async () => {
+    await updateProject(project.id, {
+      completedAt: new Date().toISOString(),
+    });
+    onClose();
+  };
 
   return (
     <Modal
@@ -64,46 +42,95 @@ export const MilestoneModal: React.FC<MilestoneModalProps> = ({
       onRequestClose={onClose}
     >
       <View style={styles.backdrop}>
-        {/* Confetti Particle Layer */}
-        <ConfettiCannon />
-
         <View style={styles.cardContainer}>
-          {/* Glowing Header Banner */}
-          <View style={[styles.ribbonBanner, isCompletion ? styles.ribbonGold : styles.ribbonMint]}>
-            <Sparkles size={16} color={isCompletion ? '#FFB800' : '#86EFAC'} />
-            <Text style={[styles.ribbonText, isCompletion ? styles.ribbonTextGold : styles.ribbonTextMint]}>
-              {isCompletion ? 'GOAL ACQUIRED & FULFILLED!' : 'SAVINGS MILESTONE REACHED!'}
-            </Text>
+          {/* Mascot with Coin Artwork */}
+          <View style={styles.mascotContainer}>
+            <Image
+              source={PROJECT_IMAGES.mascot_avatar}
+              style={styles.mascotImage}
+            />
           </View>
 
-          {/* Badge Icon */}
-          <View style={styles.iconCircle}>
-            <IconComponent size={34} color={isCompletion ? '#FFB800' : '#86EFAC'} />
-          </View>
+          {isCompletion ? (
+            <>
+              {/* Goal Complete Header */}
+              <View style={styles.statusPill}>
+                <Sparkles size={14} color="#EBCB72" />
+                <Text style={styles.statusPillText}>Goal complete</Text>
+              </View>
 
-          {/* Phase Title & Subtitle */}
-          <Text style={styles.phaseName}>{phase.name}</Text>
-          <Text style={styles.phaseTagline}>{phase.tagline}</Text>
+              <Text style={styles.savedAmountText}>
+                {formatPHP(project.targetPrice)} saved
+              </Text>
+              <Text style={styles.motivatingText}>
+                "You made it happen."
+              </Text>
 
-          {/* Project Target Box */}
-          <View style={styles.projectInfoBox}>
-            <Text style={styles.projectTitle}>{project.title}</Text>
-            <Text style={styles.progressSummary}>
-              {formatPHP(project.currentAmount)} of {formatPHP(project.targetPrice)} ({clampedPercent}%)
-            </Text>
-          </View>
+              <Text style={styles.projectSubtitle}>
+                {project.title}
+              </Text>
 
-          {/* Story Snippet */}
-          <View style={styles.descriptionBox}>
-            <Text style={styles.descriptionText}>{phase.description}</Text>
-          </View>
+              {/* Three Restrained Production Options */}
+              <View style={styles.optionsCol}>
+                <TouchableOpacity
+                  style={[styles.primaryActionBtn, { backgroundColor: '#55D99A' }]}
+                  onPress={handleMarkPurchased}
+                  activeOpacity={0.85}
+                >
+                  <Text style={styles.primaryActionText}>Mark as purchased</Text>
+                </TouchableOpacity>
 
-          {/* Dismiss Button */}
-          <TouchableOpacity style={styles.confirmBtn} onPress={onClose} activeOpacity={0.8}>
-            <Text style={styles.confirmBtnText}>
-              {isCompletion ? 'Claim and Celebrate!' : 'Keep Stacking!'}
-            </Text>
-          </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.secondaryActionBtn, { backgroundColor: '#102820', borderColor: '#142F26' }]}
+                  onPress={onClose}
+                  activeOpacity={0.85}
+                >
+                  <Text style={styles.secondaryActionText}>Keep saving</Text>
+                </TouchableOpacity>
+
+                {onOpenNewGoal && (
+                  <TouchableOpacity
+                    style={styles.ghostActionBtn}
+                    onPress={() => {
+                      onClose();
+                      onOpenNewGoal();
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.ghostActionText}>Create another goal</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </>
+          ) : (
+            <>
+              {/* Intermediate Savings Milestone */}
+              <View style={styles.statusPill}>
+                <Sparkles size={14} color="#55D99A" />
+                <Text style={[styles.statusPillText, { color: '#55D99A' }]}>
+                  Savings milestone
+                </Text>
+              </View>
+
+              <Text style={styles.phaseName}>{phase.name}</Text>
+              <Text style={styles.phaseTagline}>{phase.tagline}</Text>
+
+              <View style={styles.projectInfoBox}>
+                <Text style={styles.projectTitle}>{project.title}</Text>
+                <Text style={styles.progressSummary}>
+                  {formatPHP(project.currentAmount)} of {formatPHP(project.targetPrice)}
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                style={[styles.primaryActionBtn, { backgroundColor: '#55D99A' }]}
+                onPress={onClose}
+                activeOpacity={0.85}
+              >
+                <Text style={styles.primaryActionText}>Keep saving</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </View>
     </Modal>
@@ -113,130 +140,144 @@ export const MilestoneModal: React.FC<MilestoneModalProps> = ({
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(5, 8, 15, 0.85)',
+    backgroundColor: 'rgba(7, 19, 15, 0.82)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: 24,
   },
   cardContainer: {
     width: '100%',
     maxWidth: 340,
-    backgroundColor: '#121B2A',
-    borderRadius: 24,
-    borderWidth: 1.5,
-    borderColor: '#1E293B',
+    backgroundColor: '#0D211B',
+    borderRadius: KansyaDesign.radius.lg,
+    borderWidth: 1,
+    borderColor: '#142F26',
     padding: 24,
     alignItems: 'center',
-    shadowColor: '#86EFAC',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 20,
-    elevation: 10,
   },
-  ribbonBanner: {
+  mascotContainer: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: '#102820',
+    borderWidth: 1.5,
+    borderColor: 'rgba(85, 217, 154, 0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    marginBottom: 16,
+  },
+  mascotImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  statusPill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    backgroundColor: 'rgba(235, 203, 114, 0.14)',
     paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    marginBottom: 16,
+    paddingVertical: 5,
+    borderRadius: 16,
+    marginBottom: 12,
   },
-  ribbonMint: {
-    backgroundColor: 'rgba(134, 239, 172, 0.12)',
-    borderWidth: 1,
-    borderColor: 'rgba(134, 239, 172, 0.3)',
+  statusPillText: {
+    fontSize: 11.5,
+    fontWeight: '700',
+    color: '#EBCB72',
+    letterSpacing: 0.4,
   },
-  ribbonGold: {
-    backgroundColor: 'rgba(255, 184, 0, 0.12)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 184, 0, 0.3)',
-  },
-  ribbonText: {
-    fontSize: 11,
+  savedAmountText: {
+    fontSize: 26,
     fontWeight: '800',
-    letterSpacing: 0.5,
+    color: '#F4F7F3',
+    letterSpacing: -0.5,
+    marginBottom: 4,
   },
-  ribbonTextMint: {
-    color: '#86EFAC',
+  motivatingText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#55D99A',
+    fontStyle: 'italic',
+    marginBottom: 8,
   },
-  ribbonTextGold: {
-    color: '#FFB800',
+  projectSubtitle: {
+    fontSize: 13,
+    color: '#9AAFA5',
+    marginBottom: 20,
   },
-  iconCircle: {
-    width: 68,
-    height: 68,
-    borderRadius: 34,
-    backgroundColor: '#162234',
-    borderWidth: 2,
-    borderColor: '#22324B',
+  optionsCol: {
+    width: '100%',
+    gap: 10,
+    marginTop: 6,
+  },
+  primaryActionBtn: {
+    width: '100%',
+    height: 48,
+    borderRadius: KansyaDesign.radius.md,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 14,
   },
-  iconEmoji: {
-    fontSize: 34,
+  primaryActionText: {
+    fontSize: 14.5,
+    fontWeight: '700',
+    color: '#07130F',
+  },
+  secondaryActionBtn: {
+    width: '100%',
+    height: 46,
+    borderRadius: KansyaDesign.radius.md,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  secondaryActionText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#F4F7F3',
+  },
+  ghostActionBtn: {
+    paddingVertical: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ghostActionText: {
+    fontSize: 13,
+    color: '#9AAFA5',
+    fontWeight: '500',
   },
   phaseName: {
-    fontSize: 20,
+    fontSize: 19,
     fontWeight: '800',
-    color: '#F8FAFC',
-    textAlign: 'center',
+    color: '#F4F7F3',
+    marginBottom: 2,
   },
   phaseTagline: {
     fontSize: 12,
-    color: '#86EFAC',
-    fontWeight: '600',
-    marginTop: 2,
-    marginBottom: 14,
-  },
-  projectInfoBox: {
-    backgroundColor: '#0E1624',
-    borderRadius: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 14,
-  },
-  projectTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#F8FAFC',
-  },
-  progressSummary: {
-    fontSize: 11,
-    color: '#94A3B8',
-    marginTop: 2,
-  },
-  descriptionBox: {
-    backgroundColor: '#162234',
-    borderRadius: 12,
-    padding: 12,
-    width: '100%',
-    marginBottom: 20,
-  },
-  descriptionText: {
-    fontSize: 12,
-    color: '#CBD5E1',
-    lineHeight: 18,
+    color: '#9AAFA5',
+    marginBottom: 16,
     textAlign: 'center',
   },
-  confirmBtn: {
+  projectInfoBox: {
     width: '100%',
-    backgroundColor: '#86EFAC',
-    borderRadius: 16,
-    height: 48,
+    backgroundColor: '#102820',
+    borderRadius: KansyaDesign.radius.md,
+    borderWidth: 1,
+    borderColor: '#142F26',
+    padding: 12,
     alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#86EFAC',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
+    marginBottom: 18,
   },
-  confirmBtnText: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#0B111E',
+  projectTitle: {
+    fontSize: 13.5,
+    fontWeight: '700',
+    color: '#F4F7F3',
+  },
+  progressSummary: {
+    fontSize: 12,
+    color: '#55D99A',
+    fontWeight: '600',
+    marginTop: 2,
   },
 });

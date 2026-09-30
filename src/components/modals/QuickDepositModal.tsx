@@ -7,12 +7,12 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
 } from 'react-native';
 import { X, ArrowRight, CheckCircle2 } from 'lucide-react-native';
 import { WishlistProject } from '../../types';
 import { formatPHP, getProjectProgress } from '../../utils/calculations';
+import { KansyaDesign } from '../../utils/theme';
 
 interface QuickDepositModalProps {
   visible: boolean;
@@ -21,7 +21,7 @@ interface QuickDepositModalProps {
   onDeposit: (amount: number, note?: string) => Promise<void>;
 }
 
-const PRESET_CHIPS = [20, 50, 100, 200, 500];
+const PRESET_CHIPS = [50, 100, 200, 500];
 
 export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
   visible,
@@ -29,7 +29,7 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
   onClose,
   onDeposit,
 }) => {
-  const [selectedAmount, setSelectedAmount] = useState<number>(50);
+  const [selectedAmount, setSelectedAmount] = useState<number>(100);
   const [customInput, setCustomInput] = useState<string>('');
   const [note, setNote] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,6 +40,7 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
 
   React.useEffect(() => {
     if (!visible) {
+      setSelectedAmount(100);
       setCustomInput('');
       setNote('');
     }
@@ -89,11 +90,11 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
           {/* Header Row */}
           <View style={styles.headerRow}>
             <View>
-              <Text style={styles.headerSubtitle}>SAVINGS DEPOSIT</Text>
-              <Text style={styles.headerTitle}>Fund {project.title}</Text>
+              <Text style={styles.headerSubtitle}>ADD SAVINGS</Text>
+              <Text style={styles.headerTitle}>{project.title}</Text>
             </View>
             <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-              <X size={18} color="#94A3B8" />
+              <X size={18} color="#9AAFA5" />
             </TouchableOpacity>
           </View>
 
@@ -102,8 +103,8 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={styles.scrollContent}
           >
-            {/* Quick Amount Selector */}
-            <Text style={styles.sectionLabel}>Select Amount</Text>
+            {/* Quick Amounts */}
+            <Text style={styles.sectionLabel}>Quick amounts</Text>
             <View style={styles.chipRow}>
               {PRESET_CHIPS.map((chip) => {
                 const isSelected = !customInput && selectedAmount === chip;
@@ -114,7 +115,7 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
                     style={[styles.chipButton, isSelected && styles.chipButtonActive]}
                   >
                     <Text style={[styles.chipText, isSelected && styles.chipTextActive]}>
-                      +₱{chip}
+                      ₱{chip}
                     </Text>
                   </TouchableOpacity>
                 );
@@ -122,45 +123,49 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
             </View>
 
             {/* Custom Amount Input */}
+            <Text style={styles.sectionLabel}>Custom amount</Text>
             <View style={styles.inputWrapper}>
               <Text style={styles.pesoSign}>₱</Text>
               <TextInput
                 style={styles.customTextInput}
-                placeholder="Or type custom amount"
-                placeholderTextColor="#64748B"
+                placeholder="Enter custom amount"
+                placeholderTextColor="#667A71"
                 keyboardType="numeric"
                 value={customInput}
                 onChangeText={handleCustomChange}
               />
             </View>
 
-            {/* Deposit Note Input */}
+            {/* Optional Note Input */}
+            <Text style={styles.sectionLabel}>Optional note</Text>
             <View style={styles.noteInputWrapper}>
               <TextInput
                 style={styles.noteInput}
-                placeholder="Optional note (e.g. Skipped milk tea, Baon savings)"
-                placeholderTextColor="#64748B"
+                placeholder="e.g. Skipped coffee, Baon savings"
+                placeholderTextColor="#667A71"
                 value={note}
                 onChangeText={setNote}
                 maxLength={60}
               />
             </View>
 
-            {/* Impact Preview Card */}
+            {/* Impact Preview */}
             <View style={styles.impactCard}>
               <View style={styles.impactRow}>
                 <Text style={styles.impactLabel}>Current Progress:</Text>
-                <Text style={styles.impactVal}>{currentProg.clampedPercent}% ({formatPHP(project.currentAmount)})</Text>
+                <Text style={styles.impactVal}>
+                  {currentProg.clampedPercent}% ({formatPHP(project.currentAmount)})
+                </Text>
               </View>
               <View style={styles.impactRow}>
                 <Text style={styles.impactLabel}>After Deposit:</Text>
-                <Text style={[styles.impactVal, { color: '#86EFAC', fontWeight: '700' }]}>
+                <Text style={[styles.impactVal, { color: '#55D99A', fontWeight: '700' }]}>
                   {nextProg.clampedPercent}% ({formatPHP(project.currentAmount + activeAmount)})
                 </Text>
               </View>
               {nextProg.isCompleted && (
                 <View style={styles.completionBadge}>
-                  <CheckCircle2 size={13} color="#FFB800" />
+                  <CheckCircle2 size={13} color="#EBCB72" />
                   <Text style={styles.completionText}>Will fully fund this goal!</Text>
                 </View>
               )}
@@ -173,9 +178,9 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
               disabled={activeAmount <= 0 || isSubmitting}
             >
               <Text style={styles.depositBtnText}>
-                {isSubmitting ? 'Saving...' : `Deposit ${formatPHP(activeAmount)}`}
+                {isSubmitting ? 'Adding...' : `Add ${formatPHP(activeAmount)}`}
               </Text>
-              <ArrowRight size={18} color="#0B111E" strokeWidth={2.5} />
+              <ArrowRight size={18} color="#07130F" strokeWidth={2.5} />
             </TouchableOpacity>
           </ScrollView>
         </View>
@@ -187,24 +192,24 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
 const styles = StyleSheet.create({
   modalBackdrop: {
     flex: 1,
-    backgroundColor: 'rgba(5, 8, 15, 0.75)',
+    backgroundColor: 'rgba(7, 19, 15, 0.75)',
     justifyContent: 'flex-end',
   },
   dismissOverlay: {
     flex: 1,
   },
   sheetContainer: {
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 24,
     paddingBottom: 36,
     maxHeight: '90%',
   },
   scrollContent: {
-    paddingBottom: 28,
+    paddingBottom: 20,
   },
   headerRow: {
     flexDirection: 'row',
@@ -213,100 +218,102 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerSubtitle: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: '#86EFAC',
-    letterSpacing: 1.5,
+    fontSize: 10.5,
+    fontWeight: '700',
+    color: '#55D99A',
+    letterSpacing: 0.8,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#F4F7F3',
     marginTop: 2,
   },
   closeBtn: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#1E293B',
+    backgroundColor: '#102820',
+    borderWidth: 1,
+    borderColor: '#142F26',
     alignItems: 'center',
     justifyContent: 'center',
   },
   sectionLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#94A3B8',
-    marginBottom: 10,
+    color: '#9AAFA5',
+    marginBottom: 8,
   },
   chipRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+    justifyContent: 'space-between',
     marginBottom: 16,
+    gap: 8,
   },
   chipButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 12,
-    backgroundColor: '#1A2436',
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: KansyaDesign.radius.sm,
+    backgroundColor: '#102820',
     borderWidth: 1,
-    borderColor: '#26354D',
+    borderColor: '#142F26',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   chipButtonActive: {
-    backgroundColor: 'rgba(134, 239, 172, 0.15)',
-    borderColor: '#86EFAC',
+    backgroundColor: 'rgba(85, 217, 154, 0.16)',
+    borderColor: '#55D99A',
   },
   chipText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#94A3B8',
+    fontWeight: '700',
+    color: '#9AAFA5',
   },
   chipTextActive: {
-    color: '#86EFAC',
-    fontWeight: '700',
+    color: '#55D99A',
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#0E1624',
-    borderRadius: 14,
+    backgroundColor: '#102820',
+    borderRadius: KansyaDesign.radius.md,
     borderWidth: 1,
-    borderColor: '#1E293B',
-    paddingHorizontal: 16,
-    height: 50,
-    marginBottom: 12,
+    borderColor: '#142F26',
+    paddingHorizontal: 14,
+    marginBottom: 16,
   },
   pesoSign: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
-    color: '#86EFAC',
-    marginRight: 8,
+    color: '#55D99A',
+    marginRight: 6,
   },
   customTextInput: {
     flex: 1,
-    color: '#FFFFFF',
-    fontSize: 15,
+    height: 48,
+    color: '#F4F7F3',
+    fontSize: 14,
   },
   noteInputWrapper: {
-    backgroundColor: '#0E1624',
-    borderRadius: 14,
+    backgroundColor: '#102820',
+    borderRadius: KansyaDesign.radius.md,
     borderWidth: 1,
-    borderColor: '#1E293B',
-    paddingHorizontal: 16,
-    height: 48,
-    justifyContent: 'center',
+    borderColor: '#142F26',
+    paddingHorizontal: 14,
     marginBottom: 16,
   },
   noteInput: {
-    color: '#FFFFFF',
-    fontSize: 13,
+    height: 48,
+    color: '#F4F7F3',
+    fontSize: 13.5,
   },
   impactCard: {
-    backgroundColor: '#162234',
-    borderRadius: 14,
-    padding: 14,
+    backgroundColor: '#102820',
+    borderRadius: KansyaDesign.radius.md,
     borderWidth: 1,
-    borderColor: '#22324B',
+    borderColor: '#142F26',
+    padding: 14,
     marginBottom: 20,
     gap: 8,
   },
@@ -317,50 +324,44 @@ const styles = StyleSheet.create({
   },
   impactLabel: {
     fontSize: 12,
-    color: '#94A3B8',
+    color: '#9AAFA5',
   },
   impactVal: {
-    fontSize: 13,
-    color: '#F8FAFC',
+    fontSize: 12.5,
     fontWeight: '600',
+    color: '#F4F7F3',
   },
   completionBadge: {
-    marginTop: 4,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    backgroundColor: 'rgba(255, 184, 0, 0.15)',
-    borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: 6,
+    backgroundColor: 'rgba(235, 203, 114, 0.12)',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 6,
+    alignSelf: 'flex-start',
+    marginTop: 2,
   },
   completionText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#FFB800',
+    fontSize: 11,
+    color: '#EBCB72',
+    fontWeight: '600',
   },
   depositBtn: {
     flexDirection: 'row',
+    backgroundColor: '#55D99A',
+    borderRadius: KansyaDesign.radius.md,
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#86EFAC',
-    borderRadius: 16,
-    height: 52,
     gap: 8,
-    shadowColor: '#86EFAC',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 6,
   },
   depositBtnDisabled: {
-    backgroundColor: '#334155',
-    shadowOpacity: 0,
+    opacity: 0.45,
   },
   depositBtnText: {
     fontSize: 15,
-    fontWeight: '800',
-    color: '#0B111E',
+    fontWeight: '700',
+    color: '#07130F',
   },
 });

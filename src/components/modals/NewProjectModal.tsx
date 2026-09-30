@@ -7,13 +7,13 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
 } from 'react-native';
 import { X, Sparkles } from 'lucide-react-native';
 import { WishlistProject } from '../../types';
 import { useKansya } from '../../store/KansyaContext';
 import { formatPHP, getDailyExcessRate, calculatePace } from '../../utils/calculations';
+import { KansyaDesign } from '../../utils/theme';
 
 interface NewProjectModalProps {
   visible: boolean;
@@ -24,32 +24,30 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
   const { createProject, allowance } = useKansya();
   const [title, setTitle] = useState('');
   const [targetPriceStr, setTargetPriceStr] = useState('');
-  const category: WishlistProject['category'] = 'other';
-  const [useManualRate, setUseManualRate] = useState(false);
-  const [manualRateStr, setManualRateStr] = useState('');
+  const [targetDateStr, setTargetDateStr] = useState('');
+  const [initialSavedStr, setInitialSavedStr] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   React.useEffect(() => {
     if (!visible) {
       setTitle('');
       setTargetPriceStr('');
-      setManualRateStr('');
-      setUseManualRate(false);
+      setTargetDateStr('');
+      setInitialSavedStr('');
     }
   }, [visible]);
 
   const targetPrice = parseInt(targetPriceStr, 10) || 0;
-  const manualRate = parseInt(manualRateStr, 10) || 0;
+  const initialSaved = parseInt(initialSavedStr, 10) || 0;
   const autoDailyExcess = getDailyExcessRate(allowance);
-  const activeRate = useManualRate && manualRate > 0 ? manualRate : autoDailyExcess;
 
   const pace = calculatePace(
     {
       id: 'preview',
       title: title.trim() || 'New Goal',
       targetPrice,
-      currentAmount: 0,
-      category,
+      currentAmount: initialSaved,
+      category: 'gadget',
       createdAt: new Date().toISOString(),
     },
     allowance
@@ -62,8 +60,9 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
       await createProject(
         title.trim(),
         targetPrice,
-        category,
-        useManualRate && manualRate > 0 ? manualRate : undefined
+        'gadget',
+        undefined,
+        initialSaved > 0 ? initialSaved : undefined
       );
       onClose();
     } finally {
@@ -89,11 +88,11 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
           {/* Header */}
           <View style={styles.headerRow}>
             <View>
-              <Text style={styles.headerSubtitle}>NEW FINANCIAL GOAL</Text>
-              <Text style={styles.headerTitle}>Stake a Wishlist Goal</Text>
+              <Text style={styles.headerSubtitle}>NEW GOAL</Text>
+              <Text style={styles.headerTitle}>Create a Goal</Text>
             </View>
             <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-              <X size={18} color="#94A3B8" />
+              <X size={18} color="#9AAFA5" />
             </TouchableOpacity>
           </View>
 
@@ -102,48 +101,75 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={styles.scrollContent}
           >
-            {/* Goal Title */}
-            <Text style={styles.fieldLabel}>Item / Goal Name</Text>
+            {/* Step 1: What are you saving for? */}
+            <Text style={styles.fieldLabel}>What are you saving for?</Text>
             <View style={styles.inputWrapper}>
               <TextInput
                 style={styles.textInput}
-                placeholder="e.g. Mechanical Keyboard, Palworld..."
-                placeholderTextColor="#64748B"
+                placeholder="e.g. Gaming Laptop"
+                placeholderTextColor="#667A71"
                 value={title}
                 onChangeText={setTitle}
                 maxLength={45}
               />
             </View>
 
-            {/* Target Price */}
-            <Text style={styles.fieldLabel}>Target Price (PHP)</Text>
+            {/* Step 2: How much does it cost? */}
+            <Text style={styles.fieldLabel}>How much does it cost?</Text>
             <View style={styles.inputWrapper}>
               <Text style={styles.pesoSign}>₱</Text>
               <TextInput
                 style={styles.textInput}
-                placeholder="e.g. 2500"
-                placeholderTextColor="#64748B"
+                placeholder="e.g. 50000"
+                placeholderTextColor="#667A71"
                 keyboardType="numeric"
                 value={targetPriceStr}
                 onChangeText={(val) => setTargetPriceStr(val.replace(/[^0-9]/g, ''))}
               />
             </View>
 
-            {/* Pace Projection Card */}
+            {/* Step 3: When do you want it? (Optional) */}
+            <Text style={styles.fieldLabel}>When do you want it? (Optional)</Text>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="e.g. Dec 2026, Birthday, Next Summer"
+                placeholderTextColor="#667A71"
+                value={targetDateStr}
+                onChangeText={setTargetDateStr}
+                maxLength={40}
+              />
+            </View>
+
+            {/* Step 4: How much have you already saved? (Optional) */}
+            <Text style={styles.fieldLabel}>How much have you already saved? (Optional)</Text>
+            <View style={styles.inputWrapper}>
+              <Text style={styles.pesoSign}>₱</Text>
+              <TextInput
+                style={styles.textInput}
+                placeholder="e.g. 525 (leave empty if 0)"
+                placeholderTextColor="#667A71"
+                keyboardType="numeric"
+                value={initialSavedStr}
+                onChangeText={(val) => setInitialSavedStr(val.replace(/[^0-9]/g, ''))}
+              />
+            </View>
+
+            {/* Smart Pace Projection Card */}
             {targetPrice > 0 && (
               <View style={styles.previewBox}>
                 <View style={styles.previewHeader}>
-                  <Sparkles size={16} color="#86EFAC" />
-                  <Text style={styles.previewTitle}>Pace Forecast</Text>
+                  <Sparkles size={16} color="#55D99A" />
+                  <Text style={styles.previewTitle}>Smart pace</Text>
                 </View>
                 <Text style={styles.previewText}>
-                  At {formatPHP(activeRate)}/day daily excess, you'll reach this goal in{' '}
+                  Based on your current pace, you'll reach this in{' '}
                   <Text style={styles.highlightText}>
                     {pace.daysRemaining > 0 ? `${pace.daysRemaining} days` : 'today'}
                   </Text>
                   {pace.projectedDate ? (
                     <Text style={styles.dateSubtext}>
-                      {' '}(by {new Date(pace.projectedDate).toLocaleDateString()})
+                      {' '}(around {new Date(pace.projectedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })})
                     </Text>
                   ) : null}
                   .
@@ -151,7 +177,7 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
               </View>
             )}
 
-            {/* Create Button */}
+            {/* Step 5: Create Goal Button */}
             <TouchableOpacity
               style={[
                 styles.submitBtn,
@@ -161,7 +187,7 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
               disabled={!title.trim() || targetPrice <= 0 || isSubmitting}
             >
               <Text style={styles.submitBtnText}>
-                {isSubmitting ? 'Staking Goal...' : 'Launch Goal'}
+                {isSubmitting ? 'Creating Goal...' : 'Create goal'}
               </Text>
             </TouchableOpacity>
           </ScrollView>
@@ -174,18 +200,18 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
 const styles = StyleSheet.create({
   modalBackdrop: {
     flex: 1,
-    backgroundColor: 'rgba(5, 8, 15, 0.75)',
+    backgroundColor: 'rgba(7, 19, 15, 0.75)',
     justifyContent: 'flex-end',
   },
   dismissOverlay: {
     flex: 1,
   },
   sheetContainer: {
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 24,
     paddingBottom: 36,
     maxHeight: '90%',
@@ -200,60 +226,61 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerSubtitle: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: '#86EFAC',
-    letterSpacing: 1.5,
+    fontSize: 10.5,
+    fontWeight: '700',
+    color: '#55D99A',
+    letterSpacing: 0.8,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#F4F7F3',
     marginTop: 2,
   },
   closeBtn: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#1E293B',
+    backgroundColor: '#102820',
+    borderWidth: 1,
+    borderColor: '#142F26',
     alignItems: 'center',
     justifyContent: 'center',
   },
   fieldLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#94A3B8',
-    marginBottom: 6,
-    marginTop: 4,
+    color: '#9AAFA5',
+    marginBottom: 8,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#0E1624',
-    borderRadius: 14,
+    backgroundColor: '#102820',
+    borderRadius: KansyaDesign.radius.md,
     borderWidth: 1,
-    borderColor: '#1E293B',
-    paddingHorizontal: 16,
-    height: 50,
-    marginBottom: 14,
+    borderColor: '#142F26',
+    paddingHorizontal: 14,
+    marginBottom: 16,
   },
   pesoSign: {
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: '700',
-    color: '#86EFAC',
-    marginRight: 8,
+    color: '#55D99A',
+    marginRight: 6,
   },
   textInput: {
     flex: 1,
-    color: '#FFFFFF',
-    fontSize: 15,
+    height: 48,
+    color: '#F4F7F3',
+    fontSize: 14,
   },
   previewBox: {
-    backgroundColor: '#162234',
-    borderRadius: 14,
-    padding: 14,
+    backgroundColor: '#102820',
+    borderRadius: KansyaDesign.radius.md,
     borderWidth: 1,
-    borderColor: '#22324B',
+    borderColor: '#142F26',
+    padding: 14,
     marginBottom: 20,
   },
   previewHeader: {
@@ -265,42 +292,34 @@ const styles = StyleSheet.create({
   previewTitle: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#86EFAC',
-    letterSpacing: 0.5,
+    color: '#55D99A',
   },
   previewText: {
-    fontSize: 13,
-    color: '#CBD5E1',
-    lineHeight: 19,
+    fontSize: 12.5,
+    color: '#9AAFA5',
+    lineHeight: 18,
   },
   highlightText: {
-    color: '#86EFAC',
+    color: '#55D99A',
     fontWeight: '700',
   },
   dateSubtext: {
-    color: '#94A3B8',
-    fontSize: 12,
+    color: '#F4F7F3',
   },
   submitBtn: {
+    backgroundColor: '#55D99A',
+    borderRadius: KansyaDesign.radius.md,
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#86EFAC',
-    borderRadius: 16,
-    height: 52,
-    marginTop: 6,
-    shadowColor: '#86EFAC',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 6,
+    marginTop: 4,
   },
   submitBtnDisabled: {
-    backgroundColor: '#334155',
-    shadowOpacity: 0,
+    opacity: 0.45,
   },
   submitBtnText: {
     fontSize: 15,
-    fontWeight: '800',
-    color: '#0B111E',
+    fontWeight: '700',
+    color: '#07130F',
   },
 });

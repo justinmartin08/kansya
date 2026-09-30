@@ -7,13 +7,12 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
 } from 'react-native';
 import { X } from 'lucide-react-native';
 import { WishlistProject } from '../../types';
 import { useKansya } from '../../store/KansyaContext';
-import { formatPHP, getDailyExcessRate } from '../../utils/calculations';
+import { KansyaDesign } from '../../utils/theme';
 
 interface EditProjectModalProps {
   visible: boolean;
@@ -26,16 +25,10 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
   project,
   onClose,
 }) => {
-  const { updateProject, allowance } = useKansya();
+  const { updateProject } = useKansya();
   const [title, setTitle] = useState(project.title);
   const [targetPriceStr, setTargetPriceStr] = useState(project.targetPrice.toString());
   const [category, setCategory] = useState<WishlistProject['category']>(project.category);
-  const [useManualRate, setUseManualRate] = useState(
-    project.manualDailyAllocation !== undefined && project.manualDailyAllocation > 0
-  );
-  const [manualRateStr, setManualRateStr] = useState(
-    project.manualDailyAllocation ? project.manualDailyAllocation.toString() : ''
-  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -43,15 +36,10 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
       setTitle(project.title);
       setTargetPriceStr(project.targetPrice.toString());
       setCategory(project.category);
-      const hasManual =
-        project.manualDailyAllocation !== undefined && project.manualDailyAllocation > 0;
-      setUseManualRate(hasManual);
-      setManualRateStr(hasManual ? project.manualDailyAllocation!.toString() : '');
     }
   }, [visible, project]);
 
   const targetPrice = parseInt(targetPriceStr, 10) || 0;
-  const manualRate = parseInt(manualRateStr, 10) || 0;
 
   const handleSave = async () => {
     if (!title.trim() || targetPrice <= 0 || isSubmitting) return;
@@ -61,7 +49,6 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
         title: title.trim(),
         targetPrice,
         category,
-        manualDailyAllocation: useManualRate && manualRate > 0 ? manualRate : undefined,
       });
       onClose();
     } finally {
@@ -87,11 +74,11 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
           {/* Header */}
           <View style={styles.headerRow}>
             <View>
-              <Text style={styles.headerSubtitle}>EDIT FINANCIAL GOAL</Text>
+              <Text style={styles.headerSubtitle}>EDIT GOAL</Text>
               <Text style={styles.headerTitle}>Update Goal Settings</Text>
             </View>
             <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-              <X size={18} color="#94A3B8" />
+              <X size={18} color="#9AAFA5" />
             </TouchableOpacity>
           </View>
 
@@ -101,42 +88,42 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
             contentContainerStyle={styles.scrollContent}
           >
             {/* Goal Title */}
-            <Text style={styles.fieldLabel}>Item / Goal Name</Text>
+            <Text style={styles.fieldLabel}>Goal Name</Text>
             <View style={styles.inputWrapper}>
               <TextInput
                 style={styles.textInput}
+                placeholder="Item / Goal name"
+                placeholderTextColor="#667A71"
                 value={title}
                 onChangeText={setTitle}
                 maxLength={45}
-                placeholder="Item name"
-                placeholderTextColor="#64748B"
               />
             </View>
 
             {/* Target Price */}
-            <Text style={styles.fieldLabel}>Target Price (PHP)</Text>
+            <Text style={styles.fieldLabel}>Target Price (₱)</Text>
             <View style={styles.inputWrapper}>
               <Text style={styles.pesoSign}>₱</Text>
               <TextInput
                 style={styles.textInput}
+                placeholder="Target Price"
+                placeholderTextColor="#667A71"
                 keyboardType="numeric"
                 value={targetPriceStr}
                 onChangeText={(val) => setTargetPriceStr(val.replace(/[^0-9]/g, ''))}
-                placeholder="Target Price"
-                placeholderTextColor="#64748B"
               />
             </View>
 
             {/* Save Button */}
             <TouchableOpacity
               style={[
-                styles.saveBtn,
-                (!title.trim() || targetPrice <= 0 || isSubmitting) && styles.saveBtnDisabled,
+                styles.submitBtn,
+                (!title.trim() || targetPrice <= 0 || isSubmitting) && styles.submitBtnDisabled,
               ]}
               onPress={handleSave}
               disabled={!title.trim() || targetPrice <= 0 || isSubmitting}
             >
-              <Text style={styles.saveBtnText}>
+              <Text style={styles.submitBtnText}>
                 {isSubmitting ? 'Saving...' : 'Save Changes'}
               </Text>
             </TouchableOpacity>
@@ -150,24 +137,24 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
 const styles = StyleSheet.create({
   modalBackdrop: {
     flex: 1,
-    backgroundColor: 'rgba(5, 8, 15, 0.75)',
+    backgroundColor: 'rgba(7, 19, 15, 0.75)',
     justifyContent: 'flex-end',
   },
   dismissOverlay: {
     flex: 1,
   },
   sheetContainer: {
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 24,
     paddingBottom: 36,
     maxHeight: '90%',
   },
   scrollContent: {
-    paddingBottom: 28,
+    paddingBottom: 20,
   },
   headerRow: {
     flexDirection: 'row',
@@ -176,73 +163,69 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerSubtitle: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: '#86EFAC',
-    letterSpacing: 1.5,
+    fontSize: 10.5,
+    fontWeight: '700',
+    color: '#55D99A',
+    letterSpacing: 0.8,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#F4F7F3',
     marginTop: 2,
   },
   closeBtn: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#1E293B',
+    backgroundColor: '#102820',
+    borderWidth: 1,
+    borderColor: '#142F26',
     alignItems: 'center',
     justifyContent: 'center',
   },
   fieldLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#94A3B8',
-    marginBottom: 6,
-    marginTop: 4,
+    color: '#9AAFA5',
+    marginBottom: 8,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#0E1624',
-    borderRadius: 14,
+    backgroundColor: '#102820',
+    borderRadius: KansyaDesign.radius.md,
     borderWidth: 1,
-    borderColor: '#1E293B',
-    paddingHorizontal: 16,
-    height: 50,
-    marginBottom: 14,
+    borderColor: '#142F26',
+    paddingHorizontal: 14,
+    marginBottom: 16,
   },
   pesoSign: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
-    color: '#86EFAC',
-    marginRight: 8,
+    color: '#55D99A',
+    marginRight: 6,
   },
   textInput: {
     flex: 1,
-    color: '#FFFFFF',
-    fontSize: 15,
+    height: 48,
+    color: '#F4F7F3',
+    fontSize: 14,
   },
-  saveBtn: {
+  submitBtn: {
+    backgroundColor: '#55D99A',
+    borderRadius: KansyaDesign.radius.md,
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#86EFAC',
-    borderRadius: 16,
-    height: 52,
-    shadowColor: '#86EFAC',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 6,
+    marginTop: 10,
   },
-  saveBtnDisabled: {
-    backgroundColor: '#334155',
-    shadowOpacity: 0,
+  submitBtnDisabled: {
+    opacity: 0.45,
   },
-  saveBtnText: {
+  submitBtnText: {
     fontSize: 15,
-    fontWeight: '800',
-    color: '#0B111E',
+    fontWeight: '700',
+    color: '#07130F',
   },
 });

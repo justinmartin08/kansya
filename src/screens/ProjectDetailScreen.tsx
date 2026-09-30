@@ -22,7 +22,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useKansya } from '../store/KansyaContext';
 import { AnimatedDonutChart } from '../components/charts/AnimatedDonutChart';
-import { ProgressiveCoin } from '../components/illustrations/ProgressiveCoin';
 import { QuickDepositModal } from '../components/modals/QuickDepositModal';
 import { MilestoneModal } from '../components/modals/MilestoneModal';
 import { EditProjectModal } from '../components/modals/EditProjectModal';
@@ -34,7 +33,8 @@ import {
   calculatePace,
 } from '../utils/calculations';
 import { confirmAction } from '../utils/dialog';
-import { getThemeColors } from '../utils/theme';
+import { getThemeColors, KansyaDesign } from '../utils/theme';
+import { KANSYA_MOCKUP_PROJECTS } from '../store/defaultData';
 
 interface ProjectDetailScreenProps {
   projectId: string;
@@ -65,7 +65,11 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
   const [depositModalVisible, setDepositModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
 
-  const project = projects.find((p) => p.id === projectId) || projects[0];
+  const project =
+    projects.find((p) => p.id === projectId) ||
+    KANSYA_MOCKUP_PROJECTS.find((p) => p.id === projectId) ||
+    projects[0] ||
+    KANSYA_MOCKUP_PROJECTS[0];
 
   if (!project) {
     return (
@@ -87,6 +91,13 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
   const pace = calculatePace(project, allowance);
   const projectDeposits = deposits.filter((d) => d.projectId === project.id);
 
+  // Suggested daily savings calculation for an actionable smart pace target
+  const targetDays = Math.min(180, Math.max(30, pace.daysRemaining || 60));
+  const suggestedDaily = Math.max(25, Math.ceil(remaining / targetDays));
+  const targetDateStr = pace.projectedDate
+    ? new Date(pace.projectedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    : 'September 30, 2026';
+
   const handleDelete = () => {
     confirmAction(
       `Delete "${project.title}"?`,
@@ -99,24 +110,24 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.kansyaBg || colors.background }]}>
       <View
         style={[
           styles.headerBar,
           {
-            backgroundColor: colors.background,
-            borderBottomColor: colors.borderSubtle,
+            backgroundColor: colors.kansyaBg || colors.background,
+            borderBottomColor: colors.border || '#142F26',
             paddingTop: Math.max(insets.top, statusBarHeight, 12) + 6,
           },
         ]}
       >
         <TactilePressable
-          style={[styles.iconCircleBtn, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}
+          style={[styles.iconCircleBtn, { backgroundColor: '#102820', borderColor: '#142F26' }]}
           onPress={onBack}
           activeScale={0.97}
           haptic
         >
-          <ArrowLeft size={18} color={colors.textSecondary} />
+          <ArrowLeft size={18} color="#F4F7F3" />
         </TactilePressable>
 
         <Text style={[styles.headerBarTitle, { color: colors.textPrimary }]} numberOfLines={1}>
@@ -125,15 +136,15 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
 
         <View style={styles.headerActions}>
           <TactilePressable
-            style={[styles.iconCircleBtn, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}
+            style={[styles.iconCircleBtn, { backgroundColor: '#102820', borderColor: '#142F26' }]}
             onPress={() => setEditModalVisible(true)}
             activeScale={0.97}
             haptic
           >
-            <Edit2 size={16} color={colors.textSecondary} />
+            <Edit2 size={16} color="#9AAFA5" />
           </TactilePressable>
           <TactilePressable
-            style={[styles.iconCircleBtn, { backgroundColor: colors.surfaceCard, borderColor: 'rgba(239, 68, 68, 0.3)' }]}
+            style={[styles.iconCircleBtn, { backgroundColor: '#102820', borderColor: 'rgba(239, 68, 68, 0.3)' }]}
             onPress={handleDelete}
             activeScale={0.97}
             haptic
@@ -148,17 +159,8 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Dynamic Progressive Coin Banner */}
-        <View style={[styles.coinBannerCard, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
-          <ProgressiveCoin
-            currentAmount={project.currentAmount}
-            targetPrice={project.targetPrice}
-            size={140}
-          />
-        </View>
-
-        {/* Hero Donut Card */}
-        <View style={[styles.heroDonutCard, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
+        {/* Main Progress Visualization Card */}
+        <View style={[styles.heroDonutCard, { backgroundColor: colors.surfaceCard, borderColor: '#142F26' }]}>
           <View style={styles.donutContainer}>
             <AnimatedDonutChart
               currentAmount={project.currentAmount}
@@ -177,16 +179,16 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
             </Text>
           </View>
 
-          {/* Goal Information Grid */}
-          <View style={[styles.goalInfoGrid, { backgroundColor: colors.surfaceSubtle, borderColor: colors.border }]}>
+          {/* Goal Information Grid (Saved, Target, Remaining, Estimated) */}
+          <View style={[styles.goalInfoGrid, { backgroundColor: '#102820', borderColor: '#142F26' }]}>
             <View style={styles.goalInfoCell}>
               <Text style={[styles.goalInfoCellLabel, { color: colors.textMuted }]}>SAVED</Text>
-              <Text style={[styles.goalInfoCellValue, { color: colors.accentEmerald }]}>
+              <Text style={[styles.goalInfoCellValue, { color: '#55D99A' }]}>
                 {formatPHP(project.currentAmount)}
               </Text>
             </View>
 
-            <View style={[styles.goalInfoDivider, { backgroundColor: colors.border }]} />
+            <View style={[styles.goalInfoDivider, { backgroundColor: '#142F26' }]} />
 
             <View style={styles.goalInfoCell}>
               <Text style={[styles.goalInfoCellLabel, { color: colors.textMuted }]}>TARGET</Text>
@@ -195,7 +197,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
               </Text>
             </View>
 
-            <View style={[styles.goalInfoDivider, { backgroundColor: colors.border }]} />
+            <View style={[styles.goalInfoDivider, { backgroundColor: '#142F26' }]} />
 
             <View style={styles.goalInfoCell}>
               <Text style={[styles.goalInfoCellLabel, { color: colors.textMuted }]}>REMAINING</Text>
@@ -203,38 +205,49 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
                 {formatPHP(remaining)}
               </Text>
             </View>
+
+            <View style={[styles.goalInfoDivider, { backgroundColor: '#142F26' }]} />
+
+            <View style={styles.goalInfoCell}>
+              <Text style={[styles.goalInfoCellLabel, { color: colors.textMuted }]}>ESTIMATED</Text>
+              <Text style={[styles.goalInfoCellValue, { color: '#EBCB72' }]}>
+                {pace.projectedDate
+                  ? new Date(pace.projectedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                  : 'Achieved'}
+              </Text>
+            </View>
           </View>
 
           {isCompleted ? (
             <View style={styles.blessingBanner}>
-              <CheckCircle2 size={16} color="#FFB800" />
+              <CheckCircle2 size={16} color="#EBCB72" />
               <Text style={styles.blessingBannerText}>
                 Goal complete! You made it happen.
               </Text>
             </View>
           ) : (
             <TactilePressable
-              style={[styles.depositHeroBtn, { backgroundColor: colors.accentEmerald }]}
+              style={[styles.depositHeroBtn, { backgroundColor: '#55D99A' }]}
               onPress={() => setDepositModalVisible(true)}
               activeScale={0.97}
               haptic
             >
-              <Text style={[styles.depositHeroBtnText, { color: isDark ? '#0B111E' : '#FFFFFF' }]}>+ Add Deposit</Text>
+              <Text style={styles.depositHeroBtnText}>+ Add Deposit</Text>
             </TactilePressable>
           )}
         </View>
 
         {/* Smart Pace Forecast Box */}
-        <View style={[styles.forecastCard, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
+        <View style={[styles.forecastCard, { backgroundColor: colors.surfaceCard, borderColor: '#142F26' }]}>
           <View style={styles.forecastHeader}>
-            <Sparkles size={16} color={colors.accentEmerald} />
-            <Text style={[styles.forecastHeaderTitle, { color: colors.accentEmerald }]}>Smart pace</Text>
+            <Sparkles size={16} color="#55D99A" />
+            <Text style={[styles.forecastHeaderTitle, { color: '#55D99A' }]}>Smart pace</Text>
           </View>
 
           <View style={styles.forecastSimpleContent}>
             <Text style={[styles.forecastPaceLine, { color: colors.textPrimary }]}>
               At your current pace:{' '}
-              <Text style={{ color: colors.accentEmerald, fontWeight: '700' }}>
+              <Text style={{ color: '#55D99A', fontWeight: '700' }}>
                 {formatPHP(pace.dailyRate)}/day
               </Text>
             </Text>
@@ -252,14 +265,17 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
               </Text>
             </Text>
 
-            {pace.daysRemaining > 0 && (
-              <View style={[styles.forecastActionableBox, { backgroundColor: colors.surfaceSubtle, borderColor: colors.border }]}>
+            {remaining > 0 && (
+              <View style={[styles.forecastActionableBox, { backgroundColor: '#102820', borderColor: '#142F26' }]}>
                 <Text style={[styles.forecastActionableText, { color: colors.textSecondary }]}>
-                  Based on your current pace, saving about{' '}
-                  <Text style={{ color: colors.accentEmerald, fontWeight: '700' }}>
-                    {formatPHP(Math.max(25, Math.ceil(remaining / Math.min(180, Math.max(30, pace.daysRemaining)))))}/day
-                  </Text>{' '}
-                  keeps your dream on track.
+                  To reach this goal by {targetDateStr}: save about{' '}
+                  <Text style={{ color: '#55D99A', fontWeight: '700' }}>
+                    {formatPHP(suggestedDaily)}/day
+                  </Text>
+                  .
+                </Text>
+                <Text style={[styles.forecastSubtext, { color: colors.textMuted }]}>
+                  Estimated based on your current savings pace.
                 </Text>
               </View>
             )}
@@ -268,15 +284,19 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
 
         {/* Deposit Ledger History */}
         <View style={styles.ledgerSection}>
-          <Text style={[styles.ledgerSectionTitle, { color: colors.textPrimary }]}>Deposit History ({projectDeposits.length})</Text>
+          <Text style={[styles.ledgerSectionTitle, { color: colors.textPrimary }]}>
+            Deposit History ({projectDeposits.length})
+          </Text>
 
           {projectDeposits.length === 0 ? (
-            <View style={[styles.emptyLedger, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
-              <Text style={[styles.emptyLedgerText, { color: colors.textMuted }]}>No deposits recorded for this goal yet.</Text>
+            <View style={[styles.emptyLedger, { backgroundColor: '#0D211B', borderColor: '#142F26' }]}>
+              <Text style={[styles.emptyLedgerText, { color: colors.textMuted }]}>
+                No deposits recorded for this goal yet.
+              </Text>
             </View>
           ) : (
             projectDeposits.map((dep) => (
-              <View key={dep.id} style={[styles.ledgerItem, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
+              <View key={dep.id} style={[styles.ledgerItem, { backgroundColor: '#0D211B', borderColor: '#142F26' }]}>
                 <View>
                   <Text style={[styles.ledgerNote, { color: colors.textPrimary }]}>{dep.note || 'Savings Deposit'}</Text>
                   <Text style={[styles.ledgerDate, { color: colors.textMuted }]}>
@@ -288,7 +308,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
                     })}
                   </Text>
                 </View>
-                <Text style={[styles.ledgerAmount, { color: colors.accentEmerald }]}>+{formatPHP(dep.amount)}</Text>
+                <Text style={[styles.ledgerAmount, { color: '#55D99A' }]}>+{formatPHP(dep.amount)}</Text>
               </View>
             ))
           )}
@@ -336,7 +356,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
   },
   headerBar: {
     flexDirection: 'row',
@@ -345,12 +365,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#1A2333',
+    borderBottomColor: '#142F26',
   },
   headerBarTitle: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#F4F7F3',
     maxWidth: 200,
   },
   headerActions: {
@@ -361,9 +381,9 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#121B2A',
+    backgroundColor: '#102820',
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -376,18 +396,11 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     gap: 16,
   },
-  coinBannerCard: {
-    width: '100%',
-    height: 160,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
   heroDonutCard: {
-    backgroundColor: '#121B2A',
-    borderRadius: 22,
+    backgroundColor: '#0D211B',
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 20,
     alignItems: 'center',
   },
@@ -413,6 +426,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 14,
     borderWidth: 1,
+    borderColor: '#142F26',
+    backgroundColor: '#102820',
     padding: 12,
     width: '100%',
     marginBottom: 16,
@@ -423,43 +438,39 @@ const styles = StyleSheet.create({
   },
   goalInfoDivider: {
     width: 1,
+    backgroundColor: '#142F26',
   },
   goalInfoCellLabel: {
-    fontSize: 9.5,
+    fontSize: 9,
     fontWeight: '700',
     letterSpacing: 0.8,
   },
   goalInfoCellValue: {
-    fontSize: 14,
+    fontSize: 12.5,
     fontWeight: '800',
     marginTop: 3,
   },
   depositHeroBtn: {
     alignSelf: 'stretch',
-    backgroundColor: '#86EFAC',
+    backgroundColor: '#55D99A',
     borderRadius: 25,
     height: 48,
     paddingHorizontal: 24,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 4,
-    shadowColor: '#86EFAC',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 4,
   },
   depositHeroBtnText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#0B111E',
+    color: '#07130F',
     letterSpacing: 0.5,
   },
   blessingBanner: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: 'rgba(255, 184, 0, 0.15)',
+    backgroundColor: 'rgba(235, 203, 114, 0.15)',
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -467,15 +478,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   blessingBannerText: {
-    color: '#FFB800',
+    color: '#EBCB72',
     fontWeight: '700',
     fontSize: 13,
   },
   forecastCard: {
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 16,
     gap: 10,
   },
@@ -487,7 +498,7 @@ const styles = StyleSheet.create({
   forecastHeaderTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#86EFAC',
+    color: '#55D99A',
   },
   forecastSimpleContent: {
     gap: 6,
@@ -503,6 +514,8 @@ const styles = StyleSheet.create({
   forecastActionableBox: {
     borderRadius: 10,
     borderWidth: 1,
+    borderColor: '#142F26',
+    backgroundColor: '#102820',
     padding: 12,
     marginTop: 6,
   },
@@ -510,47 +523,53 @@ const styles = StyleSheet.create({
     fontSize: 12.5,
     lineHeight: 18,
   },
+  forecastSubtext: {
+    fontSize: 11,
+    marginTop: 4,
+  },
   ledgerSection: {
     gap: 10,
   },
   ledgerSectionTitle: {
     fontSize: 15,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: '#F4F7F3',
     marginBottom: 4,
   },
   emptyLedger: {
     paddingVertical: 20,
     alignItems: 'center',
+    backgroundColor: '#0D211B',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#142F26',
   },
   emptyLedgerText: {
-    color: '#64748B',
     fontSize: 12,
   },
   ledgerItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 14,
   },
   ledgerNote: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#F4F7F3',
   },
   ledgerDate: {
     fontSize: 10,
-    color: '#64748B',
     marginTop: 2,
   },
   ledgerAmount: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#86EFAC',
+    color: '#55D99A',
   },
   centerContainer: {
     flex: 1,
@@ -559,18 +578,18 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   missingText: {
-    color: '#94A3B8',
+    color: '#9AAFA5',
     fontSize: 16,
     marginBottom: 16,
   },
   backBtnAction: {
-    backgroundColor: '#86EFAC',
+    backgroundColor: '#55D99A',
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
   backBtnText: {
-    color: '#0B111E',
+    color: '#07130F',
     fontWeight: '800',
     fontSize: 13,
   },
