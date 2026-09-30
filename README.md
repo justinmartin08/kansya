@@ -4,14 +4,19 @@
 [![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20Web%20%7C%20iOS-blue.svg)](https://reactnative.dev)
 [![Framework](https://img.shields.io/badge/Framework-Expo%20%2F%20React%20Native-000000.svg)](https://expo.dev)
 [![Offline](https://img.shields.io/badge/Database-100%25%20Offline%20AsyncStorage-10B981.svg)](#-offline-first-architecture)
-[![Build](https://img.shields.io/badge/Release-APK%20v1.0.0-success.svg)](#-standalone-android-apk)
+[![Build](https://img.shields.io/badge/Release-APK%20v1.1.0-success.svg)](#-standalone-android-apk)
 
 > **Sleek Modern Savings Engine & Wishlist Tracker for Students & Dreamers**  
-> *Turn your daily school baon into real-world wishlist goals with glowing circular progress rings, smart pace forecasting, and collaborative squad goals.*
+> *Turn your daily school baon into real-world wishlist goals with glowing circular progress rings, smart pace forecasting, collaborative squad goals, and calm 3D mascot companions.*
 
 ---
 
 ## 📸 Key Features
+
+### 🐷 0. Calm Kansya Mobile Design System & 3D Piggy Mascot
+- **3D Piggy Bank Mascot**: Soothing 3D porcelain emerald piggy companion welcoming you on the dashboard and cheering on wishlist milestones.
+- **Calm Forest Color Palette**: Modern, gentle emerald and obsidian hues with high accessibility contrast ratios.
+- **Interactive Mockup Suite**: Rich visual assets in `assets/mockups/` showcasing light/dark modes and mobile chassis.
 
 ### 🌗 1. Dynamic Light & Dark Theme Engine
 - **Instant Header Toggle**: Tap the **Sun / Moon** icon in the top header row for an instant, fluid 200ms ease-out switch.
@@ -65,13 +70,14 @@ Kansya is built from the ground up as a **100% offline-first application**:
 ## 📱 Standalone Android APK
 
 You can directly download and install the pre-compiled Android release APK on your phone:
-- **Direct Download**: [**Download kansya-v1.0.0.apk (74.2 MB)**](https://github.com/justinmartin08/kansya/releases/download/v1.0.0/kansya-v1.0.0.apk)
-- **Official GitHub Release**: [Kansya v1.0.0 Release Page](https://github.com/justinmartin08/kansya/releases/tag/v1.0.0)
-- **Architecture**: Hermes Bytecode, ARM64 / x86_64, Android 7.0+ (API 24+)
+- **Direct Download (Latest v1.1.0)**: [**Download kansya-v1.1.0.apk (77.4 MB)**](https://github.com/justinmartin08/kansya/releases/download/v1.1.0/kansya-v1.1.0.apk)
+- **Official GitHub Release**: [Kansya v1.1.0 Release Page](https://github.com/justinmartin08/kansya/releases/tag/v1.1.0)
+- **Architecture**: Hermes Bytecode, ARM64 / ARMv7 / x86 / x86_64, Android 7.0+ (API 24+)
 - **Install via ADB**:
   ```bash
-  adb install -r kansya-v1.0.0.apk
+  adb install -r kansya-v1.1.0.apk
   ```
+- *Legacy v1.0.0 APK*: Also available at [kansya-v1.0.0.apk](https://github.com/justinmartin08/kansya/releases/download/v1.0.0/kansya-v1.0.0.apk).
 
 ---
 
