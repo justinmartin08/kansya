@@ -64,8 +64,9 @@ Kansya is built from the ground up as a **100% offline-first application**:
 
 ## 📱 Standalone Android APK
 
-You can directly install the pre-compiled Android release APK:
-- **Location**: `kansya-v1.0.0.apk`
+You can directly download and install the pre-compiled Android release APK on your phone:
+- **Direct Download**: [**Download kansya-v1.0.0.apk (74.2 MB)**](https://github.com/justinmartin08/kansya/releases/download/v1.0.0/kansya-v1.0.0.apk)
+- **Official GitHub Release**: [Kansya v1.0.0 Release Page](https://github.com/justinmartin08/kansya/releases/tag/v1.0.0)
 - **Architecture**: Hermes Bytecode, ARM64 / x86_64, Android 7.0+ (API 24+)
 - **Install via ADB**:
   ```bash
