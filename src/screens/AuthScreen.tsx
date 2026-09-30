@@ -369,7 +369,7 @@ export const AuthScreen: React.FC = () => {
                   ? 'Create Kansya Account'
                   : 'Sign In to Kansya'}
               </Text>
-              <ArrowRight size={18} color="#0B111E" strokeWidth={2.5} />
+              <ArrowRight size={18} color="#07130F" strokeWidth={2.5} />
             </TactilePressable>
           </View>
 
@@ -389,7 +389,7 @@ export const AuthScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
   },
   keyboardContainer: {
     flex: 1,
@@ -562,7 +562,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   submitBtnText: {
-    color: '#0B111E',
+    color: '#07130F',
     fontSize: 15,
     fontWeight: '800',
   },

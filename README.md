@@ -20,7 +20,7 @@
 
 ### 🌗 1. Dynamic Light & Dark Theme Engine
 - **Instant Header Toggle**: Tap the **Sun / Moon** icon in the top header row for an instant, fluid 200ms ease-out switch.
-- **Dark Mode (Obsidian Navy)**: Deep obsidian navy (`#0B111E`), slate cards (`#1E293B`), neon emerald accents, and an evening sunset mountain greeting.
+- **Dark Mode (Calm Forest Green)**: Deep calm forest green (`#07130F`), forest surfaces (`#0D211B`), vibrant emerald accents, and an evening sunset mountain greeting.
 - **Light Mode (Crisp Porcelain)**: Crisp porcelain background (`#F8FAFC`), pure white cards (`#FFFFFF`), high-contrast slate typography (`#0F172A`), and a morning sunrise mountain greeting with golden rays.
 - **100% Theme Consistency**: Every card surface, text label, and progress donut adapts seamlessly to prevent washed-out text.
 

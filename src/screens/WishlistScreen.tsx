@@ -163,9 +163,9 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={onBack ? onBack : () => {}}
-            style={[styles.headerCircleBtn, { backgroundColor: '#102820', borderColor: '#142F26' }]}
+            style={[styles.headerCircleBtn, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}
           >
-            <ArrowLeft size={18} color="#F4F7F3" />
+            <ArrowLeft size={18} color={colors.textPrimary} />
           </TouchableOpacity>
 
           <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
@@ -175,9 +175,9 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => setAddModalVisible(true)}
-            style={[styles.headerCircleBtn, { backgroundColor: '#102820', borderColor: '#142F26' }]}
+            style={[styles.headerCircleBtn, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}
           >
-            <Plus size={18} color="#55D99A" strokeWidth={2.4} />
+            <Plus size={18} color={colors.accentEmerald} strokeWidth={2.4} />
           </TouchableOpacity>
         </View>
 
@@ -195,19 +195,20 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
         {/* 3. SEGMENTED FILTER PILLS (All | Goal | Wishlist) */}
         {/* ================================================================ */}
         <View style={styles.segmentedContainer}>
-          <View style={styles.segmentedBar}>
+          <View style={[styles.segmentedBar, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
             <TouchableOpacity
               activeOpacity={0.85}
               onPress={() => setActiveFilter('all')}
               style={[
                 styles.segmentTab,
-                activeFilter === 'all' && styles.segmentTabActive,
+                activeFilter === 'all' && [styles.segmentTabActive, { backgroundColor: colors.accentEmerald }],
               ]}
             >
               <Text
                 style={[
                   styles.segmentText,
-                  activeFilter === 'all' && styles.segmentTextActive,
+                  { color: colors.textSecondary },
+                  activeFilter === 'all' && [styles.segmentTextActive, { color: isDark ? '#07130F' : '#FFFFFF' }],
                 ]}
               >
                 All
@@ -219,13 +220,14 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
               onPress={() => setActiveFilter('goal')}
               style={[
                 styles.segmentTab,
-                activeFilter === 'goal' && styles.segmentTabActive,
+                activeFilter === 'goal' && [styles.segmentTabActive, { backgroundColor: colors.accentEmerald }],
               ]}
             >
               <Text
                 style={[
                   styles.segmentText,
-                  activeFilter === 'goal' && styles.segmentTextActive,
+                  { color: colors.textSecondary },
+                  activeFilter === 'goal' && [styles.segmentTextActive, { color: isDark ? '#07130F' : '#FFFFFF' }],
                 ]}
               >
                 Goal
@@ -237,13 +239,14 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
               onPress={() => setActiveFilter('wishlist')}
               style={[
                 styles.segmentTab,
-                activeFilter === 'wishlist' && styles.segmentTabActive,
+                activeFilter === 'wishlist' && [styles.segmentTabActive, { backgroundColor: colors.accentEmerald }],
               ]}
             >
               <Text
                 style={[
                   styles.segmentText,
-                  activeFilter === 'wishlist' && styles.segmentTextActive,
+                  { color: colors.textSecondary },
+                  activeFilter === 'wishlist' && [styles.segmentTextActive, { color: isDark ? '#07130F' : '#FFFFFF' }],
                 ]}
               >
                 Wishlist
@@ -280,11 +283,11 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
                   }}
                   style={[
                     styles.itemCard,
-                    { backgroundColor: '#0D211B', borderColor: '#142F26' },
+                    { backgroundColor: colors.surfaceCard, borderColor: colors.border },
                   ]}
                 >
                   {/* Thumbnail */}
-                  <View style={styles.itemThumbWrapper}>
+                  <View style={[styles.itemThumbWrapper, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
                     <Image source={imgSource} style={styles.itemThumb} />
                   </View>
 
@@ -306,7 +309,7 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
                           style={styles.moreBtn}
                           accessibilityLabel="More actions"
                         >
-                          <MoreVertical size={16} color="#667A71" />
+                          <MoreVertical size={16} color={colors.textMuted} />
                         </TouchableOpacity>
                       </View>
                     </View>
@@ -321,10 +324,10 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
                         <KProgressBar
                           progress={clampedPercent}
                           height={4}
-                          color={isInProgress ? '#55D99A' : '#142F26'}
+                          color={isInProgress ? colors.accentEmerald : (isDark ? '#142F26' : '#E2E8F0')}
                         />
                       </View>
-                      <Text style={[styles.itemPercentText, { color: isInProgress ? '#55D99A' : '#667A71' }]}>
+                      <Text style={[styles.itemPercentText, { color: isInProgress ? colors.accentEmerald : colors.textMuted }]}>
                         {clampedPercent}%
                       </Text>
                     </View>
@@ -366,14 +369,14 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
             onPress={() => setAddModalVisible(false)}
           />
 
-          <View style={styles.sheetContent}>
+          <View style={[styles.sheetContent, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
             <View style={styles.sheetHeader}>
-              <Text style={styles.sheetTitle}>Add to Wishlist</Text>
+              <Text style={[styles.sheetTitle, { color: colors.textPrimary }]}>Add to Wishlist</Text>
               <TouchableOpacity
                 onPress={() => setAddModalVisible(false)}
-                style={styles.sheetCloseBtn}
+                style={[styles.sheetCloseBtn, { backgroundColor: colors.surfaceCardSecondary }]}
               >
-                <X size={18} color="#9AAFA5" />
+                <X size={18} color={colors.textSecondary} />
               </TouchableOpacity>
             </View>
 
@@ -382,20 +385,20 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
               keyboardShouldPersistTaps="handled"
               contentContainerStyle={styles.sheetBody}
             >
-              <Text style={styles.fieldLabel}>What are you dreaming of?</Text>
+              <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>What are you dreaming of?</Text>
               <TextInput
-                style={styles.inputField}
+                style={[styles.inputField, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder, color: colors.textPrimary }]}
                 placeholder="e.g. Noise-Cancelling Headphones"
-                placeholderTextColor="#667A71"
+                placeholderTextColor={colors.textMuted}
                 value={newItemTitle}
                 onChangeText={setNewItemTitle}
               />
 
-              <Text style={styles.fieldLabel}>Estimated Price (₱)</Text>
+              <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Estimated Price (₱)</Text>
               <TextInput
-                style={styles.inputField}
+                style={[styles.inputField, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder, color: colors.textPrimary }]}
                 placeholder="e.g. 5000"
-                placeholderTextColor="#667A71"
+                placeholderTextColor={colors.textMuted}
                 keyboardType="numeric"
                 value={newItemPrice}
                 onChangeText={setNewItemPrice}
@@ -407,10 +410,11 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
                 disabled={!newItemTitle.trim() || !newItemPrice.trim() || isSubmitting}
                 style={[
                   styles.createItemBtn,
+                  { backgroundColor: colors.accentEmerald },
                   (!newItemTitle.trim() || !newItemPrice.trim() || isSubmitting) && styles.createItemBtnDisabled,
                 ]}
               >
-                <Text style={styles.createItemBtnText}>
+                <Text style={[styles.createItemBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>
                   {isSubmitting ? 'Adding...' : 'Add to Wishlist'}
                 </Text>
               </TouchableOpacity>
@@ -440,14 +444,14 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
               onPress={() => setEditItem(null)}
             />
 
-            <View style={styles.sheetContent}>
+            <View style={[styles.sheetContent, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
               <View style={styles.sheetHeader}>
-                <Text style={styles.sheetTitle}>Edit Wishlist Item</Text>
+                <Text style={[styles.sheetTitle, { color: colors.textPrimary }]}>Edit Wishlist Item</Text>
                 <TouchableOpacity
                   onPress={() => setEditItem(null)}
-                  style={styles.sheetCloseBtn}
+                  style={[styles.sheetCloseBtn, { backgroundColor: colors.surfaceCardSecondary }]}
                 >
-                  <X size={18} color="#9AAFA5" />
+                  <X size={18} color={colors.textSecondary} />
                 </TouchableOpacity>
               </View>
 
@@ -456,20 +460,20 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={styles.sheetBody}
               >
-                <Text style={styles.fieldLabel}>Item Name</Text>
+                <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Item Name</Text>
                 <TextInput
-                  style={styles.inputField}
+                  style={[styles.inputField, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder, color: colors.textPrimary }]}
                   placeholder="e.g. Gaming Laptop"
-                  placeholderTextColor="#667A71"
+                  placeholderTextColor={colors.textMuted}
                   value={editTitle}
                   onChangeText={setEditTitle}
                 />
 
-                <Text style={styles.fieldLabel}>Target Price (₱)</Text>
+                <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Target Price (₱)</Text>
                 <TextInput
-                  style={styles.inputField}
+                  style={[styles.inputField, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder, color: colors.textPrimary }]}
                   placeholder="e.g. 50000"
-                  placeholderTextColor="#667A71"
+                  placeholderTextColor={colors.textMuted}
                   keyboardType="numeric"
                   value={editPrice}
                   onChangeText={setEditPrice}
@@ -481,10 +485,11 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
                   disabled={!editTitle.trim() || !editPrice.trim()}
                   style={[
                     styles.createItemBtn,
+                    { backgroundColor: colors.accentEmerald },
                     (!editTitle.trim() || !editPrice.trim()) && styles.createItemBtnDisabled,
                   ]}
                 >
-                  <Text style={styles.createItemBtnText}>Save Changes</Text>
+                  <Text style={[styles.createItemBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>Save Changes</Text>
                 </TouchableOpacity>
               </ScrollView>
             </View>
@@ -508,11 +513,11 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
             activeOpacity={1}
             onPress={() => setActionItem(null)}
           >
-            <View style={styles.actionSheetContainer}>
-              <Text style={styles.actionSheetTitle} numberOfLines={1}>
+            <View style={[styles.actionSheetContainer, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
+              <Text style={[styles.actionSheetTitle, { color: colors.textPrimary }]} numberOfLines={1}>
                 {actionItem.title}
               </Text>
-              <Text style={styles.actionSheetPrice}>
+              <Text style={[styles.actionSheetPrice, { color: colors.textSecondary }]}>
                 Target: {formatPHP(actionItem.targetPrice)}
               </Text>
 
@@ -523,50 +528,50 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
                   setDepositItem(actionItem);
                   setActionItem(null);
                 }}
-                style={styles.actionSheetRow}
+                style={[styles.actionSheetRow, { borderTopColor: colors.border }]}
               >
-                <Plus size={18} color="#55D99A" />
-                <Text style={styles.actionSheetRowText}>Add Savings</Text>
+                <Plus size={18} color={colors.accentEmerald} />
+                <Text style={[styles.actionSheetRowText, { color: colors.textPrimary }]}>Add Savings</Text>
               </TouchableOpacity>
 
               {/* Action 2: Convert to Active Goal */}
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => handleConvertToGoal(actionItem)}
-                style={styles.actionSheetRow}
+                style={[styles.actionSheetRow, { borderTopColor: colors.border }]}
               >
-                <ArrowUpRight size={18} color="#9FC7A9" />
-                <Text style={styles.actionSheetRowText}>Focus as Active Goal</Text>
+                <ArrowUpRight size={18} color={colors.accentEmerald} />
+                <Text style={[styles.actionSheetRowText, { color: colors.textPrimary }]}>Focus as Active Goal</Text>
               </TouchableOpacity>
 
               {/* Action 3: Edit Item */}
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => handleOpenEdit(actionItem)}
-                style={styles.actionSheetRow}
+                style={[styles.actionSheetRow, { borderTopColor: colors.border }]}
               >
-                <Edit2 size={18} color="#55D99A" />
-                <Text style={styles.actionSheetRowText}>Edit Item</Text>
+                <Edit2 size={18} color={colors.accentEmerald} />
+                <Text style={[styles.actionSheetRowText, { color: colors.textPrimary }]}>Edit Item</Text>
               </TouchableOpacity>
 
               {/* Action 4: Mark as Purchased */}
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => handleMarkPurchased(actionItem)}
-                style={styles.actionSheetRow}
+                style={[styles.actionSheetRow, { borderTopColor: colors.border }]}
               >
                 <CheckCircle2 size={18} color="#EBCB72" />
-                <Text style={styles.actionSheetRowText}>Mark as Purchased</Text>
+                <Text style={[styles.actionSheetRowText, { color: colors.textPrimary }]}>Mark as Purchased</Text>
               </TouchableOpacity>
 
               {/* Action 5: Archive / Unarchive */}
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => handleArchiveItem(actionItem)}
-                style={styles.actionSheetRow}
+                style={[styles.actionSheetRow, { borderTopColor: colors.border }]}
               >
-                <Archive size={18} color="#9AAFA5" />
-                <Text style={styles.actionSheetRowText}>
+                <Archive size={18} color={colors.textSecondary} />
+                <Text style={[styles.actionSheetRowText, { color: colors.textPrimary }]}>
                   {actionItem.completedAt ? 'Restore from Archive' : 'Archive Item'}
                 </Text>
               </TouchableOpacity>
@@ -575,7 +580,7 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => handleDeleteItem(actionItem)}
-                style={[styles.actionSheetRow, styles.actionSheetRowDanger]}
+                style={[styles.actionSheetRow, styles.actionSheetRowDanger, { borderTopColor: 'rgba(239, 68, 68, 0.25)' }]}
               >
                 <Trash2 size={18} color="#EF4444" />
                 <Text style={[styles.actionSheetRowText, { color: '#EF4444' }]}>

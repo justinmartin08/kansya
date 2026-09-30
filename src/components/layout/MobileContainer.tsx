@@ -45,7 +45,7 @@ export const MobileContainer: React.FC<MobileContainerProps> = ({ children }) =>
 const styles = StyleSheet.create({
   nativeContainer: {
     flex: 1,
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
   },
   webBackdrop: {
     flex: 1,
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     width: 390,
     height: '100%',
     maxHeight: 844,
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
     borderRadius: 44,
     borderWidth: 4,
     borderColor: '#1E293B',
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   statusBar: {
     height: 44,
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -106,13 +106,13 @@ const styles = StyleSheet.create({
   },
   phoneContent: {
     flex: 1,
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
     position: 'relative',
     overflow: 'hidden',
   },
   homeIndicatorContainer: {
     height: 20,
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
     alignItems: 'center',
     justifyContent: 'center',
   },

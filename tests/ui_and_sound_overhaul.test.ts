@@ -54,8 +54,8 @@ const dockContent = fs.readFileSync(
 assert(dockContent.includes('width: 44'), 'BottomNavDock must define 44x44 badge width');
 assert(dockContent.includes('height: 44'), 'BottomNavDock must define 44x44 badge height');
 assert(dockContent.includes('borderRadius: 22'), 'BottomNavDock must define borderRadius: 22 for circular badge (not square/box)');
-assert(dockContent.includes("backgroundColor: '#10B981'"), 'BottomNavDock must use vibrant emerald badge');
-assert(dockContent.includes("color={isActive ? '#0B111E' : '#64748B'}"), 'BottomNavDock must tint active icon dark obsidian');
+assert(dockContent.includes("backgroundColor: '#55D99A'"), 'BottomNavDock must use vibrant primary green badge');
+assert(dockContent.includes("color={isActive ? '#07130F' : '#64748B'}"), 'BottomNavDock must tint active icon dark green #07130F');
 assert(!dockContent.includes('borderRadius: 12'), 'BottomNavDock must NOT use boxy borderRadius: 12');
 assert(!dockContent.includes('<View style={styles.activeDot}'), 'BottomNavDock must NOT render duplicate indicator dot in JSX');
 assert(dockContent.includes('insets.bottom'), 'BottomNavDock must apply insets.bottom padding for Android gesture navigation');

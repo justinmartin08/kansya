@@ -37,7 +37,7 @@ export interface ThemeColors {
 export const darkThemeColors: ThemeColors = {
   mode: 'dark',
   isDark: true,
-  background: '#0B111E',
+  background: '#07130F',
   surfaceCard: '#0D211B',
   surfaceCardSecondary: '#102820',
   surfaceSubtle: '#07130F',

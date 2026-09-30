@@ -101,7 +101,7 @@ export const ProgressiveCoin: React.FC<ProgressiveCoinProps> = ({
           <RadialGradient id={dullFaceId} cx="42%" cy="38%" r="65%">
             <Stop offset="0%" stopColor="#1E293B" />
             <Stop offset="65%" stopColor="#111827" />
-            <Stop offset="100%" stopColor="#0B111E" />
+            <Stop offset="100%" stopColor="#07130F" />
           </RadialGradient>
           <LinearGradient id={dullSymbolId} x1="0%" y1="0%" x2="0%" y2="100%">
             <Stop offset="0%" stopColor="#94A3B8" />

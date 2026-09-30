@@ -323,7 +323,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) 
                         </Text>
                         {isSelected && (
                           <View style={styles.avatarCheckmarkPill}>
-                            <Check size={10} color="#0B111E" strokeWidth={3} />
+                            <Check size={10} color="#07130F" strokeWidth={3} />
                           </View>
                         )}
                       </TouchableOpacity>
@@ -885,7 +885,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   actionBtnText: {
-    color: '#0B111E',
+    color: '#07130F',
     fontSize: 14,
     fontWeight: '800',
   },

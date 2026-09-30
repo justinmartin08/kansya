@@ -118,7 +118,7 @@ export const KProgressBar: React.FC<KProgressBarProps> = ({
   height = 5,
   style,
 }) => {
-  const normalized = progress > 1 ? Math.min(100, Math.max(0, progress)) : Math.min(100, Math.max(0, progress * 100));
+  const normalized = Math.min(100, Math.max(0, progress));
   const pctStr: DimensionValue = `${normalized}%`;
 
   return (

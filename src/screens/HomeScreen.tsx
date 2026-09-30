@@ -245,7 +245,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <View
             style={[
               styles.heroAtmosphereCard,
-              { backgroundColor: '#0D211B', borderColor: '#142F26' },
+              { backgroundColor: colors.surfaceCard, borderColor: colors.border },
             ]}
           >
             {/* Sparkline integration for test & financial overview */}
@@ -289,9 +289,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </View>
 
               {/* Today Badge */}
-              <View style={styles.todayPillBadge}>
-                <ArrowUpRight size={12} color="#55D99A" strokeWidth={2.5} />
-                <Text style={styles.todayPillText}>
+              <View style={[styles.todayPillBadge, { backgroundColor: isDark ? 'rgba(85, 217, 154, 0.12)' : 'rgba(5, 150, 105, 0.12)' }]}>
+                <ArrowUpRight size={12} color={colors.accentEmerald} strokeWidth={2.5} />
+                <Text style={[styles.todayPillText, { color: colors.accentEmerald }]}>
                   {formatPHP(displayTodaySavings)} today
                 </Text>
               </View>
@@ -302,15 +302,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => onOpenProjectDetail(activeGoal.id)}
-                style={styles.currentGoalSubCard}
+                style={[
+                  styles.currentGoalSubCard,
+                  {
+                    backgroundColor: isDark ? 'rgba(7, 19, 15, 0.72)' : colors.surfaceCardSecondary,
+                    borderColor: isDark ? 'rgba(20, 47, 38, 0.8)' : colors.border,
+                  },
+                ]}
               >
                 <View style={styles.currentGoalHeader}>
-                  <View style={styles.currentGoalDot} />
-                  <Text style={styles.currentGoalLabel}>Current Goal</Text>
+                  <View style={[styles.currentGoalDot, { backgroundColor: colors.accentEmerald }]} />
+                  <Text style={[styles.currentGoalLabel, { color: isDark ? '#9FC7A9' : colors.textSecondary }]}>Current Goal</Text>
                 </View>
 
                 <View style={styles.currentGoalBody}>
-                  <View style={styles.currentGoalIconBox}>
+                  <View style={[styles.currentGoalIconBox, { backgroundColor: isDark ? '#102820' : colors.surfaceCard, borderColor: colors.border }]}>
                     <Image
                       source={getProjectImage(activeGoal.imageKey, activeGoal.category)}
                       style={styles.currentGoalThumbnail}
@@ -334,10 +340,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                         <KProgressBar
                           progress={activeProg.clampedPercent}
                           height={4}
-                          color="#55D99A"
+                          color={colors.accentEmerald}
                         />
                       </View>
-                      <Text style={styles.currentGoalPercentText}>
+                      <Text style={[styles.currentGoalPercentText, { color: colors.accentEmerald }]}>
                         {activeProg.clampedPercent}%
                       </Text>
                     </View>
@@ -364,8 +370,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             }}
             style={styles.quickActionItem}
           >
-            <View style={[styles.quickActionCircle, { backgroundColor: '#102820', borderColor: '#142F26' }]}>
-              <Sparkles size={20} color="#55D99A" strokeWidth={2.4} />
+            <View style={[styles.quickActionCircle, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
+              <Sparkles size={20} color={colors.accentEmerald} strokeWidth={2.4} />
             </View>
             <Text style={[styles.quickActionLabel, { color: colors.textPrimary }]}>
               Add Savings
@@ -378,8 +384,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             onPress={() => setNewProjectModalVisible(true)}
             style={styles.quickActionItem}
           >
-            <View style={[styles.quickActionCircle, { backgroundColor: '#102820', borderColor: '#142F26' }]}>
-              <Target size={20} color="#55D99A" strokeWidth={2.4} />
+            <View style={[styles.quickActionCircle, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
+              <Target size={20} color={colors.accentEmerald} strokeWidth={2.4} />
             </View>
             <Text style={[styles.quickActionLabel, { color: colors.textPrimary }]}>
               New Goal
@@ -392,8 +398,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             onPress={() => (onNavigateTab ? onNavigateTab('savings') : null)}
             style={styles.quickActionItem}
           >
-            <View style={[styles.quickActionCircle, { backgroundColor: '#102820', borderColor: '#142F26' }]}>
-              <Bookmark size={20} color="#55D99A" strokeWidth={2.4} />
+            <View style={[styles.quickActionCircle, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
+              <Bookmark size={20} color={colors.accentEmerald} strokeWidth={2.4} />
             </View>
             <Text style={[styles.quickActionLabel, { color: colors.textPrimary }]}>
               Wishlist
@@ -406,8 +412,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             onPress={() => setHistoryModalVisible(true)}
             style={styles.quickActionItem}
           >
-            <View style={[styles.quickActionCircle, { backgroundColor: '#102820', borderColor: '#142F26' }]}>
-              <Clock size={20} color="#55D99A" strokeWidth={2.4} />
+            <View style={[styles.quickActionCircle, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
+              <Clock size={20} color={colors.accentEmerald} strokeWidth={2.4} />
             </View>
             <Text style={[styles.quickActionLabel, { color: colors.textPrimary }]}>
               History
@@ -450,10 +456,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   onPress={() => onOpenProjectDetail(item.id)}
                   style={[
                     styles.goalRowCard,
-                    { backgroundColor: '#0D211B', borderColor: '#142F26' },
+                    { backgroundColor: colors.surfaceCard, borderColor: colors.border },
                   ]}
                 >
-                  <View style={styles.goalRowThumbContainer}>
+                  <View style={[styles.goalRowThumbContainer, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
                     <Image source={imgSource} style={styles.goalRowThumb} />
                   </View>
 
@@ -474,10 +480,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                         <KProgressBar
                           progress={clampedPercent}
                           height={4}
-                          color="#55D99A"
+                          color={colors.accentEmerald}
                         />
                       </View>
-                      <Text style={styles.goalRowPercent}>
+                      <Text style={[styles.goalRowPercent, { color: colors.accentEmerald }]}>
                         {clampedPercent}%
                       </Text>
                     </View>
@@ -513,7 +519,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               onPress={() => setHistoryModalVisible(true)}
               style={styles.viewAllAction}
             >
-              <Text style={styles.viewAllActionText}>View all</Text>
+              <Text style={[styles.viewAllActionText, { color: colors.accentEmerald }]}>View all</Text>
             </TouchableOpacity>
           </View>
 
@@ -523,11 +529,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 key={act.id}
                 style={[
                   styles.activityRow,
-                  { backgroundColor: '#0D211B', borderColor: '#142F26' },
+                  { backgroundColor: colors.surfaceCard, borderColor: colors.border },
                 ]}
               >
-                <View style={styles.activityIconCircle}>
-                  <ArrowDownLeft size={16} color="#55D99A" strokeWidth={2.4} />
+                <View style={[styles.activityIconCircle, { backgroundColor: isDark ? 'rgba(85, 217, 154, 0.12)' : 'rgba(5, 150, 105, 0.12)' }]}>
+                  <ArrowDownLeft size={16} color={colors.accentEmerald} strokeWidth={2.4} />
                 </View>
 
                 <View style={styles.activityDetailsCol}>
@@ -539,7 +545,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   </Text>
                 </View>
 
-                <Text style={styles.activityAmountPositive}>
+                <Text style={[styles.activityAmountPositive, { color: colors.accentEmerald }]}>
                   +{formatPHP(act.amount)}
                 </Text>
               </View>
@@ -648,9 +654,7 @@ const styles = StyleSheet.create({
   headerMascotAvatar: {
     width: 38,
     height: 38,
-    borderRadius: 19,
-    borderWidth: 1.5,
-    borderColor: 'rgba(85, 217, 154, 0.3)',
+    resizeMode: 'contain',
   },
   brandTextCol: {
     justifyContent: 'center',

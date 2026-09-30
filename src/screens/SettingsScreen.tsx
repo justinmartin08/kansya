@@ -69,13 +69,13 @@ export const SettingsScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+    <View style={[styles.safeArea, { backgroundColor: colors.background }]}>
       <ScrollView
         style={[styles.container, { backgroundColor: colors.background }]}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingTop: Math.max(insets.top, statusBarHeight, 12) + 6 },
+          { paddingTop: Math.max(insets.top, statusBarHeight, 16) + 12 },
         ]}
       >
         {/* Header */}
@@ -235,7 +235,7 @@ export const SettingsScreen: React.FC = () => {
           haptic
         >
           <View style={styles.settingLeft}>
-            <View style={[styles.iconCircle, { backgroundColor: isCloudSyncActive ? 'rgba(56, 189, 248, 0.15)' : (isDark ? '#162234' : '#F1F5F9') }]}>
+            <View style={[styles.iconCircle, { backgroundColor: isCloudSyncActive ? 'rgba(56, 189, 248, 0.15)' : (isDark ? '#102820' : '#F1F5F9') }]}>
               <Cloud size={18} color={isCloudSyncActive ? '#38BDF8' : colors.textMuted} />
             </View>
             <View>
@@ -312,14 +312,14 @@ export const SettingsScreen: React.FC = () => {
         visible={supabaseModalVisible}
         onClose={() => setSupabaseModalVisible(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
   },
   container: {
     flex: 1,
@@ -355,10 +355,10 @@ const styles = StyleSheet.create({
   profileCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 16,
     gap: 14,
     marginBottom: 6,
@@ -393,10 +393,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 14,
     marginBottom: 8,
   },

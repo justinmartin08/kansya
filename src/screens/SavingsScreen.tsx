@@ -142,7 +142,7 @@ export const SavingsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
   },
   container: {
     flex: 1,

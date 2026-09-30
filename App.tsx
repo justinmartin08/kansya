@@ -132,11 +132,11 @@ export default function App() {
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
   },
   contentArea: {
     flex: 1,
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
   },
   screenTransitionContainer: {
     flex: 1,

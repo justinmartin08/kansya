@@ -364,6 +364,6 @@ const styles = StyleSheet.create({
   saveBtnText: {
     fontSize: 15,
     fontWeight: '800',
-    color: '#0B111E',
+    color: '#07130F',
   },
 });

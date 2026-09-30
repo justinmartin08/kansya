@@ -217,7 +217,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                 activeScale={0.97}
                 haptic
               >
-                <Plus size={15} color="#0B111E" strokeWidth={3} />
+                <Plus size={15} color="#07130F" strokeWidth={3} />
                 <Text style={styles.addBtnText}>New Goal</Text>
               </TactilePressable>
             </View>
@@ -234,7 +234,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                       styles.filterChip,
                       {
                         backgroundColor: isSelected
-                          ? (isDark ? '#1E293B' : '#E2E8F0')
+                          ? (isDark ? '#142F26' : '#E2E8F0')
                           : colors.surfaceCard,
                         borderColor: isSelected ? colors.accentEmerald : colors.border,
                       },
@@ -270,7 +270,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.listContent}>
               {filteredProjects.length === 0 ? (
                 <View style={[styles.emptyContainer, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
-                  <View style={[styles.emptyIconBox, { backgroundColor: isDark ? '#162234' : colors.surfaceSubtle, borderColor: colors.border }]}>
+                  <View style={[styles.emptyIconBox, { backgroundColor: isDark ? '#102820' : colors.surfaceSubtle, borderColor: colors.border }]}>
                     <Sparkles size={28} color={colors.accentEmerald} />
                   </View>
                   <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No Wishlist Goals Yet</Text>
@@ -286,7 +286,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                       activeScale={0.97}
                       haptic
                     >
-                      <Text style={[styles.emptyActionBtnText, { color: isDark ? '#0B111E' : '#FFFFFF' }]}>+ Add First Goal</Text>
+                      <Text style={[styles.emptyActionBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>+ Add First Goal</Text>
                     </TactilePressable>
                   )}
                 </View>
@@ -430,7 +430,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                   activeScale={0.97}
                   haptic
                 >
-                  <Plus size={15} color="#0B111E" strokeWidth={3} />
+                  <Plus size={15} color="#07130F" strokeWidth={3} />
                   <Text style={styles.addBtnText}>New Goal</Text>
                 </TactilePressable>
               </View>
@@ -459,11 +459,11 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                           style={styles.acceptBtn}
                           onPress={() => respondToInvite(goal.id, true)}
                         >
-                          <Check size={14} color="#0B111E" strokeWidth={3} />
+                          <Check size={14} color="#07130F" strokeWidth={3} />
                           <Text style={styles.acceptBtnText}>Accept</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                          style={[styles.declineBtn, { backgroundColor: isDark ? '#1E293B' : '#E2E8F0' }]}
+                          style={[styles.declineBtn, { backgroundColor: isDark ? '#142F26' : '#E2E8F0' }]}
                           onPress={() => respondToInvite(goal.id, false)}
                         >
                           <Text style={[styles.declineBtnText, { color: colors.textSecondary }]}>Decline</Text>
@@ -477,7 +477,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
               {/* Collab Goals List */}
               {collabGoals.length === 0 ? (
                 <View style={[styles.emptyContainer, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
-                  <View style={[styles.emptyIconBox, { backgroundColor: isDark ? '#162234' : colors.surfaceSubtle, borderColor: colors.border }]}>
+                  <View style={[styles.emptyIconBox, { backgroundColor: isDark ? '#102820' : colors.surfaceSubtle, borderColor: colors.border }]}>
                     <Users size={32} color={colors.accentEmerald} />
                   </View>
                   <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No Squad Goals Yet</Text>
@@ -490,7 +490,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                     activeScale={0.97}
                     haptic
                   >
-                    <Text style={[styles.emptyActionBtnText, { color: isDark ? '#0B111E' : '#FFFFFF' }]}>+ Create Squad Goal</Text>
+                    <Text style={[styles.emptyActionBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>+ Create Squad Goal</Text>
                   </TactilePressable>
                 </View>
               ) : (
@@ -509,7 +509,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                             Created by @{goal.createdBy} · {goal.members.length} Squad {goal.members.length === 1 ? 'Member' : 'Members'}
                           </Text>
                           {goal.inviteCode ? (
-                            <View style={[styles.squadCodePill, { backgroundColor: isDark ? '#162234' : '#F1F5F9', borderColor: colors.border }]}>
+                            <View style={[styles.squadCodePill, { backgroundColor: isDark ? '#102820' : '#F1F5F9', borderColor: colors.border }]}>
                               <KeyRound size={11} color={colors.accentEmerald} />
                               <Text style={[styles.squadCodeLabel, { color: colors.textSecondary }]}>SQUAD CODE: </Text>
                               <Text style={[styles.squadCodeValue, { color: colors.accentEmerald }]}>{goal.inviteCode}</Text>
@@ -518,7 +518,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                         </View>
                         <View style={styles.collabActionsRow}>
                           <TouchableOpacity
-                            style={[styles.inviteMiniBtn, { backgroundColor: isDark ? '#162234' : '#F1F5F9', borderColor: isDark ? '#22324B' : '#CBD5E1' }]}
+                            style={[styles.inviteMiniBtn, { backgroundColor: isDark ? '#102820' : '#F1F5F9', borderColor: isDark ? '#142F26' : '#CBD5E1' }]}
                             onPress={() => setInviteModalGoalId(goal.id)}
                           >
                             <UserPlus size={14} color={colors.accentEmerald} />
@@ -529,7 +529,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                             style={[styles.collabDepositActionBtn, { backgroundColor: colors.accentEmerald }]}
                             onPress={() => setCollabDepositGoal(goal)}
                           >
-                            <Text style={[styles.collabDepositActionBtnText, { color: isDark ? '#0B111E' : '#FFFFFF' }]}>+ Deposit</Text>
+                            <Text style={[styles.collabDepositActionBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>+ Deposit</Text>
                           </TouchableOpacity>
                         </View>
                       </View>
@@ -723,7 +723,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                 style={[styles.modalPrimaryBtn, { backgroundColor: colors.accentEmerald }]}
                 onPress={handleCreateCollabGoal}
               >
-                <Text style={[styles.modalPrimaryBtnText, { color: isDark ? '#0B111E' : '#FFFFFF' }]}>Launch Squad Goal</Text>
+                <Text style={[styles.modalPrimaryBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>Launch Squad Goal</Text>
               </TouchableOpacity>
             </ScrollView>
           </View>
@@ -814,8 +814,8 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                 style={[styles.modalPrimaryBtn, { backgroundColor: colors.accentEmerald }]}
                 onPress={handleSendInvite}
               >
-                <Send size={16} color={isDark ? '#0B111E' : '#FFFFFF'} />
-                <Text style={[styles.modalPrimaryBtnText, { color: isDark ? '#0B111E' : '#FFFFFF' }]}>Send Invitation</Text>
+                <Send size={16} color={isDark ? '#07130F' : '#FFFFFF'} />
+                <Text style={[styles.modalPrimaryBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>Send Invitation</Text>
               </TouchableOpacity>
             </ScrollView>
           </View>
@@ -928,7 +928,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                 style={[styles.modalPrimaryBtn, { backgroundColor: colors.accentEmerald }]}
                 onPress={handleConfirmCollabDeposit}
               >
-                <Text style={[styles.modalPrimaryBtnText, { color: isDark ? '#0B111E' : '#FFFFFF' }]}>
+                <Text style={[styles.modalPrimaryBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>
                   Confirm Contribution ({formatPHP(parseInt(collabDepositAmountStr, 10) || 0)})
                 </Text>
               </TouchableOpacity>
@@ -943,7 +943,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
   },
   container: {
     flex: 1,
@@ -1027,7 +1027,7 @@ const styles = StyleSheet.create({
   inviteBadgeText: {
     fontSize: 10,
     fontWeight: '900',
-    color: '#0B111E',
+    color: '#07130F',
   },
   header: {
     flexDirection: 'row',
@@ -1059,7 +1059,7 @@ const styles = StyleSheet.create({
   addBtnText: {
     fontSize: 12,
     fontWeight: '800',
-    color: '#0B111E',
+    color: '#07130F',
   },
   filterRow: {
     flexDirection: 'row',
@@ -1135,7 +1135,7 @@ const styles = StyleSheet.create({
   emptyActionBtnText: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#0B111E',
+    color: '#07130F',
   },
   goalCard: {
     backgroundColor: '#121B2A',
@@ -1193,7 +1193,7 @@ const styles = StyleSheet.create({
   depositBtnText: {
     fontSize: 12,
     fontWeight: '800',
-    color: '#0B111E',
+    color: '#07130F',
   },
   amountBreakdownRow: {
     flexDirection: 'row',
@@ -1312,7 +1312,7 @@ const styles = StyleSheet.create({
   acceptBtnText: {
     fontSize: 12,
     fontWeight: '800',
-    color: '#0B111E',
+    color: '#07130F',
   },
   declineBtn: {
     backgroundColor: '#1E293B',
@@ -1423,7 +1423,7 @@ const styles = StyleSheet.create({
   collabDepositActionBtnText: {
     fontSize: 12,
     fontWeight: '800',
-    color: '#0B111E',
+    color: '#07130F',
   },
   collabAmountsRow: {
     flexDirection: 'row',
@@ -1647,7 +1647,7 @@ const styles = StyleSheet.create({
   modalPrimaryBtnText: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#0B111E',
+    color: '#07130F',
   },
   errorBanner: {
     backgroundColor: 'rgba(239, 68, 68, 0.15)',

@@ -151,11 +151,11 @@ export const JoinSquadModal: React.FC<JoinSquadModalProps> = ({
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color="#0B111E" />
+                <ActivityIndicator color="#07130F" />
               ) : (
                 <>
-                  <Users size={16} color={isDark ? '#0B111E' : '#FFFFFF'} />
-                  <Text style={[styles.modalPrimaryBtnText, { color: isDark ? '#0B111E' : '#FFFFFF' }]}>Join Squad</Text>
+                  <Users size={16} color={isDark ? '#07130F' : '#FFFFFF'} />
+                  <Text style={[styles.modalPrimaryBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>Join Squad</Text>
                 </>
               )}
             </TouchableOpacity>

@@ -31,7 +31,7 @@ export const MountainSunset: React.FC<MountainSunsetProps> = ({
           <LinearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
             <Stop offset="0%" stopColor={isLight ? '#BAE6FD' : '#111B2C'} />
             <Stop offset="50%" stopColor={isLight ? '#FEF08A' : '#1E2A44'} />
-            <Stop offset="100%" stopColor={isLight ? '#F0FDF4' : '#0B111E'} />
+            <Stop offset="100%" stopColor={isLight ? '#F0FDF4' : '#07130F'} />
           </LinearGradient>
 
           {/* Warm Glowing Golden Sun/Moon Orb */}
@@ -63,7 +63,7 @@ export const MountainSunset: React.FC<MountainSunsetProps> = ({
           {/* Mountain Gradient Fore */}
           <LinearGradient id="mountFore" x1="0%" y1="0%" x2="0%" y2="100%">
             <Stop offset="0%" stopColor={isLight ? '#059669' : '#0F172A'} />
-            <Stop offset="100%" stopColor={isLight ? '#064E3B' : '#0B111E'} />
+            <Stop offset="100%" stopColor={isLight ? '#064E3B' : '#07130F'} />
           </LinearGradient>
         </Defs>
 

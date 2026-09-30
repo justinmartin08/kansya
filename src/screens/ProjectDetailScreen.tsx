@@ -122,12 +122,12 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
         ]}
       >
         <TactilePressable
-          style={[styles.iconCircleBtn, { backgroundColor: '#102820', borderColor: '#142F26' }]}
+          style={[styles.iconCircleBtn, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}
           onPress={onBack}
           activeScale={0.97}
           haptic
         >
-          <ArrowLeft size={18} color="#F4F7F3" />
+          <ArrowLeft size={18} color={colors.textPrimary} />
         </TactilePressable>
 
         <Text style={[styles.headerBarTitle, { color: colors.textPrimary }]} numberOfLines={1}>
@@ -136,15 +136,15 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
 
         <View style={styles.headerActions}>
           <TactilePressable
-            style={[styles.iconCircleBtn, { backgroundColor: '#102820', borderColor: '#142F26' }]}
+            style={[styles.iconCircleBtn, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}
             onPress={() => setEditModalVisible(true)}
             activeScale={0.97}
             haptic
           >
-            <Edit2 size={16} color="#9AAFA5" />
+            <Edit2 size={16} color={colors.textSecondary} />
           </TactilePressable>
           <TactilePressable
-            style={[styles.iconCircleBtn, { backgroundColor: '#102820', borderColor: 'rgba(239, 68, 68, 0.3)' }]}
+            style={[styles.iconCircleBtn, { backgroundColor: colors.surfaceCardSecondary, borderColor: 'rgba(239, 68, 68, 0.3)' }]}
             onPress={handleDelete}
             activeScale={0.97}
             haptic
@@ -160,7 +160,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
         contentContainerStyle={styles.scrollContent}
       >
         {/* Main Progress Visualization Card */}
-        <View style={[styles.heroDonutCard, { backgroundColor: colors.surfaceCard, borderColor: '#142F26' }]}>
+        <View style={[styles.heroDonutCard, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
           <View style={styles.donutContainer}>
             <AnimatedDonutChart
               currentAmount={project.currentAmount}
@@ -180,15 +180,15 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
           </View>
 
           {/* Goal Information Grid (Saved, Target, Remaining, Estimated) */}
-          <View style={[styles.goalInfoGrid, { backgroundColor: '#102820', borderColor: '#142F26' }]}>
+          <View style={[styles.goalInfoGrid, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
             <View style={styles.goalInfoCell}>
               <Text style={[styles.goalInfoCellLabel, { color: colors.textMuted }]}>SAVED</Text>
-              <Text style={[styles.goalInfoCellValue, { color: '#55D99A' }]}>
+              <Text style={[styles.goalInfoCellValue, { color: colors.accentEmerald }]}>
                 {formatPHP(project.currentAmount)}
               </Text>
             </View>
 
-            <View style={[styles.goalInfoDivider, { backgroundColor: '#142F26' }]} />
+            <View style={[styles.goalInfoDivider, { backgroundColor: colors.border }]} />
 
             <View style={styles.goalInfoCell}>
               <Text style={[styles.goalInfoCellLabel, { color: colors.textMuted }]}>TARGET</Text>
@@ -197,7 +197,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
               </Text>
             </View>
 
-            <View style={[styles.goalInfoDivider, { backgroundColor: '#142F26' }]} />
+            <View style={[styles.goalInfoDivider, { backgroundColor: colors.border }]} />
 
             <View style={styles.goalInfoCell}>
               <Text style={[styles.goalInfoCellLabel, { color: colors.textMuted }]}>REMAINING</Text>
@@ -206,7 +206,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
               </Text>
             </View>
 
-            <View style={[styles.goalInfoDivider, { backgroundColor: '#142F26' }]} />
+            <View style={[styles.goalInfoDivider, { backgroundColor: colors.border }]} />
 
             <View style={styles.goalInfoCell}>
               <Text style={[styles.goalInfoCellLabel, { color: colors.textMuted }]}>ESTIMATED</Text>
@@ -227,7 +227,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
             </View>
           ) : (
             <TactilePressable
-              style={[styles.depositHeroBtn, { backgroundColor: '#55D99A' }]}
+              style={[styles.depositHeroBtn, { backgroundColor: colors.accentEmerald }]}
               onPress={() => setDepositModalVisible(true)}
               activeScale={0.97}
               haptic
@@ -238,16 +238,16 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
         </View>
 
         {/* Smart Pace Forecast Box */}
-        <View style={[styles.forecastCard, { backgroundColor: colors.surfaceCard, borderColor: '#142F26' }]}>
+        <View style={[styles.forecastCard, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
           <View style={styles.forecastHeader}>
-            <Sparkles size={16} color="#55D99A" />
-            <Text style={[styles.forecastHeaderTitle, { color: '#55D99A' }]}>Smart pace</Text>
+            <Sparkles size={16} color={colors.accentEmerald} />
+            <Text style={[styles.forecastHeaderTitle, { color: colors.accentEmerald }]}>Smart pace</Text>
           </View>
 
           <View style={styles.forecastSimpleContent}>
             <Text style={[styles.forecastPaceLine, { color: colors.textPrimary }]}>
               At your current pace:{' '}
-              <Text style={{ color: '#55D99A', fontWeight: '700' }}>
+              <Text style={{ color: colors.accentEmerald, fontWeight: '700' }}>
                 {formatPHP(pace.dailyRate)}/day
               </Text>
             </Text>
@@ -266,10 +266,10 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
             </Text>
 
             {remaining > 0 && (
-              <View style={[styles.forecastActionableBox, { backgroundColor: '#102820', borderColor: '#142F26' }]}>
+              <View style={[styles.forecastActionableBox, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
                 <Text style={[styles.forecastActionableText, { color: colors.textSecondary }]}>
                   To reach this goal by {targetDateStr}: save about{' '}
-                  <Text style={{ color: '#55D99A', fontWeight: '700' }}>
+                  <Text style={{ color: colors.accentEmerald, fontWeight: '700' }}>
                     {formatPHP(suggestedDaily)}/day
                   </Text>
                   .
@@ -289,14 +289,14 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
           </Text>
 
           {projectDeposits.length === 0 ? (
-            <View style={[styles.emptyLedger, { backgroundColor: '#0D211B', borderColor: '#142F26' }]}>
+            <View style={[styles.emptyLedger, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
               <Text style={[styles.emptyLedgerText, { color: colors.textMuted }]}>
                 No deposits recorded for this goal yet.
               </Text>
             </View>
           ) : (
             projectDeposits.map((dep) => (
-              <View key={dep.id} style={[styles.ledgerItem, { backgroundColor: '#0D211B', borderColor: '#142F26' }]}>
+              <View key={dep.id} style={[styles.ledgerItem, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
                 <View>
                   <Text style={[styles.ledgerNote, { color: colors.textPrimary }]}>{dep.note || 'Savings Deposit'}</Text>
                   <Text style={[styles.ledgerDate, { color: colors.textMuted }]}>
@@ -308,7 +308,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
                     })}
                   </Text>
                 </View>
-                <Text style={[styles.ledgerAmount, { color: '#55D99A' }]}>+{formatPHP(dep.amount)}</Text>
+                <Text style={[styles.ledgerAmount, { color: colors.accentEmerald }]}>+{formatPHP(dep.amount)}</Text>
               </View>
             ))
           )}

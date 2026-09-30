@@ -74,7 +74,7 @@ console.log('✓ Top navigation reorganization verified: [Theme Toggle] [Trophie
 console.log('2. Testing Light & Dark Theme Engine...');
 
 // Theme Color Palettes
-assert(darkThemeColors.background === '#0B111E', 'Dark mode must use obsidian navy #0B111E');
+assert(darkThemeColors.background === '#07130F', 'Dark mode must use calm forest green #07130F');
 assert(lightThemeColors.background === '#F8FAFC', 'Light mode must use porcelain #F8FAFC');
 assert(lightThemeColors.surfaceCard === '#FFFFFF', 'Light mode must use white cards #FFFFFF');
 assert(lightThemeColors.textPrimary === '#0F172A', 'Light mode must use deep slate text #0F172A');

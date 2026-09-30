@@ -241,10 +241,10 @@ export const SupabaseConfigModal: React.FC<SupabaseConfigModalProps> = ({ visibl
               disabled={testing}
             >
               {testing ? (
-                <ActivityIndicator color="#0B111E" />
+                <ActivityIndicator color="#07130F" />
               ) : (
                 <>
-                  <Check size={18} color="#0B111E" strokeWidth={3} />
+                  <Check size={18} color="#07130F" strokeWidth={3} />
                   <Text style={styles.saveBtnText}>
                     {isEnabled ? 'Test Connection & Save' : 'Save Offline Settings'}
                   </Text>
@@ -403,6 +403,6 @@ const styles = StyleSheet.create({
   saveBtnText: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#0B111E',
+    color: '#07130F',
   },
 });

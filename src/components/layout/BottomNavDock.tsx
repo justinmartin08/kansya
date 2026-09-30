@@ -64,8 +64,8 @@ export const BottomNavDock: React.FC<BottomNavDockProps> = ({
         styles.dockWrapper,
         {
           paddingBottom: Math.max(insets.bottom, 6),
-          backgroundColor: isDark ? '#0B111E' : '#FFFFFF',
-          borderTopColor: isDark ? '#1A2333' : '#E2E8F0',
+          backgroundColor: isDark ? '#07130F' : '#FFFFFF',
+          borderTopColor: isDark ? '#142F26' : '#E2E8F0',
         },
       ]}
     >
@@ -99,13 +99,13 @@ export const BottomNavDock: React.FC<BottomNavDockProps> = ({
                 >
                   <IconComp
                     size={20}
-                    color={isActive ? '#0B111E' : '#64748B'}
+                    color={isActive ? '#07130F' : '#64748B'}
                     strokeWidth={isActive ? 2.5 : 2}
                   />
                 </View>
 
                 {/* Tab Label */}
-                <Text style={[styles.tabLabel, isActive && styles.activeTabLabel]}>
+                <Text style={[styles.tabLabel, isActive && styles.activeTabLabel, isActive && { color: isDark ? '#55D99A' : '#059669' }]}>
                   {tab.label}
                 </Text>
               </Animated.View>
@@ -122,9 +122,9 @@ export { BottomNavDock as BottomDock };
 
 const styles = StyleSheet.create({
   dockWrapper: {
-    backgroundColor: '#0B111E',
+    backgroundColor: '#07130F',
     borderTopWidth: 1,
-    borderTopColor: '#1A2333',
+    borderTopColor: '#142F26',
     paddingBottom: 6,
     paddingTop: 6,
   },
@@ -154,12 +154,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   activeIconWrapper: {
-    backgroundColor: '#10B981',
+    backgroundColor: '#55D99A',
     width: 44,
     height: 44,
     borderRadius: 22,
     borderWidth: 0,
-    shadowColor: '#10B981',
+    shadowColor: '#55D99A',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.35,
     shadowRadius: 6,
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   activeTabLabel: {
-    color: '#10B981',
+    color: '#55D99A',
     fontWeight: '700',
   },
 });
