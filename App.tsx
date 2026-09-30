@@ -7,7 +7,6 @@ import { MobileContainer } from './src/components/layout/MobileContainer';
 import { BottomNavDock, TabKey } from './src/components/layout/BottomNavDock';
 import { HomeScreen } from './src/screens/HomeScreen';
 import { GoalsScreen } from './src/screens/GoalsScreen';
-import { SavingsScreen } from './src/screens/SavingsScreen';
 import { SettingsScreen } from './src/screens/SettingsScreen';
 import { ProjectDetailScreen } from './src/screens/ProjectDetailScreen';
 import { AuthScreen } from './src/screens/AuthScreen';

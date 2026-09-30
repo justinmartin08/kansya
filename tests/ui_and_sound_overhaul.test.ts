@@ -28,6 +28,8 @@ const screens = [
   'SavingsScreen.tsx',
   'SettingsScreen.tsx',
   'ProjectDetailScreen.tsx',
+  'WishlistScreen.tsx',
+  'AuthScreen.tsx',
 ];
 
 for (const scr of screens) {

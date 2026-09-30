@@ -124,7 +124,7 @@ The output APK will be located at `android/app/build/outputs/apk/release/app-rel
 
 ## 🧪 Automated Testing
 
-Kansya includes 7 comprehensive automated test suites covering financial mathematics, edge cases, milestone logic, theme consistency, and clean-slate onboarding:
+Kansya includes 12 comprehensive automated test suites covering financial mathematics, edge cases, milestone logic, theme consistency, clean-slate onboarding, Supabase hybrid sync, adversarial currency handling, zero-emoji verification, asset loading, and UI layout stress verification:
 
 ```bash
 # Run all test suites
@@ -173,9 +173,10 @@ kansya/
 │       ├── AuthScreen.tsx             # Register / Login with Eye toggles & offline persistence
 │       ├── HomeScreen.tsx             # Main dashboard with greeting, hero balance & carousel
 │       ├── GoalsScreen.tsx            # Personal wishlist & Collab Squad management
+│       ├── WishlistScreen.tsx         # Calm mobile design system wishlist & 3D piggy mascot
 │       ├── SavingsScreen.tsx          # Ledger analytics & deposit history
 │       └── SettingsScreen.tsx         # Account profile & preferences
-└── tests/                             # 7 Automated verification test suites
+└── tests/                             # 12 Automated verification test suites
 ```
 
 ---

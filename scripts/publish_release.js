@@ -2,13 +2,22 @@ const cp = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const creds = cp.execSync('git credential fill', { input: 'protocol=https\nhost=github.com\n' }).toString();
-const m = creds.match(/password=(.+)/);
-if (!m) {
-  console.error('Failed to get GitHub token from credential manager');
+let token = (process.env.GH_TOKEN || process.env.GITHUB_TOKEN || '').trim();
+if (!token) {
+  try {
+    const creds = cp.execSync('git credential fill', { input: 'protocol=https\nhost=github.com\n' }).toString();
+    const m = creds.match(/password=(.+)/);
+    if (m) {
+      token = m[1].trim();
+    }
+  } catch (err) {
+    // fallback
+  }
+}
+if (!token) {
+  console.error('Failed to get GitHub token from GH_TOKEN / GITHUB_TOKEN or credential manager');
   process.exit(1);
 }
-const token = m[1].trim();
 
 const notes = `## 🌱 Kansya v1.1.0 Release
 

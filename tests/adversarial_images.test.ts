@@ -20,10 +20,21 @@ console.log('=== Running Adversarial Project Images Loader Stress Tests ===');
 console.log('1. Verifying physical image files on disk...');
 
 const expectedAssets = [
-  { name: 'earbuds.jpg', key: 'earbuds' },
-  { name: 'keyboard.jpg', key: 'keyboard' },
-  { name: 'gaming_setup.jpg', key: 'gaming_setup' },
-  { name: 'palworld.jpg', key: 'palworld' },
+  { name: 'earbuds.jpg', key: 'earbuds', minSize: 100000, type: 'jpg' },
+  { name: 'keyboard.jpg', key: 'keyboard', minSize: 100000, type: 'jpg' },
+  { name: 'gaming_setup.jpg', key: 'gaming_setup', minSize: 100000, type: 'jpg' },
+  { name: 'palworld.jpg', key: 'palworld', minSize: 100000, type: 'jpg' },
+  { name: 'college.jpg', key: 'college', minSize: 5000, type: 'jpg' },
+  { name: 'headphones.jpg', key: 'headphones', minSize: 5000, type: 'jpg' },
+  { name: 'laptop.jpg', key: 'laptop', minSize: 5000, type: 'jpg' },
+  { name: 'phone.jpg', key: 'phone', minSize: 5000, type: 'jpg' },
+  { name: 'shoes.jpg', key: 'shoes', minSize: 5000, type: 'jpg' },
+  { name: 'travel.jpg', key: 'travel', minSize: 5000, type: 'jpg' },
+  { name: 'home_hero_bg.png', minSize: 20000, type: 'png' },
+  { name: 'home_hero_piggy.png', key: 'home_hero_piggy', minSize: 15000, type: 'png' },
+  { name: 'mascot_avatar.png', key: 'mascot_avatar', minSize: 15000, type: 'png' },
+  { name: 'wishlist_hero.png', key: 'wishlist_hero', minSize: 20000, type: 'png' },
+  { name: 'wishlist_footer.png', key: 'wishlist_footer', minSize: 20000, type: 'png' },
 ];
 
 for (const asset of expectedAssets) {
@@ -31,26 +42,37 @@ for (const asset of expectedAssets) {
   assert(fs.existsSync(filePath), `Physical file ${asset.name} must exist`);
 
   const stat = fs.statSync(filePath);
-  assert(stat.size > 100000, `Asset ${asset.name} must be high-res (>100KB), got ${stat.size} bytes`);
+  assert(stat.size > asset.minSize, `Asset ${asset.name} must exceed minimum size (${asset.minSize} bytes), got ${stat.size} bytes`);
 
-  // Verify JPEG magic bytes FF D8 FF
   const buffer = fs.readFileSync(filePath);
-  assert(
-    buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff,
-    `Asset ${asset.name} must have valid JPEG header`
-  );
+  if (asset.type === 'jpg') {
+    assert(
+      buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff,
+      `Asset ${asset.name} must have valid JPEG header`
+    );
+  } else if (asset.type === 'png') {
+    assert(
+      buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47,
+      `Asset ${asset.name} must have valid PNG header`
+    );
+  }
 }
-console.log('✓ All 4 physical JPEG assets are verified high-resolution on disk!');
+console.log(`✓ All ${expectedAssets.length} physical image assets are verified on disk!`);
 
 // ----------------------------------------------------------------------------
 // 2. Test PROJECT_IMAGES Record
 // ----------------------------------------------------------------------------
 console.log('2. Verifying PROJECT_IMAGES record mapping...');
 
-assert(PROJECT_IMAGES.earbuds !== undefined, 'PROJECT_IMAGES.earbuds must be defined');
-assert(PROJECT_IMAGES.keyboard !== undefined, 'PROJECT_IMAGES.keyboard must be defined');
-assert(PROJECT_IMAGES.gaming_setup !== undefined, 'PROJECT_IMAGES.gaming_setup must be defined');
-assert(PROJECT_IMAGES.palworld !== undefined, 'PROJECT_IMAGES.palworld must be defined');
+const mappedKeys = [
+  'earbuds', 'keyboard', 'gaming_setup', 'palworld',
+  'laptop', 'phone', 'college', 'headphones', 'shoes', 'travel',
+  'mascot_avatar', 'home_hero_piggy', 'wishlist_hero', 'wishlist_footer',
+];
+
+for (const k of mappedKeys) {
+  assert(PROJECT_IMAGES[k] !== undefined, `PROJECT_IMAGES.${k} must be defined`);
+}
 
 // ----------------------------------------------------------------------------
 // 3. Adversarial getProjectImage Edge Cases

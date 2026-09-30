@@ -191,10 +191,12 @@ const goalsScreenPath = path.resolve(__dirname, '../src/screens/GoalsScreen.tsx'
 assert(fs.existsSync(goalsScreenPath), 'GoalsScreen.tsx must exist');
 const goalsContent = fs.readFileSync(goalsScreenPath, 'utf8');
 
-// Verify itemTitle in GoalsScreen has NO numberOfLines={1} truncation
+// Verify goalTitle and itemTitle in GoalsScreen have NO numberOfLines={1} truncation
 assert(
+  !goalsContent.includes('style={[styles.goalTitle, { color: colors.textPrimary }]} numberOfLines={1}') &&
+  !goalsContent.includes('style={styles.goalTitle} numberOfLines={1}') &&
   !goalsContent.includes('<Text style={styles.itemTitle} numberOfLines={1}>'),
-  'GoalsScreen itemTitle must NOT enforce numberOfLines={1} to allow full readable titles'
+  'GoalsScreen goalTitle must NOT enforce numberOfLines={1} to allow full readable titles'
 );
 
 // Verify AnimatedDonutChart dynamic typography scaling

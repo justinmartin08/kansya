@@ -291,7 +291,7 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
                   {/* Details Column */}
                   <View style={styles.itemInfoCol}>
                     <View style={styles.itemHeaderLine}>
-                      <Text style={[styles.itemTitle, { color: colors.textPrimary }]} numberOfLines={1}>
+                      <Text style={[styles.itemTitle, { color: colors.textPrimary }]} numberOfLines={2}>
                         {item.title}
                       </Text>
 

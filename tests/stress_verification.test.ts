@@ -186,16 +186,25 @@ const stressTitles = [
 const goalsFilePath = path.resolve(__dirname, '../src/screens/GoalsScreen.tsx');
 const goalsContent = fs.readFileSync(goalsFilePath, 'utf8');
 
-// Check that numberOfLines={1} is NOT present on itemTitle
-const hasNumberOfLinesOnTitle = goalsContent.includes('style={styles.itemTitle} numberOfLines={1}');
-console.log(`- Truncation guard: itemTitle has numberOfLines={1}: ${hasNumberOfLinesOnTitle ? 'FAIL (truncating)' : 'PASS (no truncation)'}`);
+// Check that numberOfLines={1} is NOT present on goalTitle in GoalsScreen
+const hasNumberOfLinesOnTitle =
+  goalsContent.includes('style={[styles.goalTitle, { color: colors.textPrimary }]} numberOfLines={1}') ||
+  goalsContent.includes('style={styles.goalTitle} numberOfLines={1}') ||
+  goalsContent.includes('style={styles.itemTitle} numberOfLines={1}');
+console.log(`- Truncation guard: goalTitle has numberOfLines={1}: ${hasNumberOfLinesOnTitle ? 'FAIL (truncating)' : 'PASS (no truncation)'}`);
+if (hasNumberOfLinesOnTitle) throw new Error('FAIL: GoalsScreen goal title has numberOfLines={1}');
 
-// Check infoCol and goalItemCard flex layout
-const hasFlexInInfoCol = goalsContent.includes('infoCol: {') && goalsContent.includes('flex: 1');
-console.log(`- Layout flexibility: infoCol has flex: 1: ${hasFlexInInfoCol ? 'PASS' : 'FAIL'}`);
+// Check cardTitleCol flex layout
+const hasFlexInCardTitleCol = goalsContent.includes('cardTitleCol: {') && goalsContent.includes('flex: 1');
+console.log(`- Layout flexibility: cardTitleCol has flex: 1: ${hasFlexInCardTitleCol ? 'PASS' : 'FAIL'}`);
+if (!hasFlexInCardTitleCol) throw new Error('FAIL: GoalsScreen cardTitleCol must have flex: 1');
 
-const hasLineHeightOnTitle = goalsContent.includes('itemTitle: {') && goalsContent.includes('lineHeight: 20');
-console.log(`- Typography metrics: itemTitle has lineHeight: 20: ${hasLineHeightOnTitle ? 'PASS' : 'FAIL'}`);
+// Check WishlistScreen itemInfoCol flex layout
+const wishlistFilePath = path.resolve(__dirname, '../src/screens/WishlistScreen.tsx');
+const wishlistContent = fs.readFileSync(wishlistFilePath, 'utf8');
+const hasFlexInWishlistCol = wishlistContent.includes('itemInfoCol: {') && wishlistContent.includes('flex: 1');
+console.log(`- Layout flexibility: WishlistScreen itemInfoCol has flex: 1: ${hasFlexInWishlistCol ? 'PASS' : 'FAIL'}`);
+if (!hasFlexInWishlistCol) throw new Error('FAIL: WishlistScreen itemInfoCol must have flex: 1');
 
 for (const t of stressTitles) {
   // Verify title can be formatted and handled safely without regex or runtime exceptions

@@ -324,7 +324,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                         </View>
 
                         <View style={styles.cardTitleCol}>
-                          <Text style={[styles.goalTitle, { color: colors.textPrimary }]} numberOfLines={1}>
+                          <Text style={[styles.goalTitle, { color: colors.textPrimary }]}>
                             {proj.title}
                           </Text>
                           {isCompleted ? (

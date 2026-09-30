@@ -26,7 +26,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "test": "npx tsx tests/calculations.test.ts && npx tsx tests/edge_cases.test.ts && npx tsx tests/milestones_and_bugs.test.ts && npx tsx tests/verification_r1_r5.test.ts && npx tsx tests/ui_and_sound_overhaul.test.ts && npx tsx tests/auth_collab_and_clean_slate.test.ts && npx tsx tests/profile_theme_and_offline.test.ts && npx tsx tests/supabase_and_option3.test.ts"
+    "test": "npx tsx tests/calculations.test.ts && npx tsx tests/edge_cases.test.ts && npx tsx tests/milestones_and_bugs.test.ts && npx tsx tests/verification_r1_r5.test.ts && npx tsx tests/ui_and_sound_overhaul.test.ts && npx tsx tests/auth_collab_and_clean_slate.test.ts && npx tsx tests/profile_theme_and_offline.test.ts && npx tsx tests/supabase_and_option3.test.ts && npx tsx tests/adversarial_currency.test.ts && npx tsx tests/adversarial_emoji_scan.test.ts && npx tsx tests/adversarial_images.test.ts && npx tsx tests/stress_verification.test.ts",
+    "release": "node scripts/publish_release.js"
   },
   "private": true
 }
