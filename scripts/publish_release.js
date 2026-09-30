@@ -55,15 +55,27 @@ const notesFile = path.join(__dirname, 'RELEASE_NOTES.tmp.md');
 fs.writeFileSync(notesFile, notes, 'utf8');
 
 try {
-  console.log('Publishing GitHub release v1.1.0...');
-  cp.execSync(
-    'gh release create v1.1.0 kansya-v1.1.0.apk kansya-v1.0.0.apk --title "Kansya v1.1.0 - Calm Mobile Design System and 3D Piggy Mascot" --notes-file "' + notesFile + '"',
-    {
-      env: { ...process.env, GH_TOKEN: token },
-      stdio: 'inherit',
-    }
-  );
-  console.log('Release v1.1.0 published successfully!');
+  try {
+    console.log('Publishing GitHub release v1.1.0...');
+    cp.execSync(
+      'gh release create v1.1.0 kansya-v1.1.0.apk kansya-v1.0.0.apk --title "Kansya v1.1.0 - Calm Mobile Design System and 3D Piggy Mascot" --notes-file "' + notesFile + '"',
+      {
+        env: { ...process.env, GH_TOKEN: token },
+        stdio: 'inherit',
+      }
+    );
+    console.log('Release v1.1.0 published successfully!');
+  } catch (createErr) {
+    console.log('Release v1.1.0 already exists, uploading updated assets with --clobber...');
+    cp.execSync(
+      'gh release upload v1.1.0 kansya-v1.1.0.apk kansya-v1.0.0.apk --clobber',
+      {
+        env: { ...process.env, GH_TOKEN: token },
+        stdio: 'inherit',
+      }
+    );
+    console.log('Release v1.1.0 assets updated successfully!');
+  }
 
   // Also update v1.0.0 release assets so anyone downloading from the old link gets the fresh build
   try {
