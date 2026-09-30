@@ -69,7 +69,7 @@ export const SavingsScreen: React.FC = () => {
             </View>
           </View>
 
-          <View style={styles.metricsRow}>
+          <View style={[styles.metricsRow, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
             <View style={styles.metricItem}>
               <Text style={[styles.metricLabel, { color: colors.textMuted }]}>Daily Excess</Text>
               <Text style={[styles.metricValue, { color: colors.textPrimary }]}>{formatPHP(dailyExcess)}/day</Text>
@@ -168,10 +168,10 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   heroCard: {
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 18,
     marginBottom: 20,
   },
@@ -198,11 +198,11 @@ const styles = StyleSheet.create({
   },
   metricsRow: {
     flexDirection: 'row',
-    backgroundColor: '#162234',
+    backgroundColor: '#102820',
     borderRadius: 14,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#22324B',
+    borderColor: '#142F26',
   },
   metricItem: {
     flex: 1,
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   },
   metricDivider: {
     width: 1,
-    backgroundColor: '#22324B',
+    backgroundColor: '#142F26',
   },
   metricLabel: {
     fontSize: 10,
@@ -242,10 +242,10 @@ const styles = StyleSheet.create({
   ledgerCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 14,
     gap: 12,
   },

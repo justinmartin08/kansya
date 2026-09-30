@@ -136,7 +136,7 @@ export const JoinSquadModal: React.FC<JoinSquadModalProps> = ({
             </View>
 
             {/* Cloud Status Pill */}
-            <View style={[styles.cloudPill, { backgroundColor: isDark ? '#162234' : '#F1F5F9', borderColor: colors.border }]}>
+            <View style={[styles.cloudPill, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
               <View style={[styles.statusDot, { backgroundColor: isCloudSyncActive ? '#10B981' : '#94A3B8' }]} />
               <Text style={[styles.cloudPillText, { color: colors.textSecondary }]}>
                 {isCloudSyncActive

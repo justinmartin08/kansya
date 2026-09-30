@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#07130F',
     borderRadius: 44,
     borderWidth: 4,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     overflow: 'hidden',
     shadowColor: '#00F5A0',
     shadowOffset: { width: 0, height: 10 },

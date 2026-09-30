@@ -223,7 +223,7 @@ export const SupabaseConfigModal: React.FC<SupabaseConfigModalProps> = ({ visibl
             </View>
 
             {/* SQL Notice */}
-            <View style={[styles.schemaHintBox, { backgroundColor: isDark ? '#162234' : '#F1F5F9', borderColor: colors.border }]}>
+            <View style={[styles.schemaHintBox, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
               <ShieldCheck size={16} color={colors.accentEmerald} />
               <Text style={[styles.schemaHintText, { color: colors.textSecondary }]}>
                 Ready-to-run database tables are provided in <Text style={{ fontWeight: '700', color: colors.textPrimary }}>supabase/schema.sql</Text>. Run it in the Supabase SQL editor with one click.

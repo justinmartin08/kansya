@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
   },
   // Stone Slate Border
   outer_stone: {
-    borderColor: '#1E293B',
-    backgroundColor: '#334155',
+    borderColor: '#142F26',
+    backgroundColor: '#102820',
   },
   // Gold Trim Border
   outer_gold: {
@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
   },
   // Dark Onyx Border
   outer_dark: {
-    borderColor: '#0F172A',
-    backgroundColor: '#1E293B',
+    borderColor: '#0D211B',
+    backgroundColor: '#142F26',
   },
   glowActive: {
     shadowColor: '#38BDF8',
@@ -86,15 +86,15 @@ const styles = StyleSheet.create({
     borderRightColor: '#292524',
   },
   inner_stone: {
-    backgroundColor: '#0F172A',
+    backgroundColor: '#07130F',
     borderTopWidth: 2,
     borderLeftWidth: 2,
     borderTopColor: '#020617',
     borderLeftColor: '#020617',
     borderBottomWidth: 2,
     borderRightWidth: 2,
-    borderBottomColor: '#1E293B',
-    borderRightColor: '#1E293B',
+    borderBottomColor: '#142F26',
+    borderRightColor: '#142F26',
   },
   inner_gold: {
     backgroundColor: '#18181B',
@@ -108,15 +108,15 @@ const styles = StyleSheet.create({
     borderRightColor: '#FBBF24',
   },
   inner_dark: {
-    backgroundColor: '#0A0F1D',
+    backgroundColor: '#07130F',
     borderTopWidth: 2,
     borderLeftWidth: 2,
     borderTopColor: '#020617',
     borderLeftColor: '#020617',
     borderBottomWidth: 2,
     borderRightWidth: 2,
-    borderBottomColor: '#1E293B',
-    borderRightColor: '#1E293B',
+    borderBottomColor: '#142F26',
+    borderRightColor: '#142F26',
   },
   // 4 Corner Pixel Accents
   cornerSquare: {

@@ -166,7 +166,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
               styles.segmentBtn,
               activeSegment === 'personal' && [
                 styles.segmentBtnActive,
-                { backgroundColor: isDark ? '#1E293B' : '#E2E8F0' },
+                { backgroundColor: colors.surfaceCardSecondary },
               ],
             ]}
             onPress={() => setActiveSegment('personal')}
@@ -182,7 +182,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
               styles.segmentBtn,
               activeSegment === 'collab' && [
                 styles.segmentBtnActive,
-                { backgroundColor: isDark ? '#1E293B' : '#E2E8F0' },
+                { backgroundColor: colors.surfaceCardSecondary },
               ],
             ]}
             onPress={() => setActiveSegment('collab')}
@@ -344,8 +344,8 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                             style={[
                               styles.depositBtn,
                               {
-                                backgroundColor: isDark ? '#162234' : '#F1F5F9',
-                                borderColor: isDark ? '#22324B' : '#CBD5E1',
+                                backgroundColor: colors.surfaceCardSecondary,
+                                borderColor: colors.border,
                               },
                             ]}
                             onPress={(e) => {
@@ -373,7 +373,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                       </View>
 
                       {/* Horizontal Progress Bar */}
-                      <View style={[styles.progressBarTrack, { backgroundColor: isDark ? '#1E293B' : '#E2E8F0' }]}>
+                      <View style={[styles.progressBarTrack, { backgroundColor: isDark ? '#142F26' : '#E2E8F0' }]}>
                         <View
                           style={[
                             styles.progressBarFill,
@@ -416,7 +416,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
               </View>
               <View style={styles.headerButtonsRow}>
                 <TouchableOpacity
-                  style={[styles.joinCodeBtn, { backgroundColor: isDark ? '#162234' : '#F1F5F9', borderColor: colors.border }]}
+                  style={[styles.joinCodeBtn, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}
                   onPress={() => setJoinSquadModalVisible(true)}
                   activeOpacity={0.8}
                 >
@@ -495,7 +495,9 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                 </View>
               ) : (
                 collabGoals.map((goal) => {
-                  const percent = Math.min(100, Math.round((goal.currentAmount / goal.targetPrice) * 100));
+                  const percent = goal.targetPrice > 0
+                    ? Math.min(100, Math.max(0, Math.round((goal.currentAmount / goal.targetPrice) * 100)))
+                    : 0;
                   const isCompleted = goal.currentAmount >= goal.targetPrice;
                   const isMember = goal.members.some((m) => m.username.toLowerCase() === currentUsername);
 
@@ -547,7 +549,7 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                       </View>
 
                       {/* Progress Bar */}
-                      <View style={[styles.progressBarTrack, { backgroundColor: isDark ? '#1E293B' : '#E2E8F0' }]}>
+                      <View style={[styles.progressBarTrack, { backgroundColor: isDark ? '#142F26' : '#E2E8F0' }]}>
                         <View
                           style={[
                             styles.progressBarFill,
@@ -954,7 +956,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#1E293B',
+    backgroundColor: '#102820',
     borderColor: '#86EFAC',
     borderWidth: 1,
     borderRadius: 14,
@@ -988,12 +990,12 @@ const styles = StyleSheet.create({
   },
   segmentContainer: {
     flexDirection: 'row',
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderRadius: 14,
     padding: 4,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
   },
   segmentBtn: {
     flex: 1,
@@ -1003,7 +1005,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   segmentBtnActive: {
-    backgroundColor: '#1E293B',
+    backgroundColor: '#102820',
   },
   segmentText: {
     fontSize: 13,
@@ -1070,9 +1072,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 10,
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
   },
   filterChipActive: {
     backgroundColor: 'rgba(134, 239, 172, 0.15)',
@@ -1092,10 +1094,10 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   emptyContainer: {
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 28,
     alignItems: 'center',
     justifyContent: 'center',
@@ -1106,9 +1108,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#162234',
+    backgroundColor: '#102820',
     borderWidth: 1,
-    borderColor: '#22324B',
+    borderColor: '#142F26',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 6,
@@ -1138,10 +1140,10 @@ const styles = StyleSheet.create({
     color: '#07130F',
   },
   goalCard: {
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 16,
   },
   goalCardCompleted: {
@@ -1221,7 +1223,7 @@ const styles = StyleSheet.create({
   },
   progressBarTrack: {
     height: 7,
-    backgroundColor: '#1E293B',
+    backgroundColor: '#142F26',
     borderRadius: 3.5,
     overflow: 'hidden',
     marginBottom: 10,
@@ -1254,7 +1256,7 @@ const styles = StyleSheet.create({
     color: '#64748B',
   },
   pendingInvitesContainer: {
-    backgroundColor: '#162234',
+    backgroundColor: '#102820',
     borderRadius: 16,
     borderWidth: 1,
     borderColor: '#F59E0B',
@@ -1274,7 +1276,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   pendingInviteCard: {
-    backgroundColor: '#0E1624',
+    backgroundColor: '#07130F',
     borderRadius: 12,
     padding: 12,
     flexDirection: 'row',
@@ -1315,7 +1317,7 @@ const styles = StyleSheet.create({
     color: '#07130F',
   },
   declineBtn: {
-    backgroundColor: '#1E293B',
+    backgroundColor: '#102820',
     borderRadius: 10,
     paddingVertical: 6,
     paddingHorizontal: 10,
@@ -1365,10 +1367,10 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   collabGoalCard: {
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 16,
     gap: 12,
   },
@@ -1402,9 +1404,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#162234',
+    backgroundColor: '#102820',
     borderWidth: 1,
-    borderColor: '#22324B',
+    borderColor: '#142F26',
     borderRadius: 10,
     paddingVertical: 6,
     paddingHorizontal: 10,
@@ -1448,7 +1450,7 @@ const styles = StyleSheet.create({
     color: '#F8FAFC',
   },
   membersSection: {
-    backgroundColor: '#0E1624',
+    backgroundColor: '#07130F',
     borderRadius: 14,
     padding: 12,
     gap: 8,
@@ -1476,7 +1478,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#1A2436',
+    backgroundColor: '#102820',
     borderWidth: 1,
     borderColor: '#86EFAC',
     alignItems: 'center',
@@ -1542,11 +1544,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sheetContainer: {
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 24,
     paddingBottom: 36,
     maxHeight: '90%',
@@ -1573,7 +1575,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#1E293B',
+    backgroundColor: '#102820',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1594,9 +1596,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 10,
-    backgroundColor: '#162234',
+    backgroundColor: '#102820',
     borderWidth: 1,
-    borderColor: '#22324B',
+    borderColor: '#142F26',
   },
   presetChipActive: {
     backgroundColor: 'rgba(134, 239, 172, 0.15)',
@@ -1614,10 +1616,10 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#0E1624',
+    backgroundColor: '#07130F',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     paddingHorizontal: 16,
     height: 48,
     marginBottom: 10,

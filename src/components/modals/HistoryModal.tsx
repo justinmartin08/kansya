@@ -31,7 +31,7 @@ interface GroupedDeposits {
 }
 
 export const HistoryModal: React.FC<HistoryModalProps> = ({ visible, onClose }) => {
-  const { deposits, projects, totalSavedAcrossAll, theme } = useKansya();
+  const { deposits, projects, totalSavedAcrossAll, theme, isDark } = useKansya();
   const colors = getThemeColors(theme);
 
   const projectMap = new Map(projects.map((p) => [p.id, p.title]));
@@ -123,22 +123,22 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({ visible, onClose }) 
       >
         <TouchableOpacity style={styles.dismissOverlay} activeOpacity={1} onPress={onClose} />
 
-        <View style={styles.sheetContainer}>
+        <View style={[styles.sheetContainer, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
           {/* Header */}
           <View style={styles.headerRow}>
             <View>
-              <Text style={styles.headerSubtitle}>TRANSACTION LEDGER</Text>
-              <Text style={styles.headerTitle}>Savings History</Text>
+              <Text style={[styles.headerSubtitle, { color: colors.accentEmerald }]}>TRANSACTION LEDGER</Text>
+              <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Savings History</Text>
             </View>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-              <X size={18} color="#9AAFA5" />
+            <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
+              <X size={18} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
 
           {/* Total Saved Sub-banner */}
-          <View style={styles.summaryBar}>
-            <Text style={styles.summaryLabel}>Total Accumulated Savings</Text>
-            <Text style={styles.summaryAmount}>
+          <View style={[styles.summaryBar, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
+            <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>Total Accumulated Savings</Text>
+            <Text style={[styles.summaryAmount, { color: colors.accentEmerald }]}>
               {formatPHP(totalSavedAcrossAll > 0 ? totalSavedAcrossAll : 525)}
             </Text>
           </View>
@@ -156,26 +156,26 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({ visible, onClose }) 
             ) : (
               groupedList.map((group) => (
                 <View key={group.dateLabel} style={styles.dateGroup}>
-                  <Text style={styles.dateGroupHeader}>{group.dateLabel}</Text>
-                  <View style={styles.groupCard}>
+                  <Text style={[styles.dateGroupHeader, { color: colors.textMuted }]}>{group.dateLabel}</Text>
+                  <View style={[styles.groupCard, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
                     {group.items.map((item, idx) => (
                       <View
                         key={item.id}
                         style={[
                           styles.transactionRow,
-                          idx < group.items.length - 1 && styles.rowDivider,
+                          idx < group.items.length - 1 && [styles.rowDivider, { borderBottomColor: colors.border }],
                         ]}
                       >
                         <View style={styles.iconCircle}>
-                          <ArrowDownLeft size={16} color="#55D99A" strokeWidth={2.4} />
+                          <ArrowDownLeft size={16} color={colors.accentEmerald} strokeWidth={2.4} />
                         </View>
                         <View style={styles.detailsCol}>
-                          <Text style={styles.itemTitle} numberOfLines={1}>
+                          <Text style={[styles.itemTitle, { color: colors.textPrimary }]} numberOfLines={1}>
                             {item.title}
                           </Text>
-                          <Text style={styles.itemTime}>{item.time}</Text>
+                          <Text style={[styles.itemTime, { color: colors.textMuted }]}>{item.time}</Text>
                         </View>
-                        <Text style={styles.amountPositive}>
+                        <Text style={[styles.amountPositive, { color: colors.accentEmerald }]}>
                           +{formatPHP(item.amount)}
                         </Text>
                       </View>

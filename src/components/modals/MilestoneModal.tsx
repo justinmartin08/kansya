@@ -4,7 +4,7 @@ import { Sparkles, CheckCircle2 } from 'lucide-react-native';
 import { ConstructionPhase, WishlistProject } from '../../types';
 import { formatPHP } from '../../utils/calculations';
 import { PROJECT_IMAGES } from '../../utils/projectImages';
-import { KansyaDesign } from '../../utils/theme';
+import { KansyaDesign, getThemeColors } from '../../utils/theme';
 import { useKansya } from '../../store/KansyaContext';
 
 interface MilestoneModalProps {
@@ -24,7 +24,8 @@ export const MilestoneModal: React.FC<MilestoneModalProps> = ({
   onClose,
   onOpenNewGoal,
 }) => {
-  const { updateProject } = useKansya();
+  const { updateProject, theme, isDark } = useKansya();
+  const colors = getThemeColors(theme);
 
   const handleMarkPurchased = async () => {
     await updateProject(project.id, {
@@ -42,9 +43,9 @@ export const MilestoneModal: React.FC<MilestoneModalProps> = ({
       onRequestClose={onClose}
     >
       <View style={styles.backdrop}>
-        <View style={styles.cardContainer}>
+        <View style={[styles.cardContainer, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
           {/* Mascot with Coin Artwork */}
-          <View style={styles.mascotContainer}>
+          <View style={[styles.mascotContainer, { backgroundColor: colors.surfaceCardSecondary }]}>
             <Image
               source={PROJECT_IMAGES.mascot_avatar}
               style={styles.mascotImage}
@@ -59,33 +60,33 @@ export const MilestoneModal: React.FC<MilestoneModalProps> = ({
                 <Text style={styles.statusPillText}>Goal complete</Text>
               </View>
 
-              <Text style={styles.savedAmountText}>
+              <Text style={[styles.savedAmountText, { color: colors.textPrimary }]}>
                 {formatPHP(project.targetPrice)} saved
               </Text>
               <Text style={styles.motivatingText}>
                 "You made it happen."
               </Text>
 
-              <Text style={styles.projectSubtitle}>
+              <Text style={[styles.projectSubtitle, { color: colors.textSecondary }]}>
                 {project.title}
               </Text>
 
               {/* Three Restrained Production Options */}
               <View style={styles.optionsCol}>
                 <TouchableOpacity
-                  style={[styles.primaryActionBtn, { backgroundColor: '#55D99A' }]}
+                  style={[styles.primaryActionBtn, { backgroundColor: colors.accentEmerald }]}
                   onPress={handleMarkPurchased}
                   activeOpacity={0.85}
                 >
-                  <Text style={styles.primaryActionText}>Mark as purchased</Text>
+                  <Text style={[styles.primaryActionText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>Mark as purchased</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={[styles.secondaryActionBtn, { backgroundColor: '#102820', borderColor: '#142F26' }]}
+                  style={[styles.secondaryActionBtn, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}
                   onPress={onClose}
                   activeOpacity={0.85}
                 >
-                  <Text style={styles.secondaryActionText}>Keep saving</Text>
+                  <Text style={[styles.secondaryActionText, { color: colors.textPrimary }]}>Keep saving</Text>
                 </TouchableOpacity>
 
                 {onOpenNewGoal && (
@@ -97,7 +98,7 @@ export const MilestoneModal: React.FC<MilestoneModalProps> = ({
                     }}
                     activeOpacity={0.7}
                   >
-                    <Text style={styles.ghostActionText}>Create another goal</Text>
+                    <Text style={[styles.ghostActionText, { color: colors.textSecondary }]}>Create another goal</Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -106,28 +107,28 @@ export const MilestoneModal: React.FC<MilestoneModalProps> = ({
             <>
               {/* Intermediate Savings Milestone */}
               <View style={styles.statusPill}>
-                <Sparkles size={14} color="#55D99A" />
-                <Text style={[styles.statusPillText, { color: '#55D99A' }]}>
+                <Sparkles size={14} color={colors.accentEmerald} />
+                <Text style={[styles.statusPillText, { color: colors.accentEmerald }]}>
                   Savings milestone
                 </Text>
               </View>
 
-              <Text style={styles.phaseName}>{phase.name}</Text>
-              <Text style={styles.phaseTagline}>{phase.tagline}</Text>
+              <Text style={[styles.phaseName, { color: colors.textPrimary }]}>{phase.name}</Text>
+              <Text style={[styles.phaseTagline, { color: colors.textSecondary }]}>{phase.tagline}</Text>
 
-              <View style={styles.projectInfoBox}>
-                <Text style={styles.projectTitle}>{project.title}</Text>
-                <Text style={styles.progressSummary}>
+              <View style={[styles.projectInfoBox, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
+                <Text style={[styles.projectTitle, { color: colors.textPrimary }]}>{project.title}</Text>
+                <Text style={[styles.progressSummary, { color: colors.textSecondary }]}>
                   {formatPHP(project.currentAmount)} of {formatPHP(project.targetPrice)}
                 </Text>
               </View>
 
               <TouchableOpacity
-                style={[styles.primaryActionBtn, { backgroundColor: '#55D99A' }]}
+                style={[styles.primaryActionBtn, { backgroundColor: colors.accentEmerald }]}
                 onPress={onClose}
                 activeOpacity={0.85}
               >
-                <Text style={styles.primaryActionText}>Keep saving</Text>
+                <Text style={[styles.primaryActionText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>Keep saving</Text>
               </TouchableOpacity>
             </>
           )}

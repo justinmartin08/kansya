@@ -644,7 +644,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) 
                     style={[
                       styles.generateCodeBtn,
                       {
-                        backgroundColor: isDark ? '#1E293B' : '#E2E8F0',
+                        backgroundColor: colors.surfaceCardSecondary,
                         borderColor: colors.border,
                       },
                     ]}

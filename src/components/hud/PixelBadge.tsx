@@ -77,7 +77,7 @@ export const PixelBadge: React.FC<PixelBadgeProps> = ({ badge, size = 'md' }) =>
           {
             width: dims.box - 12,
             height: dims.box - 12,
-            backgroundColor: isUnlocked ? '#292524' : '#1E293B',
+            backgroundColor: isUnlocked ? '#292524' : '#102820',
           },
         ]}
       >

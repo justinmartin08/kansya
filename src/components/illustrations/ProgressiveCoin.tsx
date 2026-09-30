@@ -95,11 +95,11 @@ export const ProgressiveCoin: React.FC<ProgressiveCoinProps> = ({
           <LinearGradient id={dullRimId} x1="0%" y1="0%" x2="100%" y2="100%">
             <Stop offset="0%" stopColor="#475569" />
             <Stop offset="30%" stopColor="#334155" />
-            <Stop offset="70%" stopColor="#1E293B" />
+            <Stop offset="70%" stopColor="#142F26" />
             <Stop offset="100%" stopColor="#0F172A" />
           </LinearGradient>
           <RadialGradient id={dullFaceId} cx="42%" cy="38%" r="65%">
-            <Stop offset="0%" stopColor="#1E293B" />
+            <Stop offset="0%" stopColor="#142F26" />
             <Stop offset="65%" stopColor="#111827" />
             <Stop offset="100%" stopColor="#07130F" />
           </RadialGradient>
@@ -181,7 +181,7 @@ export const ProgressiveCoin: React.FC<ProgressiveCoinProps> = ({
             cy="76"
             r="60"
             fill="none"
-            stroke="#1E293B"
+            stroke="#142F26"
             strokeWidth="1.5"
           />
 
@@ -211,7 +211,7 @@ export const ProgressiveCoin: React.FC<ProgressiveCoinProps> = ({
             cy="76"
             r="45"
             fill="none"
-            stroke="#1E293B"
+            stroke="#142F26"
             strokeWidth="1"
           />
 

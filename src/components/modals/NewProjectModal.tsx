@@ -13,7 +13,7 @@ import { X, Sparkles } from 'lucide-react-native';
 import { WishlistProject } from '../../types';
 import { useKansya } from '../../store/KansyaContext';
 import { formatPHP, getDailyExcessRate, calculatePace } from '../../utils/calculations';
-import { KansyaDesign } from '../../utils/theme';
+import { KansyaDesign, getThemeColors } from '../../utils/theme';
 
 interface NewProjectModalProps {
   visible: boolean;
@@ -21,7 +21,8 @@ interface NewProjectModalProps {
 }
 
 export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClose }) => {
-  const { createProject, allowance } = useKansya();
+  const { createProject, allowance, theme, isDark } = useKansya();
+  const colors = getThemeColors(theme);
   const [title, setTitle] = useState('');
   const [targetPriceStr, setTargetPriceStr] = useState('');
   const [targetDateStr, setTargetDateStr] = useState('');
@@ -84,15 +85,15 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
       >
         <TouchableOpacity style={styles.dismissOverlay} activeOpacity={1} onPress={onClose} />
 
-        <View style={styles.sheetContainer}>
+        <View style={[styles.sheetContainer, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
           {/* Header */}
           <View style={styles.headerRow}>
             <View>
-              <Text style={styles.headerSubtitle}>NEW GOAL</Text>
-              <Text style={styles.headerTitle}>Create a Goal</Text>
+              <Text style={[styles.headerSubtitle, { color: colors.accentEmerald }]}>NEW GOAL</Text>
+              <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Create a Goal</Text>
             </View>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-              <X size={18} color="#9AAFA5" />
+            <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
+              <X size={18} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
 
@@ -102,12 +103,12 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
             contentContainerStyle={styles.scrollContent}
           >
             {/* Step 1: What are you saving for? */}
-            <Text style={styles.fieldLabel}>What are you saving for?</Text>
-            <View style={styles.inputWrapper}>
+            <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>What are you saving for?</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}>
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, { color: colors.textPrimary }]}
                 placeholder="e.g. Gaming Laptop"
-                placeholderTextColor="#667A71"
+                placeholderTextColor={colors.textMuted}
                 value={title}
                 onChangeText={setTitle}
                 maxLength={45}
@@ -115,13 +116,13 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
             </View>
 
             {/* Step 2: How much does it cost? */}
-            <Text style={styles.fieldLabel}>How much does it cost?</Text>
-            <View style={styles.inputWrapper}>
-              <Text style={styles.pesoSign}>₱</Text>
+            <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>How much does it cost?</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}>
+              <Text style={[styles.pesoSign, { color: colors.accentEmerald }]}>₱</Text>
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, { color: colors.textPrimary }]}
                 placeholder="e.g. 50000"
-                placeholderTextColor="#667A71"
+                placeholderTextColor={colors.textMuted}
                 keyboardType="numeric"
                 value={targetPriceStr}
                 onChangeText={(val) => setTargetPriceStr(val.replace(/[^0-9]/g, ''))}
@@ -129,12 +130,12 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
             </View>
 
             {/* Step 3: When do you want it? (Optional) */}
-            <Text style={styles.fieldLabel}>When do you want it? (Optional)</Text>
-            <View style={styles.inputWrapper}>
+            <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>When do you want it? (Optional)</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}>
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, { color: colors.textPrimary }]}
                 placeholder="e.g. Dec 2026, Birthday, Next Summer"
-                placeholderTextColor="#667A71"
+                placeholderTextColor={colors.textMuted}
                 value={targetDateStr}
                 onChangeText={setTargetDateStr}
                 maxLength={40}
@@ -142,13 +143,13 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
             </View>
 
             {/* Step 4: How much have you already saved? (Optional) */}
-            <Text style={styles.fieldLabel}>How much have you already saved? (Optional)</Text>
-            <View style={styles.inputWrapper}>
-              <Text style={styles.pesoSign}>₱</Text>
+            <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>How much have you already saved? (Optional)</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}>
+              <Text style={[styles.pesoSign, { color: colors.accentEmerald }]}>₱</Text>
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, { color: colors.textPrimary }]}
                 placeholder="e.g. 525 (leave empty if 0)"
-                placeholderTextColor="#667A71"
+                placeholderTextColor={colors.textMuted}
                 keyboardType="numeric"
                 value={initialSavedStr}
                 onChangeText={(val) => setInitialSavedStr(val.replace(/[^0-9]/g, ''))}
@@ -157,18 +158,18 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
 
             {/* Smart Pace Projection Card */}
             {targetPrice > 0 && (
-              <View style={styles.previewBox}>
+              <View style={[styles.previewBox, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
                 <View style={styles.previewHeader}>
-                  <Sparkles size={16} color="#55D99A" />
-                  <Text style={styles.previewTitle}>Smart pace</Text>
+                  <Sparkles size={16} color={colors.accentEmerald} />
+                  <Text style={[styles.previewTitle, { color: colors.accentEmerald }]}>Smart pace</Text>
                 </View>
-                <Text style={styles.previewText}>
+                <Text style={[styles.previewText, { color: colors.textSecondary }]}>
                   Based on your current pace, you'll reach this in{' '}
-                  <Text style={styles.highlightText}>
+                  <Text style={[styles.highlightText, { color: colors.textPrimary }]}>
                     {pace.daysRemaining > 0 ? `${pace.daysRemaining} days` : 'today'}
                   </Text>
                   {pace.projectedDate ? (
-                    <Text style={styles.dateSubtext}>
+                    <Text style={[styles.dateSubtext, { color: colors.textMuted }]}>
                       {' '}(around {new Date(pace.projectedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })})
                     </Text>
                   ) : null}
@@ -181,12 +182,13 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ visible, onClo
             <TouchableOpacity
               style={[
                 styles.submitBtn,
+                { backgroundColor: colors.accentEmerald },
                 (!title.trim() || targetPrice <= 0 || isSubmitting) && styles.submitBtnDisabled,
               ]}
               onPress={handleCreate}
               disabled={!title.trim() || targetPrice <= 0 || isSubmitting}
             >
-              <Text style={styles.submitBtnText}>
+              <Text style={[styles.submitBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>
                 {isSubmitting ? 'Creating Goal...' : 'Create goal'}
               </Text>
             </TouchableOpacity>

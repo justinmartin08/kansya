@@ -182,7 +182,7 @@ export const AuthScreen: React.FC = () => {
                 styles.modeTab,
                 mode === 'register' && [
                   styles.modeTabActive,
-                  { backgroundColor: isDark ? '#1E293B' : '#E2E8F0' },
+                  { backgroundColor: colors.surfaceCardSecondary },
                 ],
               ]}
               onPress={() => {
@@ -206,7 +206,7 @@ export const AuthScreen: React.FC = () => {
                 styles.modeTab,
                 mode === 'login' && [
                   styles.modeTabActive,
-                  { backgroundColor: isDark ? '#1E293B' : '#E2E8F0' },
+                  { backgroundColor: colors.surfaceCardSecondary },
                 ],
               ]}
               onPress={() => {
@@ -419,9 +419,9 @@ const styles = StyleSheet.create({
     width: 68,
     height: 68,
     borderRadius: 34,
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderWidth: 1.5,
-    borderColor: '#22324B',
+    borderColor: '#142F26',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
@@ -460,12 +460,12 @@ const styles = StyleSheet.create({
   },
   modeSwitcherContainer: {
     flexDirection: 'row',
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderRadius: 14,
     padding: 4,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
   },
   modeTab: {
     flex: 1,
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   modeTabActive: {
-    backgroundColor: '#1E293B',
+    backgroundColor: '#102820',
   },
   modeTabText: {
     fontSize: 13,
@@ -485,10 +485,10 @@ const styles = StyleSheet.create({
     color: '#10B981',
   },
   formCard: {
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 20,
     gap: 6,
   },
@@ -517,10 +517,10 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#0E1624',
+    backgroundColor: '#07130F',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     paddingHorizontal: 14,
     height: 48,
     marginBottom: 6,

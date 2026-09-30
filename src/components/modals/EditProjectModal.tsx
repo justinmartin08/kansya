@@ -12,7 +12,7 @@ import {
 import { X } from 'lucide-react-native';
 import { WishlistProject } from '../../types';
 import { useKansya } from '../../store/KansyaContext';
-import { KansyaDesign } from '../../utils/theme';
+import { KansyaDesign, getThemeColors } from '../../utils/theme';
 
 interface EditProjectModalProps {
   visible: boolean;
@@ -25,7 +25,8 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
   project,
   onClose,
 }) => {
-  const { updateProject } = useKansya();
+  const { updateProject, theme, isDark } = useKansya();
+  const colors = getThemeColors(theme);
   const [title, setTitle] = useState(project.title);
   const [targetPriceStr, setTargetPriceStr] = useState(project.targetPrice.toString());
   const [category, setCategory] = useState<WishlistProject['category']>(project.category);
@@ -70,15 +71,15 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
       >
         <TouchableOpacity style={styles.dismissOverlay} activeOpacity={1} onPress={onClose} />
 
-        <View style={styles.sheetContainer}>
+        <View style={[styles.sheetContainer, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
           {/* Header */}
           <View style={styles.headerRow}>
             <View>
-              <Text style={styles.headerSubtitle}>EDIT GOAL</Text>
-              <Text style={styles.headerTitle}>Update Goal Settings</Text>
+              <Text style={[styles.headerSubtitle, { color: colors.accentEmerald }]}>EDIT GOAL</Text>
+              <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Update Goal Settings</Text>
             </View>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-              <X size={18} color="#9AAFA5" />
+            <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
+              <X size={18} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
 
@@ -88,12 +89,12 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
             contentContainerStyle={styles.scrollContent}
           >
             {/* Goal Title */}
-            <Text style={styles.fieldLabel}>Goal Name</Text>
-            <View style={styles.inputWrapper}>
+            <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Goal Name</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}>
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, { color: colors.textPrimary }]}
                 placeholder="Item / Goal name"
-                placeholderTextColor="#667A71"
+                placeholderTextColor={colors.textMuted}
                 value={title}
                 onChangeText={setTitle}
                 maxLength={45}
@@ -101,13 +102,13 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
             </View>
 
             {/* Target Price */}
-            <Text style={styles.fieldLabel}>Target Price (₱)</Text>
-            <View style={styles.inputWrapper}>
-              <Text style={styles.pesoSign}>₱</Text>
+            <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Target Price (₱)</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}>
+              <Text style={[styles.pesoSign, { color: colors.accentEmerald }]}>₱</Text>
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, { color: colors.textPrimary }]}
                 placeholder="Target Price"
-                placeholderTextColor="#667A71"
+                placeholderTextColor={colors.textMuted}
                 keyboardType="numeric"
                 value={targetPriceStr}
                 onChangeText={(val) => setTargetPriceStr(val.replace(/[^0-9]/g, ''))}
@@ -118,12 +119,13 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
             <TouchableOpacity
               style={[
                 styles.submitBtn,
+                { backgroundColor: colors.accentEmerald },
                 (!title.trim() || targetPrice <= 0 || isSubmitting) && styles.submitBtnDisabled,
               ]}
               onPress={handleSave}
               disabled={!title.trim() || targetPrice <= 0 || isSubmitting}
             >
-              <Text style={styles.submitBtnText}>
+              <Text style={[styles.submitBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>
                 {isSubmitting ? 'Saving...' : 'Save Changes'}
               </Text>
             </TouchableOpacity>

@@ -91,10 +91,10 @@ export const GameButton: React.FC<GameButtonProps> = ({
         styles.baseButton,
         {
           backgroundColor: disabled ? '#334155' : colors.bg,
-          borderBottomColor: disabled ? '#1E293B' : colors.shadow,
+          borderBottomColor: disabled ? '#142F26' : colors.shadow,
           borderTopColor: disabled ? '#475569' : colors.highlight,
           borderLeftColor: disabled ? '#475569' : colors.highlight,
-          borderRightColor: disabled ? '#1E293B' : colors.shadow,
+          borderRightColor: disabled ? '#142F26' : colors.shadow,
           borderBottomWidth: isPressed ? 1 : sizeStyles.bevelHeight,
           marginTop: isPressed ? sizeStyles.bevelHeight - 1 : 0,
           paddingVertical: sizeStyles.paddingVertical,

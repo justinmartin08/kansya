@@ -13,6 +13,8 @@ import {
 import { X, Sliders, Check, Zap } from 'lucide-react-native';
 import { AllowanceProfile } from '../../types';
 import { formatPHP } from '../../utils/calculations';
+import { useKansya } from '../../store/KansyaContext';
+import { getThemeColors } from '../../utils/theme';
 
 interface AllowanceModalProps {
   visible: boolean;
@@ -38,6 +40,8 @@ export const AllowanceModal: React.FC<AllowanceModalProps> = ({
   onClose,
   onSave,
 }) => {
+  const { theme, isDark } = useKansya();
+  const colors = getThemeColors(theme);
   const [dailyBaonStr, setDailyBaonStr] = useState(allowance.dailyBaon.toString());
   const [dailyExpensesStr, setDailyExpensesStr] = useState(allowance.dailyExpenses.toString());
   const [daysPerWeek, setDaysPerWeek] = useState(allowance.allowanceDaysPerWeek || 5);
@@ -87,15 +91,15 @@ export const AllowanceModal: React.FC<AllowanceModalProps> = ({
       >
         <TouchableOpacity style={styles.dismissOverlay} activeOpacity={1} onPress={onClose} />
 
-        <View style={styles.sheetContainer}>
+        <View style={[styles.sheetContainer, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
           {/* Header */}
           <View style={styles.headerRow}>
             <View>
-              <Text style={styles.headerSubtitle}>ALLOWANCE & DISCIPLINE</Text>
-              <Text style={styles.headerTitle}>Daily Baon Profile</Text>
+              <Text style={[styles.headerSubtitle, { color: colors.accentEmerald }]}>ALLOWANCE & DISCIPLINE</Text>
+              <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Daily Baon Profile</Text>
             </View>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-              <X size={18} color="#94A3B8" />
+            <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
+              <X size={18} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
 
@@ -105,35 +109,35 @@ export const AllowanceModal: React.FC<AllowanceModalProps> = ({
             contentContainerStyle={styles.scrollContent}
           >
             {/* Daily Baon Input */}
-            <Text style={styles.fieldLabel}>Daily Allowance / Baon (PHP)</Text>
-            <View style={styles.inputWrapper}>
-              <Text style={styles.pesoSign}>₱</Text>
+            <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Daily Allowance / Baon (PHP)</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}>
+              <Text style={[styles.pesoSign, { color: colors.accentEmerald }]}>₱</Text>
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, { color: colors.textPrimary }]}
                 keyboardType="numeric"
                 value={dailyBaonStr}
                 onChangeText={(v) => setDailyBaonStr(v.replace(/[^0-9]/g, ''))}
                 placeholder="e.g. 150"
-                placeholderTextColor="#64748B"
+                placeholderTextColor={colors.textMuted}
               />
             </View>
 
             {/* Daily Expenses Input */}
-            <Text style={styles.fieldLabel}>Daily Living Expenses (Fare, Food, Projects)</Text>
-            <View style={styles.inputWrapper}>
-              <Text style={styles.pesoSign}>₱</Text>
+            <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Daily Living Expenses (Fare, Food, Projects)</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}>
+              <Text style={[styles.pesoSign, { color: colors.accentEmerald }]}>₱</Text>
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, { color: colors.textPrimary }]}
                 keyboardType="numeric"
                 value={dailyExpensesStr}
                 onChangeText={(v) => setDailyExpensesStr(v.replace(/[^0-9]/g, ''))}
                 placeholder="e.g. 90"
-                placeholderTextColor="#64748B"
+                placeholderTextColor={colors.textMuted}
               />
             </View>
 
             {/* Custom College & School Days Selection (7 Interactive Chips) */}
-            <Text style={styles.fieldLabel}>Allowance Days Per Week (College / School)</Text>
+            <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Allowance Days Per Week (College / School)</Text>
             <View style={styles.weekDaysGrid}>
               {SCHEDULE_DAYS.map((item) => {
                 const isSelected = daysPerWeek === item.days;
@@ -141,13 +145,17 @@ export const AllowanceModal: React.FC<AllowanceModalProps> = ({
                   <TouchableOpacity
                     key={item.days}
                     onPress={() => setDaysPerWeek(item.days)}
-                    style={[styles.weekDayChip, isSelected && styles.weekDayChipActive]}
+                    style={[
+                      styles.weekDayChip,
+                      { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border },
+                      isSelected && [styles.weekDayChipActive, { backgroundColor: colors.tagBg, borderColor: colors.accentEmerald }],
+                    ]}
                     activeOpacity={0.7}
                   >
-                    <Text style={[styles.weekDayChipTitle, isSelected && styles.weekDayChipTitleActive]}>
+                    <Text style={[styles.weekDayChipTitle, { color: colors.textSecondary }, isSelected && [styles.weekDayChipTitleActive, { color: colors.accentEmerald }]]}>
                       {item.days}d
                     </Text>
-                    <Text style={[styles.weekDayChipSubtitle, isSelected && styles.weekDayChipSubtitleActive]}>
+                    <Text style={[styles.weekDayChipSubtitle, { color: colors.textMuted }, isSelected && [styles.weekDayChipSubtitleActive, { color: colors.accentEmerald }]]}>
                       {item.sub}
                     </Text>
                   </TouchableOpacity>
@@ -156,35 +164,35 @@ export const AllowanceModal: React.FC<AllowanceModalProps> = ({
             </View>
 
             {/* Savings Capacity Summary Card */}
-            <View style={styles.capacityCard}>
+            <View style={[styles.capacityCard, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
               <View style={styles.capacityHeaderRow}>
-                <Zap size={13} color="#86EFAC" fill="#86EFAC" />
-                <Text style={styles.capacityTitle}>SAVINGS ENGINE CAPACITY ({daysPerWeek} DAYS/WK)</Text>
+                <Zap size={13} color={colors.accentEmerald} fill={colors.accentEmerald} />
+                <Text style={[styles.capacityTitle, { color: colors.accentEmerald }]}>SAVINGS ENGINE CAPACITY ({daysPerWeek} DAYS/WK)</Text>
               </View>
               <View style={styles.capacityGrid}>
                 <View style={styles.capacityCol}>
-                  <Text style={styles.capacityNum}>{formatPHP(dailyExcess)}</Text>
-                  <Text style={styles.capacityLabel}>Daily Excess</Text>
+                  <Text style={[styles.capacityNum, { color: colors.textPrimary }]}>{formatPHP(dailyExcess)}</Text>
+                  <Text style={[styles.capacityLabel, { color: colors.textMuted }]}>Daily Excess</Text>
                 </View>
                 <View style={styles.capacityCol}>
-                  <Text style={styles.capacityNum}>{formatPHP(weeklyExcess)}</Text>
-                  <Text style={styles.capacityLabel}>Weekly Power</Text>
+                  <Text style={[styles.capacityNum, { color: colors.textPrimary }]}>{formatPHP(weeklyExcess)}</Text>
+                  <Text style={[styles.capacityLabel, { color: colors.textMuted }]}>Weekly Power</Text>
                 </View>
                 <View style={styles.capacityCol}>
-                  <Text style={styles.capacityNum}>{formatPHP(monthlyExcess)}</Text>
-                  <Text style={styles.capacityLabel}>Monthly Power</Text>
+                  <Text style={[styles.capacityNum, { color: colors.textPrimary }]}>{formatPHP(monthlyExcess)}</Text>
+                  <Text style={[styles.capacityLabel, { color: colors.textMuted }]}>Monthly Power</Text>
                 </View>
               </View>
             </View>
 
             {/* Action Button */}
             <TouchableOpacity
-              style={styles.saveBtn}
+              style={[styles.saveBtn, { backgroundColor: colors.accentEmerald }]}
               onPress={handleSave}
               disabled={isSubmitting}
               activeOpacity={0.85}
             >
-              <Text style={styles.saveBtnText}>
+              <Text style={[styles.saveBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>
                 {isSubmitting ? 'Saving...' : 'Save Allowance Engine'}
               </Text>
             </TouchableOpacity>
@@ -198,18 +206,18 @@ export const AllowanceModal: React.FC<AllowanceModalProps> = ({
 const styles = StyleSheet.create({
   modalBackdrop: {
     flex: 1,
-    backgroundColor: 'rgba(5, 8, 15, 0.75)',
+    backgroundColor: 'rgba(7, 19, 15, 0.75)',
     justifyContent: 'flex-end',
   },
   dismissOverlay: {
     flex: 1,
   },
   sheetContainer: {
-    backgroundColor: '#121B2A',
+    backgroundColor: '#0D211B',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     padding: 24,
     paddingBottom: 36,
     maxHeight: '90%',
@@ -226,37 +234,39 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     fontSize: 10,
     fontWeight: '800',
-    color: '#86EFAC',
+    color: '#55D99A',
     letterSpacing: 1.5,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#F8FAFC',
+    color: '#F4F7F3',
     marginTop: 2,
   },
   closeBtn: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#1E293B',
+    backgroundColor: '#102820',
+    borderWidth: 1,
+    borderColor: '#142F26',
     alignItems: 'center',
     justifyContent: 'center',
   },
   fieldLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#94A3B8',
+    color: '#9AAFA5',
     marginBottom: 6,
     marginTop: 4,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#0E1624',
+    backgroundColor: '#102820',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#142F26',
     paddingHorizontal: 16,
     height: 48,
     marginBottom: 14,
@@ -264,12 +274,12 @@ const styles = StyleSheet.create({
   pesoSign: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#86EFAC',
+    color: '#55D99A',
     marginRight: 8,
   },
   textInput: {
     flex: 1,
-    color: '#FFFFFF',
+    color: '#F4F7F3',
     fontSize: 15,
   },
   weekDaysGrid: {
@@ -284,39 +294,39 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 6,
     borderRadius: 12,
-    backgroundColor: '#162234',
+    backgroundColor: '#102820',
     borderWidth: 1,
-    borderColor: '#22324B',
+    borderColor: '#142F26',
     alignItems: 'center',
     justifyContent: 'center',
   },
   weekDayChipActive: {
-    backgroundColor: 'rgba(134, 239, 172, 0.15)',
-    borderColor: '#86EFAC',
+    backgroundColor: 'rgba(85, 217, 154, 0.15)',
+    borderColor: '#55D99A',
   },
   weekDayChipTitle: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#94A3B8',
+    color: '#9AAFA5',
   },
   weekDayChipTitleActive: {
-    color: '#86EFAC',
+    color: '#55D99A',
   },
   weekDayChipSubtitle: {
     fontSize: 9,
     fontWeight: '600',
-    color: '#64748B',
+    color: '#667A71',
     marginTop: 2,
   },
   weekDayChipSubtitleActive: {
-    color: '#86EFAC',
+    color: '#55D99A',
   },
   capacityCard: {
-    backgroundColor: '#162234',
+    backgroundColor: '#102820',
     borderRadius: 14,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#22324B',
+    borderColor: '#142F26',
     marginBottom: 20,
   },
   capacityHeaderRow: {
@@ -328,7 +338,7 @@ const styles = StyleSheet.create({
   capacityTitle: {
     fontSize: 10.5,
     fontWeight: '800',
-    color: '#86EFAC',
+    color: '#55D99A',
     letterSpacing: 1,
   },
   capacityGrid: {
@@ -342,24 +352,19 @@ const styles = StyleSheet.create({
   capacityNum: {
     fontSize: 15,
     fontWeight: '800',
-    color: '#F8FAFC',
+    color: '#F4F7F3',
   },
   capacityLabel: {
     fontSize: 10,
-    color: '#94A3B8',
+    color: '#9AAFA5',
     marginTop: 2,
   },
   saveBtn: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#86EFAC',
+    backgroundColor: '#55D99A',
     borderRadius: 16,
     height: 50,
-    shadowColor: '#86EFAC',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 6,
   },
   saveBtnText: {
     fontSize: 15,

@@ -12,7 +12,8 @@ import {
 import { X, ArrowRight, CheckCircle2 } from 'lucide-react-native';
 import { WishlistProject } from '../../types';
 import { formatPHP, getProjectProgress } from '../../utils/calculations';
-import { KansyaDesign } from '../../utils/theme';
+import { KansyaDesign, getThemeColors } from '../../utils/theme';
+import { useKansya } from '../../store/KansyaContext';
 
 interface QuickDepositModalProps {
   visible: boolean;
@@ -29,6 +30,8 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
   onClose,
   onDeposit,
 }) => {
+  const { theme, isDark } = useKansya();
+  const colors = getThemeColors(theme);
   const [selectedAmount, setSelectedAmount] = useState<number>(100);
   const [customInput, setCustomInput] = useState<string>('');
   const [note, setNote] = useState<string>('');
@@ -86,15 +89,15 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
       >
         <TouchableOpacity style={styles.dismissOverlay} activeOpacity={1} onPress={onClose} />
 
-        <View style={styles.sheetContainer}>
+        <View style={[styles.sheetContainer, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
           {/* Header Row */}
           <View style={styles.headerRow}>
             <View>
-              <Text style={styles.headerSubtitle}>ADD SAVINGS</Text>
-              <Text style={styles.headerTitle}>{project.title}</Text>
+              <Text style={[styles.headerSubtitle, { color: colors.accentEmerald }]}>ADD SAVINGS</Text>
+              <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>{project.title}</Text>
             </View>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-              <X size={18} color="#9AAFA5" />
+            <TouchableOpacity onPress={onClose} style={[styles.closeBtn, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
+              <X size={18} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
 
@@ -104,7 +107,7 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
             contentContainerStyle={styles.scrollContent}
           >
             {/* Quick Amounts */}
-            <Text style={styles.sectionLabel}>Quick amounts</Text>
+            <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>Quick amounts</Text>
             <View style={styles.chipRow}>
               {PRESET_CHIPS.map((chip) => {
                 const isSelected = !customInput && selectedAmount === chip;
@@ -112,9 +115,13 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
                   <TouchableOpacity
                     key={chip}
                     onPress={() => handleSelectChip(chip)}
-                    style={[styles.chipButton, isSelected && styles.chipButtonActive]}
+                    style={[
+                      styles.chipButton,
+                      { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border },
+                      isSelected && [styles.chipButtonActive, { backgroundColor: colors.tagBg, borderColor: colors.accentEmerald }],
+                    ]}
                   >
-                    <Text style={[styles.chipText, isSelected && styles.chipTextActive]}>
+                    <Text style={[styles.chipText, { color: colors.textSecondary }, isSelected && [styles.chipTextActive, { color: colors.accentEmerald }]]}>
                       ₱{chip}
                     </Text>
                   </TouchableOpacity>
@@ -123,13 +130,13 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
             </View>
 
             {/* Custom Amount Input */}
-            <Text style={styles.sectionLabel}>Custom amount</Text>
-            <View style={styles.inputWrapper}>
-              <Text style={styles.pesoSign}>₱</Text>
+            <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>Custom amount</Text>
+            <View style={[styles.inputWrapper, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}>
+              <Text style={[styles.pesoSign, { color: colors.accentEmerald }]}>₱</Text>
               <TextInput
-                style={styles.customTextInput}
+                style={[styles.customTextInput, { color: colors.textPrimary }]}
                 placeholder="Enter custom amount"
-                placeholderTextColor="#667A71"
+                placeholderTextColor={colors.textMuted}
                 keyboardType="numeric"
                 value={customInput}
                 onChangeText={handleCustomChange}
@@ -137,12 +144,12 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
             </View>
 
             {/* Optional Note Input */}
-            <Text style={styles.sectionLabel}>Optional note</Text>
-            <View style={styles.noteInputWrapper}>
+            <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>Optional note</Text>
+            <View style={[styles.noteInputWrapper, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }]}>
               <TextInput
-                style={styles.noteInput}
+                style={[styles.noteInput, { color: colors.textPrimary }]}
                 placeholder="e.g. Skipped coffee, Baon savings"
-                placeholderTextColor="#667A71"
+                placeholderTextColor={colors.textMuted}
                 value={note}
                 onChangeText={setNote}
                 maxLength={60}
@@ -150,16 +157,16 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
             </View>
 
             {/* Impact Preview */}
-            <View style={styles.impactCard}>
+            <View style={[styles.impactCard, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
               <View style={styles.impactRow}>
-                <Text style={styles.impactLabel}>Current Progress:</Text>
-                <Text style={styles.impactVal}>
+                <Text style={[styles.impactLabel, { color: colors.textSecondary }]}>Current Progress:</Text>
+                <Text style={[styles.impactVal, { color: colors.textPrimary }]}>
                   {currentProg.clampedPercent}% ({formatPHP(project.currentAmount)})
                 </Text>
               </View>
               <View style={styles.impactRow}>
-                <Text style={styles.impactLabel}>After Deposit:</Text>
-                <Text style={[styles.impactVal, { color: '#55D99A', fontWeight: '700' }]}>
+                <Text style={[styles.impactLabel, { color: colors.textSecondary }]}>After Deposit:</Text>
+                <Text style={[styles.impactVal, { color: colors.accentEmerald, fontWeight: '700' }]}>
                   {nextProg.clampedPercent}% ({formatPHP(project.currentAmount + activeAmount)})
                 </Text>
               </View>
@@ -173,14 +180,18 @@ export const QuickDepositModal: React.FC<QuickDepositModalProps> = ({
 
             {/* Submit Button */}
             <TouchableOpacity
-              style={[styles.depositBtn, activeAmount <= 0 && styles.depositBtnDisabled]}
+              style={[
+                styles.depositBtn,
+                { backgroundColor: colors.accentEmerald },
+                activeAmount <= 0 && styles.depositBtnDisabled,
+              ]}
               onPress={handleConfirm}
               disabled={activeAmount <= 0 || isSubmitting}
             >
-              <Text style={styles.depositBtnText}>
+              <Text style={[styles.depositBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>
                 {isSubmitting ? 'Adding...' : `Add ${formatPHP(activeAmount)}`}
               </Text>
-              <ArrowRight size={18} color="#07130F" strokeWidth={2.5} />
+              <ArrowRight size={18} color={isDark ? '#07130F' : '#FFFFFF'} strokeWidth={2.5} />
             </TouchableOpacity>
           </ScrollView>
         </View>
