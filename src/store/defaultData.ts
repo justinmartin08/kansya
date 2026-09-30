@@ -55,6 +55,69 @@ export const SAMPLE_PROJECTS: WishlistProject[] = [
   },
 ];
 
+export const KANSYA_MOCKUP_PROJECTS: WishlistProject[] = [
+  {
+    id: 'mockup-laptop',
+    title: 'Gaming Laptop',
+    targetPrice: 50000,
+    currentAmount: 525,
+    category: 'gadget',
+    imageKey: 'laptop',
+    createdAt: '2026-09-30T00:00:00Z',
+    subtitle: 'Quietly saving for power.',
+  },
+  {
+    id: 'mockup-phone',
+    title: 'Phone Upgrade',
+    targetPrice: 20000,
+    currentAmount: 1200,
+    category: 'gadget',
+    imageKey: 'phone',
+    createdAt: '2026-09-30T00:00:00Z',
+    subtitle: 'Next gen daily driver.',
+  },
+  {
+    id: 'mockup-college',
+    title: 'College Fund',
+    targetPrice: 30000,
+    currentAmount: 3500,
+    category: 'education',
+    imageKey: 'college',
+    createdAt: '2026-09-30T00:00:00Z',
+    subtitle: 'Investing in the future.',
+  },
+  {
+    id: 'mockup-headphones',
+    title: 'Wireless Headphones',
+    targetPrice: 5000,
+    currentAmount: 0,
+    category: 'gadget',
+    imageKey: 'headphones',
+    createdAt: '2026-09-30T00:00:00Z',
+    subtitle: 'Focus and calm melodies.',
+  },
+  {
+    id: 'mockup-shoes',
+    title: 'New Shoes',
+    targetPrice: 3000,
+    currentAmount: 0,
+    category: 'lifestyle',
+    imageKey: 'shoes',
+    createdAt: '2026-09-30T00:00:00Z',
+    subtitle: 'Comfort for daily steps.',
+  },
+  {
+    id: 'mockup-travel',
+    title: 'Travel (Palawan)',
+    targetPrice: 15000,
+    currentAmount: 0,
+    category: 'lifestyle',
+    imageKey: 'travel',
+    createdAt: '2026-09-30T00:00:00Z',
+    subtitle: 'Crystal waters and serenity.',
+  },
+];
+
 export const INITIAL_PROJECTS: WishlistProject[] = [];
 
 export const INITIAL_DEPOSITS: DepositEntry[] = [];

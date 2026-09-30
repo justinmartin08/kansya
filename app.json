@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "backgroundColor": "#090D16",
+    "backgroundColor": "#07130F",
     "ios": {
       "supportsTablet": true
     },
@@ -14,7 +14,7 @@
       "package": "com.kansya.app",
       "versionCode": 1,
       "adaptiveIcon": {
-        "backgroundColor": "#0F172A",
+        "backgroundColor": "#07130F",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"

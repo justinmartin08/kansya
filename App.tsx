@@ -11,6 +11,7 @@ import { SavingsScreen } from './src/screens/SavingsScreen';
 import { SettingsScreen } from './src/screens/SettingsScreen';
 import { ProjectDetailScreen } from './src/screens/ProjectDetailScreen';
 import { AuthScreen } from './src/screens/AuthScreen';
+import { WishlistScreen } from './src/screens/WishlistScreen';
 import { getThemeColors } from './src/utils/theme';
 
 function MainNavigator() {
@@ -99,7 +100,12 @@ function MainNavigator() {
               {activeTab === 'goals' && (
                 <GoalsScreen onOpenProjectDetail={handleOpenDetail} />
               )}
-              {activeTab === 'savings' && <SavingsScreen />}
+              {activeTab === 'savings' && (
+                <WishlistScreen
+                  onBack={() => handleTabChange('home')}
+                  onOpenProjectDetail={handleOpenDetail}
+                />
+              )}
               {activeTab === 'settings' && <SettingsScreen />}
             </>
           )}

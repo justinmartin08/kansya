@@ -163,23 +163,44 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
             <AnimatedDonutChart
               currentAmount={project.currentAmount}
               targetPrice={project.targetPrice}
-              size={190}
-              strokeWidth={15}
+              size={160}
+              strokeWidth={8}
             />
           </View>
 
-          <View style={[styles.amountsRow, { backgroundColor: colors.surfaceSubtle, borderColor: colors.border, borderWidth: 1 }]}>
-            <View style={styles.amountCol}>
-              <Text style={[styles.amountLabel, { color: colors.textMuted }]}>SAVED SO FAR</Text>
-              <Text style={[styles.amountValue, { color: colors.accentEmerald }]}>
+          <View style={styles.ringInfoSummary}>
+            <Text style={[styles.ringSummarySaved, { color: colors.textPrimary }]}>
+              {formatPHP(project.currentAmount)} saved
+            </Text>
+            <Text style={[styles.ringSummaryTarget, { color: colors.textSecondary }]}>
+              of {formatPHP(project.targetPrice)}
+            </Text>
+          </View>
+
+          {/* Goal Information Grid */}
+          <View style={[styles.goalInfoGrid, { backgroundColor: colors.surfaceSubtle, borderColor: colors.border }]}>
+            <View style={styles.goalInfoCell}>
+              <Text style={[styles.goalInfoCellLabel, { color: colors.textMuted }]}>SAVED</Text>
+              <Text style={[styles.goalInfoCellValue, { color: colors.accentEmerald }]}>
                 {formatPHP(project.currentAmount)}
               </Text>
             </View>
-            <View style={[styles.amountDivider, { backgroundColor: colors.border }]} />
-            <View style={styles.amountCol}>
-              <Text style={[styles.amountLabel, { color: colors.textMuted }]}>TARGET PRICE</Text>
-              <Text style={[styles.amountValue, { color: colors.textPrimary }]}>
+
+            <View style={[styles.goalInfoDivider, { backgroundColor: colors.border }]} />
+
+            <View style={styles.goalInfoCell}>
+              <Text style={[styles.goalInfoCellLabel, { color: colors.textMuted }]}>TARGET</Text>
+              <Text style={[styles.goalInfoCellValue, { color: colors.textPrimary }]}>
                 {formatPHP(project.targetPrice)}
+              </Text>
+            </View>
+
+            <View style={[styles.goalInfoDivider, { backgroundColor: colors.border }]} />
+
+            <View style={styles.goalInfoCell}>
+              <Text style={[styles.goalInfoCellLabel, { color: colors.textMuted }]}>REMAINING</Text>
+              <Text style={[styles.goalInfoCellValue, { color: colors.textPrimary }]}>
+                {formatPHP(remaining)}
               </Text>
             </View>
           </View>
@@ -188,7 +209,7 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
             <View style={styles.blessingBanner}>
               <CheckCircle2 size={16} color="#FFB800" />
               <Text style={styles.blessingBannerText}>
-                Goal fully acquired and blessed!
+                Goal complete! You made it happen.
               </Text>
             </View>
           ) : (
@@ -207,45 +228,41 @@ export const ProjectDetailScreen: React.FC<ProjectDetailScreenProps> = ({
         <View style={[styles.forecastCard, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
           <View style={styles.forecastHeader}>
             <Sparkles size={16} color={colors.accentEmerald} />
-            <Text style={[styles.forecastHeaderTitle, { color: colors.accentEmerald }]}>SMART PACE FORECAST</Text>
+            <Text style={[styles.forecastHeaderTitle, { color: colors.accentEmerald }]}>Smart pace</Text>
           </View>
 
-          <View style={styles.forecastMetricsGrid}>
-            <View style={styles.forecastItem}>
-              <Clock size={16} color={colors.textSecondary} />
-              <View>
-                <Text style={[styles.forecastItemLabel, { color: colors.textMuted }]}>Days Remaining</Text>
-                <Text style={[styles.forecastItemVal, { color: colors.textPrimary }]}>
-                  {pace.daysRemaining > 0 ? `${pace.daysRemaining} days` : 'Goal Fulfilled'}
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.forecastItem}>
-              <Calendar size={16} color={colors.textSecondary} />
-              <View>
-                <Text style={[styles.forecastItemLabel, { color: colors.textMuted }]}>Estimated Completion</Text>
-                <Text style={[styles.forecastItemVal, { color: colors.textPrimary }]}>
-                  {pace.projectedDate
-                    ? new Date(pace.projectedDate).toLocaleDateString(undefined, {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })
-                    : 'Achieved!'}
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          <View style={[styles.forecastAdviceBox, { backgroundColor: colors.surfaceSubtle, borderColor: colors.border, borderWidth: 1 }]}>
-            <Text style={[styles.forecastAdviceText, { color: colors.textSecondary }]}>
-              At your current pace of{' '}
-              <Text style={[styles.forecastAdviceHighlight, { color: colors.accentEmerald }]}>
+          <View style={styles.forecastSimpleContent}>
+            <Text style={[styles.forecastPaceLine, { color: colors.textPrimary }]}>
+              At your current pace:{' '}
+              <Text style={{ color: colors.accentEmerald, fontWeight: '700' }}>
                 {formatPHP(pace.dailyRate)}/day
               </Text>
-              , you will reach this goal on track.
             </Text>
+
+            <Text style={[styles.forecastDateLine, { color: colors.textSecondary }]}>
+              Estimated completion:{' '}
+              <Text style={{ color: colors.textPrimary, fontWeight: '600' }}>
+                {pace.projectedDate
+                  ? new Date(pace.projectedDate).toLocaleDateString('en-US', {
+                      month: 'long',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })
+                  : 'Achieved!'}
+              </Text>
+            </Text>
+
+            {pace.daysRemaining > 0 && (
+              <View style={[styles.forecastActionableBox, { backgroundColor: colors.surfaceSubtle, borderColor: colors.border }]}>
+                <Text style={[styles.forecastActionableText, { color: colors.textSecondary }]}>
+                  Based on your current pace, saving about{' '}
+                  <Text style={{ color: colors.accentEmerald, fontWeight: '700' }}>
+                    {formatPHP(Math.max(25, Math.ceil(remaining / Math.min(180, Math.max(30, pace.daysRemaining)))))}/day
+                  </Text>{' '}
+                  keeps your dream on track.
+                </Text>
+              </View>
+            )}
           </View>
         </View>
 
@@ -375,35 +392,47 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   donutContainer: {
-    marginVertical: 12,
+    marginVertical: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  amountsRow: {
+  ringInfoSummary: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  ringSummarySaved: {
+    fontSize: 18,
+    fontWeight: '800',
+  },
+  ringSummaryTarget: {
+    fontSize: 12.5,
+    fontWeight: '500',
+    marginTop: 2,
+  },
+  goalInfoGrid: {
     flexDirection: 'row',
-    backgroundColor: '#162234',
     borderRadius: 14,
-    padding: 14,
+    borderWidth: 1,
+    padding: 12,
     width: '100%',
-    marginVertical: 12,
+    marginBottom: 16,
   },
-  amountCol: {
+  goalInfoCell: {
     flex: 1,
     alignItems: 'center',
   },
-  amountDivider: {
+  goalInfoDivider: {
     width: 1,
-    backgroundColor: '#22324B',
   },
-  amountLabel: {
+  goalInfoCellLabel: {
     fontSize: 9.5,
     fontWeight: '700',
-    color: '#94A3B8',
-    letterSpacing: 1,
+    letterSpacing: 0.8,
   },
-  amountValue: {
-    fontSize: 18,
-    fontWeight: '900',
-    color: '#F8FAFC',
-    marginTop: 4,
+  goalInfoCellValue: {
+    fontSize: 14,
+    fontWeight: '800',
+    marginTop: 3,
   },
   depositHeroBtn: {
     alignSelf: 'stretch',
@@ -413,7 +442,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
+    marginTop: 4,
     shadowColor: '#86EFAC',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
@@ -448,7 +477,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#1E293B',
     padding: 16,
-    gap: 12,
+    gap: 10,
   },
   forecastHeader: {
     flexDirection: 'row',
@@ -456,49 +485,30 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   forecastHeaderTitle: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: '#86EFAC',
-    letterSpacing: 1,
-  },
-  forecastMetricsGrid: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  forecastItem: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    backgroundColor: '#162234',
-    borderRadius: 12,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#22324B',
-  },
-  forecastItemLabel: {
-    fontSize: 10,
-    color: '#94A3B8',
-  },
-  forecastItemVal: {
-    fontSize: 12.5,
+    fontSize: 13,
     fontWeight: '700',
-    color: '#F8FAFC',
-    marginTop: 2,
+    color: '#86EFAC',
   },
-  forecastAdviceBox: {
-    backgroundColor: '#0E1624',
+  forecastSimpleContent: {
+    gap: 6,
+  },
+  forecastPaceLine: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  forecastDateLine: {
+    fontSize: 13,
+    fontWeight: '400',
+  },
+  forecastActionableBox: {
     borderRadius: 10,
+    borderWidth: 1,
     padding: 12,
+    marginTop: 6,
   },
-  forecastAdviceText: {
-    fontSize: 12,
-    color: '#CBD5E1',
+  forecastActionableText: {
+    fontSize: 12.5,
     lineHeight: 18,
-  },
-  forecastAdviceHighlight: {
-    color: '#86EFAC',
-    fontWeight: '700',
   },
   ledgerSection: {
     gap: 10,

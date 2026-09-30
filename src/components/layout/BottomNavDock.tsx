@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { View, Text, StyleSheet, Pressable, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LayoutGrid, CircleDollarSign, Settings } from 'lucide-react-native';
+import { LayoutGrid, CircleDollarSign, Settings, Target, Bookmark, MoreHorizontal } from 'lucide-react-native';
 import { PlantSprout } from '../illustrations/PlantSprout';
 import { triggerLightHaptic } from '../../utils/haptics';
 import { useKansya } from '../../store/KansyaContext';
@@ -21,9 +21,9 @@ export const BottomNavDock: React.FC<BottomNavDockProps> = ({
   const insets = useSafeAreaInsets();
   const tabs: Array<{ key: TabKey; label: string; icon: any }> = [
     { key: 'home', label: 'Home', icon: PlantSprout },
-    { key: 'goals', label: 'Wishlist', icon: LayoutGrid },
-    { key: 'savings', label: 'Savings', icon: CircleDollarSign },
-    { key: 'settings', label: 'Settings', icon: Settings },
+    { key: 'goals', label: 'Goals', icon: Target },
+    { key: 'savings', label: 'Wishlist', icon: Bookmark },
+    { key: 'settings', label: 'More', icon: MoreHorizontal },
   ];
 
   const scaleAnims = useRef<Record<TabKey, Animated.Value>>({
