@@ -33,6 +33,7 @@ import { PROJECT_IMAGES, getProjectImage } from '../utils/projectImages';
 import { KANSYA_MOCKUP_PROJECTS } from '../store/defaultData';
 import { KProgressBar, KBadge, KEmptyState } from '../components/design/DesignSystem';
 import { QuickDepositModal } from '../components/modals/QuickDepositModal';
+import { ProgressiveAlkansya } from '../components/illustrations/ProgressiveAlkansya';
 
 interface WishlistScreenProps {
   onBack?: () => void;
@@ -75,8 +76,8 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
   const [editTitle, setEditTitle] = useState('');
   const [editPrice, setEditPrice] = useState('');
 
-  // Combined list of projects: user-created or default Kansya mockup items
-  const allItems: WishlistProject[] = projects.length > 0 ? projects : KANSYA_MOCKUP_PROJECTS;
+  // List of projects: real user items only (100% clean slate)
+  const allItems: WishlistProject[] = projects;
 
   const filteredItems = allItems.filter((item) => {
     const isStarted = item.currentAmount > 0;
@@ -287,8 +288,12 @@ export const WishlistScreen: React.FC<WishlistScreenProps> = ({
                   ]}
                 >
                   {/* Thumbnail */}
-                  <View style={[styles.itemThumbWrapper, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
-                    <Image source={imgSource} style={styles.itemThumb} />
+                  <View style={[styles.itemThumbWrapper, { backgroundColor: 'transparent', borderWidth: 0 }]}>
+                    <ProgressiveAlkansya
+                      currentAmount={item.currentAmount}
+                      targetPrice={item.targetPrice}
+                      size={52}
+                    />
                   </View>
 
                   {/* Details Column */}

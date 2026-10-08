@@ -12,6 +12,7 @@ import { ProjectDetailScreen } from './src/screens/ProjectDetailScreen';
 import { AuthScreen } from './src/screens/AuthScreen';
 import { WishlistScreen } from './src/screens/WishlistScreen';
 import { getThemeColors } from './src/utils/theme';
+import { initAudioEngine } from './src/services/audioService';
 
 function MainNavigator() {
   const { currentUser, isLoaded, theme, isDark } = useKansya();
@@ -21,6 +22,10 @@ function MainNavigator() {
 
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const transYAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    initAudioEngine();
+  }, []);
 
   useEffect(() => {
     fadeAnim.setValue(0);

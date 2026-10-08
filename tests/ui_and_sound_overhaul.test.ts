@@ -61,44 +61,61 @@ assert(!dockContent.includes('<View style={styles.activeDot}'), 'BottomNavDock m
 assert(dockContent.includes('insets.bottom'), 'BottomNavDock must apply insets.bottom padding for Android gesture navigation');
 console.log('✓ BottomNavDock solid circular active highlight verified!');
 
-// 3. Complete Audio Decommissioning & Removal Across Entire App
-console.log('3. Testing Complete Audio Removal Across Entire App...');
+// 3. Modern Expo Audio Engine & Settings Audio Toggles
+console.log('3. Testing Modern Expo Audio Engine & Settings Audio Toggles...');
 const mainAppContent = fs.readFileSync(
   path.resolve(__dirname, '../android/app/src/main/java/com/kansya/app/MainApplication.kt'),
   'utf8'
 );
 assert(
   !mainAppContent.includes('KansyaSoundPackage'),
-  'MainApplication.kt must NOT register KansyaSoundPackage'
+  'MainApplication.kt must NOT register obsolete KansyaSoundPackage'
 );
 
-const kansyaContextContent = fs.readFileSync(
-  path.resolve(__dirname, '../src/store/KansyaContext.tsx'),
-  'utf8'
+const audioServicePath = path.resolve(__dirname, '../src/services/audioService.ts');
+assert(fs.existsSync(audioServicePath), 'src/services/audioService.ts must exist');
+const audioServiceContent = fs.readFileSync(audioServicePath, 'utf8');
+
+assert(
+  audioServiceContent.includes('expo-audio'),
+  'audioService.ts must import from expo-audio'
 );
 assert(
-  !kansyaContextContent.includes('soundEffects.play'),
-  'KansyaContext must not invoke soundEffects.play'
+  audioServiceContent.includes('playCoinSound') && audioServiceContent.includes('playTapSound'),
+  'audioService.ts must export playCoinSound and playTapSound'
 );
 assert(
-  !kansyaContextContent.includes('toggleSound'),
-  'KansyaContext must not expose toggleSound'
+  audioServiceContent.includes('toggleMusic') && audioServiceContent.includes('toggleSfx'),
+  'audioService.ts must export toggleMusic and toggleSfx'
 );
+
+// Verify sound assets
+const soundAssets = [
+  'assets/sounds/coin.wav',
+  'assets/sounds/click.wav',
+  'assets/sounds/ambient_loop.mp3',
+];
+for (const s of soundAssets) {
+  const fullSoundPath = path.resolve(__dirname, `../${s}`);
+  assert(fs.existsSync(fullSoundPath), `Sound asset ${s} must exist`);
+  const sz = fs.statSync(fullSoundPath).size;
+  assert(sz > 500, `Sound asset ${s} must be valid size (>500 bytes)`);
+}
 
 const settingsScreenContent = fs.readFileSync(
   path.resolve(__dirname, '../src/screens/SettingsScreen.tsx'),
   'utf8'
 );
 assert(
-  !settingsScreenContent.includes('FEEDBACK & AUDIO'),
-  'SettingsScreen must NOT contain FEEDBACK & AUDIO section'
+  settingsScreenContent.includes('SOUND & MUSIC'),
+  'SettingsScreen must contain SOUND & MUSIC section'
 );
 assert(
-  !settingsScreenContent.includes('Sound Effects'),
-  'SettingsScreen must NOT contain Sound Effects toggle'
+  settingsScreenContent.includes('Sound Effects') && settingsScreenContent.includes('Background Music'),
+  'SettingsScreen must contain Sound Effects and Background Music toggles'
 );
 
-console.log('✓ Complete audio removal across Android native, Context, and Settings strictly verified!');
+console.log('✓ Modern Expo audio engine, sound assets, and Settings controls strictly verified!');
 
 // 4. Launcher Piggy Bank Icon & Adaptive Margins
 console.log('4. Testing Launcher Piggy Bank Icon assets...');

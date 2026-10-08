@@ -1,11 +1,12 @@
 {
   "name": "kansya",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "main": "index.ts",
   "dependencies": {
     "@expo/metro-runtime": "~57.0.16",
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~57.0.25",
+    "expo-audio": "~57.0.5",
     "expo-haptics": "~57.0.3",
     "expo-status-bar": "~57.0.1",
     "expo-system-ui": "~57.0.4",

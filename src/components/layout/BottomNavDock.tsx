@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { View, Text, StyleSheet, Pressable, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LayoutGrid, CircleDollarSign, Settings, Target, Bookmark, MoreHorizontal } from 'lucide-react-native';
+import { CustomHomeIcon, CustomGoalIcon, CustomWishlistIcon, CustomMoreIcon } from '../illustrations/CustomIcons';
 import { PlantSprout } from '../illustrations/PlantSprout';
 import { triggerLightHaptic } from '../../utils/haptics';
 import { useKansya } from '../../store/KansyaContext';
@@ -21,9 +21,9 @@ export const BottomNavDock: React.FC<BottomNavDockProps> = ({
   const insets = useSafeAreaInsets();
   const tabs: Array<{ key: TabKey; label: string; icon: any }> = [
     { key: 'home', label: 'Home', icon: PlantSprout },
-    { key: 'goals', label: 'Goals', icon: Target },
-    { key: 'savings', label: 'Wishlist', icon: Bookmark },
-    { key: 'settings', label: 'More', icon: MoreHorizontal },
+    { key: 'goals', label: 'Goals', icon: CustomGoalIcon },
+    { key: 'savings', label: 'Wishlist', icon: CustomWishlistIcon },
+    { key: 'settings', label: 'More', icon: CustomMoreIcon },
   ];
 
   const scaleAnims = useRef<Record<TabKey, Animated.Value>>({
@@ -36,8 +36,8 @@ export const BottomNavDock: React.FC<BottomNavDockProps> = ({
   const handlePressIn = (tabKey: TabKey) => {
     Animated.spring(scaleAnims[tabKey], {
       toValue: 0.97,
-      tension: 320,
-      friction: 20,
+      tension: 100,
+      friction: 15,
       useNativeDriver: true,
     }).start();
   };
@@ -45,8 +45,8 @@ export const BottomNavDock: React.FC<BottomNavDockProps> = ({
   const handlePressOut = (tabKey: TabKey) => {
     Animated.spring(scaleAnims[tabKey], {
       toValue: 1,
-      tension: 300,
-      friction: 18,
+      tension: 120,
+      friction: 14,
       useNativeDriver: true,
     }).start();
   };

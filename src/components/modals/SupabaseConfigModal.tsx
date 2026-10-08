@@ -126,7 +126,7 @@ export const SupabaseConfigModal: React.FC<SupabaseConfigModalProps> = ({ visibl
                 <Cloud size={20} color="#38BDF8" />
               </View>
               <View>
-                <Text style={[styles.sheetSubtitle, { color: colors.accentEmerald }]}>HYBRID CLOUD (OPTION 3)</Text>
+                <Text style={[styles.sheetSubtitle, { color: colors.accentEmerald }]}>SQUAD CLOUD SYNC</Text>
                 <Text style={[styles.sheetTitle, { color: colors.textPrimary }]}>Supabase Squad Sync</Text>
               </View>
             </View>

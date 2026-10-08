@@ -19,33 +19,32 @@ if (!token) {
   process.exit(1);
 }
 
-const notes = `## 🌱 Kansya v1.1.0 Release
+const notes = `## 🌱 Kansya v2.0.0 Release
 
 ### 📱 Standalone Android APK
-Download \`kansya-v1.1.0.apk\` below and install directly on your Android phone (100% offline-first, zero server setup required)!
+Download \`kansya-v2.0.0.apk\` below and install directly on your Android phone (100% offline-first, zero server setup required)!
 
-### ✨ What's New in v1.1.0
-- 🐷 **Calm Kansya Mobile Design System & 3D Piggy Mascot**:
-  - Welcoming 3D porcelain emerald piggy companion cheering on wishlist milestones and dashboard goals.
-  - Soothing forest-inspired palette with high WCAG accessibility contrast.
-  - Interactive design mockups (\`assets/mockups/\`) for light/dark modes.
-- 🎯 **Wishlist & Goal Action Improvements**:
-  - Deposit action button directly within Goal details.
-  - Transaction history modal and enhanced ledger breakdown.
-- 🌗 **Dynamic Light & Dark Theme Engine**:
-  - Instant Sun/Moon toggle with dual sunrise & sunset mountain illustrations.
-- 👤 **Offline Profile & Security Vault**:
-  - 6 curated savings avatars, Eye/EyeOff password toggles, and master offline recovery key.
-- 👥 **Collab Squad & 6-Character Squad Codes**:
-  - Create shared duo/group goals with codes like \`BORA-924\` and track real-time contribution ledgers.
-- 🎓 **Custom College Schedule**:
-  - Dynamic 1 to 7 school day baon calculator.
-- 🏆 **10 Trophies & Milestones**:
-  - Clean-slate onboarding with dynamic unlock thresholds.
+### ✨ What's New in v2.0.0
+- 🐷 **Brand & Mascot Redesign**:
+  - Flat-vector green piggy-bank app logo filling icon edge-to-edge across all Android mipmap densities and adaptive icons.
+  - High-res 3D ceramic Kansya piggy companions on dashboard hero and wishlist screens.
+  - ProgressiveAlkansya with crisp visibility in both Light mode (#E8F7EE) and Dark mode (#142F26).
+- 🎵 **Standard Expo Audio Engine**:
+  - Original calming 16s lo-fi ambient background music loop (\`assets/sounds/ambient_loop.mp3\`).
+  - Tactile sound effects (coin drop, soft tap, milestone chime, celebration fanfare).
+  - In-app Settings toggles for Sound Effects (default ON) and Background Music (default OFF) with AppState background pause.
+- 🧹 **100% Clean Slate Start**:
+  - Purged mockup data (₱0 initial savings, zero fake Sep 30 logs, zero mock projects).
+  - Trophies overhaul with meaningful financial milestones (0/10 trophies unlocked on fresh start; no premature unlock).
+- 🎨 **Custom SVG Icon Family & UI Polish**:
+  - Redrawn organic PlantSprout icon and unified stroke-width iconography.
+  - Fixed hero overlap: comfortable ~30px breathing room between Total Savings and Current Goal card.
+  - Goals Screen differentiated from Wishlist ("SAVINGS GOALS / Your Active Goals").
+  - Cleaned developer jargon ("Obsidian Navy", "Option 3").
 
 ### 📦 Artifacts
-- \`kansya-v1.1.0.apk\` (77.4 MB): Standalone release APK (Version Code 2, Hermes Bytecode, ARM64 / ARMv7 / x86 / x86_64).
-- \`kansya-v1.0.0.apk\` (77.4 MB): Legacy compatibility release APK.
+- \`kansya-v2.0.0.apk\`: Standalone release APK (Version Code 3, Hermes Bytecode, ARM64 / ARMv7 / x86 / x86_64).
+- \`kansya-v1.0.0.apk\`: Legacy compatibility release APK.
 
 ### 📄 License
 Distributed under the MIT License.
@@ -56,25 +55,25 @@ fs.writeFileSync(notesFile, notes, 'utf8');
 
 try {
   try {
-    console.log('Publishing GitHub release v1.1.0...');
+    console.log('Publishing GitHub release v2.0.0...');
     cp.execSync(
-      'gh release create v1.1.0 kansya-v1.1.0.apk kansya-v1.0.0.apk --title "Kansya v1.1.0 - Calm Mobile Design System and 3D Piggy Mascot" --notes-file "' + notesFile + '"',
+      'gh release create v2.0.0 kansya-v2.0.0.apk kansya-v1.0.0.apk --title "Kansya v2.0.0 - Brand Redesign, Expo Audio Engine & Complete Polish" --notes-file "' + notesFile + '"',
       {
         env: { ...process.env, GH_TOKEN: token },
         stdio: 'inherit',
       }
     );
-    console.log('Release v1.1.0 published successfully!');
+    console.log('Release v2.0.0 published successfully!');
   } catch (createErr) {
-    console.log('Release v1.1.0 already exists, uploading updated assets with --clobber...');
+    console.log('Release v2.0.0 already exists, uploading updated assets with --clobber...');
     cp.execSync(
-      'gh release upload v1.1.0 kansya-v1.1.0.apk kansya-v1.0.0.apk --clobber',
+      'gh release upload v2.0.0 kansya-v2.0.0.apk kansya-v1.0.0.apk --clobber',
       {
         env: { ...process.env, GH_TOKEN: token },
         stdio: 'inherit',
       }
     );
-    console.log('Release v1.1.0 assets updated successfully!');
+    console.log('Release v2.0.0 assets updated successfully!');
   }
 
   // Also update v1.0.0 release assets so anyone downloading from the old link gets the fresh build

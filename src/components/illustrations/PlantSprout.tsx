@@ -17,17 +17,21 @@ export const PlantSprout: React.FC<PlantSproutProps> = ({
     <View style={[{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }, style]}>
       <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
         <G fill={color}>
-          {/* Rounded base stem */}
+          {/* Gentle curved stem rising from base */}
           <Path
-            d="M10.8 11.5 C10.8 15.5 11 19.5 11 21 C11 21.6 11.4 22 12 22 C12.6 22 13 21.6 13 21 C13 19.5 13.2 15.5 13.2 11.5 Z"
+            d="M12 22C12 18 11.5 14 13.5 10.5C13.8 10 14.2 10.2 14.1 10.7C12.8 14.2 13.2 18 13.2 22C13.2 22.5 12 22.5 12 22Z"
           />
-          {/* Soft Rounded Left Leaf */}
+          {/* Main Left Seedling Leaf - rounded, plump organic shape */}
           <Path
-            d="M11.6 12 C7.5 12 2.8 9.5 2.2 5.5 C5.8 4.6 10.2 6.8 11.8 11.2 C11.7 11.5 11.6 11.7 11.6 12 Z"
+            d="M12.5 11C11.5 7 7.5 4.5 3.5 5.5C3 8.5 5.5 12.5 9.5 13C10.8 13.2 12.2 12.5 12.5 11Z"
           />
-          {/* Soft Rounded Right Leaf */}
+          {/* Secondary Right Sprout Leaf - soft curved accent */}
           <Path
-            d="M12.4 12 C12.4 11.7 12.3 11.5 12.2 11.2 C13.8 6.8 18.2 4.6 21.8 5.5 C21.2 9.5 16.5 12 12.4 12 Z"
+            d="M13.2 9C15.5 6.5 19 6 21 7.2C21.2 10 19 12.8 15.8 12.8C14.5 12.8 13.5 11.8 13.2 9Z"
+          />
+          {/* Little soil mound / root base dot */}
+          <Path
+            d="M10 22C10 21.2 11 20.8 12.6 20.8C14.2 20.8 15.2 21.2 15.2 22C15.2 22.8 14.2 23.2 12.6 23.2C11 23.2 10 22.8 10 22Z"
           />
         </G>
       </Svg>

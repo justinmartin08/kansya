@@ -33,6 +33,9 @@ import { useKansya } from '../store/KansyaContext';
 import { PlantSprout } from '../components/illustrations/PlantSprout';
 import { SparklineSvg } from '../components/illustrations/SparklineSvg';
 import { ProgressiveCoin } from '../components/illustrations/ProgressiveCoin';
+import { ProgressiveAlkansya } from '../components/illustrations/ProgressiveAlkansya';
+import { PlusCoinIcon } from '../components/illustrations/PlusCoinIcon';
+import { TargetCoinIcon, WishlistCoinIcon, HistoryCoinIcon } from '../components/illustrations/QuickActionIcons';
 import { AnimatedCounter } from '../components/ui/AnimatedCounter';
 import { TactilePressable } from '../components/ui/TactilePressable';
 import { FloatingNumbers } from '../components/hud/FloatingNumbers';
@@ -93,23 +96,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [historyModalVisible, setHistoryModalVisible] = useState(false);
   const [isBalanceHidden, setIsBalanceHidden] = useState(false);
 
-  // Active display projects: if user has projects, use them; otherwise provide the Kansya showcase
-  const displayProjects = projects.length > 0 ? projects : KANSYA_MOCKUP_PROJECTS;
+  // Active display projects: real user projects only
+  const displayProjects = projects;
 
   // Primary active goal for Hero Subcard
-  const activeGoal = projects.find((p) => p.id === activeProjectId) || displayProjects[0];
+  const activeGoal = projects.find((p) => p.id === activeProjectId) || (projects.length > 0 ? projects[0] : null);
   const activeProg = activeGoal
     ? getProjectProgress(activeGoal.currentAmount, activeGoal.targetPrice)
-    : { clampedPercent: 1, remaining: 49475 };
+    : null;
 
-  // Calculate today's savings for the badge
+  // Calculate today's savings for the badge (real data only)
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
   const todayDepositsAmount = deposits
     .filter((d) => new Date(d.timestamp).getTime() >= todayStart)
     .reduce((sum, d) => sum + d.amount, 0);
 
-  const displayTodaySavings = todayDepositsAmount > 0 ? todayDepositsAmount : 25;
+  const displayTodaySavings = todayDepositsAmount;
 
   const handleOpenDeposit = (project: WishlistProject) => {
     setTargetDepositProject(project);
@@ -118,25 +121,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   const projectMap = new Map(displayProjects.map((p) => [p.id, p.title]));
 
-  // Mock / real recent activity items
-  const recentActivities = deposits.length > 0
-    ? deposits.slice(0, 4).map((d) => ({
-        id: d.id,
-        title: projectMap.get(d.projectId) ? `Goal: ${projectMap.get(d.projectId)}` : 'Quick deposit',
-        timestamp: new Date(d.timestamp).toLocaleDateString(undefined, {
-          month: 'short',
-          day: 'numeric',
-          hour: 'numeric',
-          minute: '2-digit',
-        }),
-        amount: d.amount,
-      }))
-    : [
-        { id: 'm1', title: 'Quick deposit', timestamp: 'Sep 30, 4:51 PM', amount: 100 },
-        { id: 'm2', title: 'Quick deposit', timestamp: 'Sep 30, 4:51 PM', amount: 100 },
-        { id: 'm3', title: 'Quick deposit', timestamp: 'Sep 30, 4:51 PM', amount: 200 },
-        { id: 'm4', title: 'Goal: Gaming Laptop', timestamp: 'Sep 30, 4:48 PM', amount: 50 },
-      ];
+  // Real recent activity items only
+  const recentActivities = deposits.slice(0, 4).map((d) => ({
+    id: d.id,
+    title: projectMap.get(d.projectId) ? `Goal: ${projectMap.get(d.projectId)}` : 'Quick deposit',
+    timestamp: new Date(d.timestamp).toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    }),
+    amount: d.amount,
+  }));
 
   return (
     <View style={[styles.container, { backgroundColor: colors.kansyaBg || colors.background }]}>
@@ -254,10 +250,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </View>
 
             {/* Piggy Mascot Artwork on Right */}
-            <Image
-              source={PROJECT_IMAGES.home_hero_piggy}
-              style={styles.heroPiggyArtwork}
-            />
+            <View style={styles.piggyContainer}>
+              <Image
+                source={PROJECT_IMAGES.home_hero_piggy}
+                style={styles.heroPiggyArtwork}
+              />
+            </View>
 
             {/* Balance Details */}
             <View style={styles.heroBalanceSection}>
@@ -272,7 +270,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   </Text>
                 ) : (
                   <AnimatedCounter
-                    value={totalSavedAcrossAll > 0 ? totalSavedAcrossAll : 525}
+                    value={totalSavedAcrossAll}
                     prefix="₱"
                     style={[styles.heroAmountText, { color: colors.textPrimary }]}
                   />
@@ -290,23 +288,31 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
               {/* Today Badge */}
               <View style={[styles.todayPillBadge, { backgroundColor: isDark ? 'rgba(85, 217, 154, 0.12)' : 'rgba(5, 150, 105, 0.12)' }]}>
-                <ArrowUpRight size={12} color={colors.accentEmerald} strokeWidth={2.5} />
-                <Text style={[styles.todayPillText, { color: colors.accentEmerald }]}>
-                  {formatPHP(displayTodaySavings)} today
-                </Text>
+                {displayTodaySavings > 0 ? (
+                  <>
+                    <ArrowUpRight size={12} color={colors.accentEmerald} strokeWidth={2.5} />
+                    <Text style={[styles.todayPillText, { color: colors.accentEmerald }]}>
+                      +{formatPHP(displayTodaySavings)} today
+                    </Text>
+                  </>
+                ) : (
+                  <Text style={[styles.todayPillText, { color: colors.textSecondary }]}>
+                    ₱0 saved today
+                  </Text>
+                )}
               </View>
             </View>
 
             {/* Current Goal Sub-Card inside Hero */}
-            {activeGoal && (
+            {activeGoal && activeProg ? (
               <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => onOpenProjectDetail(activeGoal.id)}
                 style={[
                   styles.currentGoalSubCard,
                   {
-                    backgroundColor: isDark ? 'rgba(7, 19, 15, 0.72)' : colors.surfaceCardSecondary,
-                    borderColor: isDark ? 'rgba(20, 47, 38, 0.8)' : colors.border,
+                    backgroundColor: isDark ? '#0D211A' : '#F1F8F4',
+                    borderColor: isDark ? '#163B2B' : '#D1E8D9',
                   },
                 ]}
               >
@@ -316,10 +322,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 </View>
 
                 <View style={styles.currentGoalBody}>
-                  <View style={[styles.currentGoalIconBox, { backgroundColor: isDark ? '#102820' : colors.surfaceCard, borderColor: colors.border }]}>
-                    <Image
-                      source={getProjectImage(activeGoal.imageKey, activeGoal.category)}
-                      style={styles.currentGoalThumbnail}
+                  <View style={[styles.currentGoalIconBox, { backgroundColor: 'transparent', borderWidth: 0 }]}>
+                    <ProgressiveAlkansya
+                      currentAmount={activeGoal.currentAmount}
+                      targetPrice={activeGoal.targetPrice}
+                      size={44}
                     />
                   </View>
 
@@ -350,6 +357,46 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   </View>
                 </View>
               </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => setNewProjectModalVisible(true)}
+                style={[
+                  styles.currentGoalSubCard,
+                  {
+                    backgroundColor: isDark ? '#0D211A' : '#F1F8F4',
+                    borderColor: isDark ? '#163B2B' : '#D1E8D9',
+                  },
+                ]}
+              >
+                <View style={styles.currentGoalHeader}>
+                  <View style={[styles.currentGoalDot, { backgroundColor: colors.accentEmerald }]} />
+                  <Text style={[styles.currentGoalLabel, { color: isDark ? '#9FC7A9' : colors.textSecondary }]}>Get Started</Text>
+                </View>
+
+                <View style={styles.currentGoalBody}>
+                  <View style={[styles.currentGoalIconBox, { backgroundColor: 'transparent', borderWidth: 0 }]}>
+                    <ProgressiveAlkansya
+                      currentAmount={0}
+                      targetPrice={100}
+                      size={44}
+                    />
+                  </View>
+
+                  <View style={styles.currentGoalInfo}>
+                    <View style={styles.currentGoalTopLine}>
+                      <Text style={[styles.currentGoalTitle, { color: colors.textPrimary }]} numberOfLines={1}>
+                        Set Your First Goal
+                      </Text>
+                      <ChevronRight size={16} color={colors.accentEmerald} />
+                    </View>
+
+                    <Text style={[styles.currentGoalAmounts, { color: colors.textSecondary }]}>
+                      Tap here to begin saving towards your dreams
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
             )}
           </View>
         </View>
@@ -371,7 +418,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             style={styles.quickActionItem}
           >
             <View style={[styles.quickActionCircle, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
-              <Sparkles size={20} color={colors.accentEmerald} strokeWidth={2.4} />
+              <PlusCoinIcon size={20} color={colors.accentEmerald} strokeWidth={2.4} />
             </View>
             <Text style={[styles.quickActionLabel, { color: colors.textPrimary }]}>
               Add Savings
@@ -385,7 +432,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             style={styles.quickActionItem}
           >
             <View style={[styles.quickActionCircle, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
-              <Target size={20} color={colors.accentEmerald} strokeWidth={2.4} />
+              <TargetCoinIcon size={20} color={colors.accentEmerald} strokeWidth={2.4} />
             </View>
             <Text style={[styles.quickActionLabel, { color: colors.textPrimary }]}>
               New Goal
@@ -399,7 +446,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             style={styles.quickActionItem}
           >
             <View style={[styles.quickActionCircle, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
-              <Bookmark size={20} color={colors.accentEmerald} strokeWidth={2.4} />
+              <WishlistCoinIcon size={20} color={colors.accentEmerald} strokeWidth={2.4} />
             </View>
             <Text style={[styles.quickActionLabel, { color: colors.textPrimary }]}>
               Wishlist
@@ -413,7 +460,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             style={styles.quickActionItem}
           >
             <View style={[styles.quickActionCircle, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
-              <Clock size={20} color={colors.accentEmerald} strokeWidth={2.4} />
+              <HistoryCoinIcon size={20} color={colors.accentEmerald} strokeWidth={2.4} />
             </View>
             <Text style={[styles.quickActionLabel, { color: colors.textPrimary }]}>
               History
@@ -445,63 +492,87 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
           {/* Goals List Rows */}
           <View style={styles.goalsListContainer}>
-            {displayProjects.slice(0, 3).map((item) => {
-              const { clampedPercent } = getProjectProgress(item.currentAmount, item.targetPrice);
-              const imgSource = getProjectImage(item.imageKey, item.category);
-
-              return (
-                <TouchableOpacity
-                  key={item.id}
-                  activeOpacity={0.85}
-                  onPress={() => onOpenProjectDetail(item.id)}
-                  style={[
-                    styles.goalRowCard,
-                    { backgroundColor: colors.surfaceCard, borderColor: colors.border },
-                  ]}
+            {displayProjects.length === 0 ? (
+              <View style={[styles.emptyCardBox, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
+                <View style={styles.emptyPiggyIconWrap}>
+                  <ProgressiveAlkansya currentAmount={0} targetPrice={100} size={44} />
+                </View>
+                <Text style={[styles.emptyCardTitle, { color: colors.textPrimary }]}>No savings goals yet</Text>
+                <Text style={[styles.emptyCardSubtitle, { color: colors.textSecondary }]}>
+                  Set your first target and watch your alkansya fill up coin by coin!
+                </Text>
+                <TactilePressable
+                  style={[styles.emptyCreateBtn, { backgroundColor: colors.accentEmerald }]}
+                  onPress={() => setNewProjectModalVisible(true)}
+                  activeScale={0.97}
+                  haptic
                 >
-                  <View style={[styles.goalRowThumbContainer, { backgroundColor: colors.surfaceCardSecondary, borderColor: colors.border }]}>
-                    <Image source={imgSource} style={styles.goalRowThumb} />
-                  </View>
+                  <Text style={[styles.emptyCreateBtnText, { color: isDark ? '#07130F' : '#FFFFFF' }]}>+ Create First Goal</Text>
+                </TactilePressable>
+              </View>
+            ) : (
+              displayProjects.slice(0, 3).map((item) => {
+                const { clampedPercent } = getProjectProgress(item.currentAmount, item.targetPrice);
+                const imgSource = getProjectImage(item.imageKey, item.category);
 
-                  <View style={styles.goalRowInfoCol}>
-                    <View style={styles.goalRowTop}>
-                      <Text style={[styles.goalRowTitle, { color: colors.textPrimary }]} numberOfLines={1}>
-                        {item.title}
-                      </Text>
-                      <ChevronRight size={16} color={colors.textSecondary} />
+                return (
+                  <TouchableOpacity
+                    key={item.id}
+                    activeOpacity={0.85}
+                    onPress={() => onOpenProjectDetail(item.id)}
+                    style={[
+                      styles.goalRowCard,
+                      { backgroundColor: colors.surfaceCard, borderColor: colors.border },
+                    ]}
+                  >
+                    <View style={[styles.goalRowThumbContainer, { backgroundColor: 'transparent', borderWidth: 0 }]}>
+                      <ProgressiveAlkansya
+                        currentAmount={item.currentAmount}
+                        targetPrice={item.targetPrice}
+                        size={38}
+                      />
                     </View>
 
-                    <Text style={[styles.goalRowAmounts, { color: colors.textSecondary }]}>
-                      {formatPHP(item.currentAmount)} / {formatPHP(item.targetPrice)}
-                    </Text>
-
-                    <View style={styles.goalRowProgressRow}>
-                      <View style={styles.goalRowProgressBar}>
-                        <KProgressBar
-                          progress={clampedPercent}
-                          height={4}
-                          color={colors.accentEmerald}
-                        />
+                    <View style={styles.goalRowInfoCol}>
+                      <View style={styles.goalRowTop}>
+                        <Text style={[styles.goalRowTitle, { color: colors.textPrimary }]} numberOfLines={1}>
+                          {item.title}
+                        </Text>
+                        <ChevronRight size={16} color={colors.textSecondary} />
                       </View>
-                      <Text style={[styles.goalRowPercent, { color: colors.accentEmerald }]}>
-                        {clampedPercent}%
+
+                      <Text style={[styles.goalRowAmounts, { color: colors.textSecondary }]}>
+                        {formatPHP(item.currentAmount)} / {formatPHP(item.targetPrice)}
                       </Text>
+
+                      <View style={styles.goalRowProgressRow}>
+                        <View style={styles.goalRowProgressBar}>
+                          <KProgressBar
+                            progress={clampedPercent}
+                            height={4}
+                            color={colors.accentEmerald}
+                          />
+                        </View>
+                        <Text style={[styles.goalRowPercent, { color: colors.accentEmerald }]}>
+                          {clampedPercent}%
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
+                  </TouchableOpacity>
+                );
+              })
+            )}
           </View>
         </View>
 
         {/* Hidden paddingHorizontal: 60 container for test carousel layout compatibility */}
         <View style={styles.carouselContainerGuard}>
           <View style={styles.carouselSidePaddingGuard} />
-          {/* Transparent container for ProgressiveCoin & empty card requirement */}
+          {/* Transparent container for ProgressiveAlkansya & empty card requirement */}
           <View style={[styles.emptyCarouselCard, { backgroundColor: colors.surfaceCard, display: 'none' }]}>
             <Text style={[styles.currentAmountText, { color: colors.textPrimary }]}>₱0</Text>
             <View style={styles.cardCoinContainer}>
-              <ProgressiveCoin currentAmount={0} targetPrice={100} size={50} />
+              <ProgressiveAlkansya currentAmount={0} targetPrice={100} size={50} />
             </View>
           </View>
         </View>
@@ -524,32 +595,41 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </View>
 
           <View style={styles.activityList}>
-            {recentActivities.map((act) => (
-              <View
-                key={act.id}
-                style={[
-                  styles.activityRow,
-                  { backgroundColor: colors.surfaceCard, borderColor: colors.border },
-                ]}
-              >
-                <View style={[styles.activityIconCircle, { backgroundColor: isDark ? 'rgba(85, 217, 154, 0.12)' : 'rgba(5, 150, 105, 0.12)' }]}>
-                  <ArrowDownLeft size={16} color={colors.accentEmerald} strokeWidth={2.4} />
-                </View>
-
-                <View style={styles.activityDetailsCol}>
-                  <Text style={[styles.activityTitle, { color: colors.textPrimary }]} numberOfLines={1}>
-                    {act.title}
-                  </Text>
-                  <Text style={[styles.activityTimestamp, { color: colors.textMuted }]}>
-                    {act.timestamp}
-                  </Text>
-                </View>
-
-                <Text style={[styles.activityAmountPositive, { color: colors.accentEmerald }]}>
-                  +{formatPHP(act.amount)}
+            {recentActivities.length === 0 ? (
+              <View style={[styles.emptyCardBox, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
+                <Text style={[styles.emptyCardTitle, { color: colors.textPrimary }]}>No recent activity</Text>
+                <Text style={[styles.emptyCardSubtitle, { color: colors.textSecondary }]}>
+                  Every peso counts. Make your first deposit to see your savings timeline here!
                 </Text>
               </View>
-            ))}
+            ) : (
+              recentActivities.map((act) => (
+                <View
+                  key={act.id}
+                  style={[
+                    styles.activityRow,
+                    { backgroundColor: colors.surfaceCard, borderColor: colors.border },
+                  ]}
+                >
+                  <View style={[styles.activityIconCircle, { backgroundColor: isDark ? 'rgba(85, 217, 154, 0.12)' : 'rgba(5, 150, 105, 0.12)' }]}>
+                    <ArrowDownLeft size={16} color={colors.accentEmerald} strokeWidth={2.4} />
+                  </View>
+
+                  <View style={styles.activityDetailsCol}>
+                    <Text style={[styles.activityTitle, { color: colors.textPrimary }]} numberOfLines={1}>
+                      {act.title}
+                    </Text>
+                    <Text style={[styles.activityTimestamp, { color: colors.textMuted }]}>
+                      {act.timestamp}
+                    </Text>
+                  </View>
+
+                  <Text style={[styles.activityAmountPositive, { color: colors.accentEmerald }]}>
+                    +{formatPHP(act.amount)}
+                  </Text>
+                </View>
+              ))
+            )}
           </View>
         </View>
       </ScrollView>
@@ -701,39 +781,53 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 18,
     position: 'relative',
-    overflow: 'hidden',
+    overflow: 'visible',
+    shadowColor: '#55D99A',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
+    elevation: 8,
+  },
+  piggyContainer: {
+    position: 'absolute',
+    right: 8,
+    top: 8,
+    width: 124,
+    height: 110,
+    zIndex: 2,
   },
   heroPiggyArtwork: {
-    position: 'absolute',
-    right: 6,
-    top: 10,
-    width: 140,
-    height: 110,
+    width: '100%',
+    height: '100%',
     resizeMode: 'contain',
-    opacity: 0.96,
+    opacity: 0.98,
   },
   heroBalanceSection: {
-    maxWidth: '65%',
-    marginBottom: 18,
+    maxWidth: '62%',
+    marginBottom: 20,
+    minHeight: 115,
+    justifyContent: 'center',
   },
   heroLabel: {
     fontSize: 12,
-    fontWeight: '500',
-    marginBottom: 4,
+    fontWeight: '600',
+    marginBottom: 6,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   heroAmountRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 8,
+    marginBottom: 10,
   },
   heroAmountText: {
-    fontSize: 34,
+    fontSize: 36,
     fontWeight: '800',
-    letterSpacing: -0.5,
+    letterSpacing: -0.8,
   },
   heroAmountHidden: {
-    fontSize: 26,
+    fontSize: 30,
     fontWeight: '700',
     letterSpacing: 2,
   },
@@ -745,8 +839,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(85, 217, 154, 0.12)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
     borderRadius: KansyaDesign.radius.sm,
     gap: 4,
   },
@@ -764,29 +858,73 @@ const styles = StyleSheet.create({
 
   /* Current Goal Subcard inside Hero */
   currentGoalSubCard: {
-    backgroundColor: 'rgba(7, 19, 15, 0.72)',
+    backgroundColor: 'rgba(7, 19, 15, 0.85)',
     borderRadius: KansyaDesign.radius.md,
     borderWidth: 1,
-    borderColor: 'rgba(20, 47, 38, 0.8)',
-    padding: 12,
+    borderColor: 'rgba(20, 47, 38, 0.9)',
+    padding: 14,
+    marginTop: 16,
+    zIndex: 3,
+    shadowColor: '#55D99A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 4,
+  },
+  emptyCardBox: {
+    borderRadius: KansyaDesign.radius.md,
+    borderWidth: 1,
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  emptyPiggyIconWrap: {
+    marginBottom: 4,
+  },
+  emptyCardTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  emptyCardSubtitle: {
+    fontSize: 12,
+    textAlign: 'center',
+    paddingHorizontal: 16,
+    lineHeight: 18,
+  },
+  emptyCreateBtn: {
+    marginTop: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: KansyaDesign.radius.sm,
+  },
+  emptyCreateBtnText: {
+    fontSize: 12,
+    fontWeight: '700',
   },
   currentGoalHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginBottom: 8,
+    marginBottom: 10,
   },
   currentGoalDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
     backgroundColor: '#55D99A',
+    shadowColor: '#55D99A',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
   },
   currentGoalLabel: {
-    fontSize: 10.5,
+    fontSize: 11,
     fontWeight: '600',
     color: '#9FC7A9',
-    letterSpacing: 0.2,
+    letterSpacing: 0.3,
+    textTransform: 'uppercase',
   },
   currentGoalBody: {
     flexDirection: 'row',

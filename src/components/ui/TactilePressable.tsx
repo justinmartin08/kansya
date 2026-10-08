@@ -39,8 +39,9 @@ export const TactilePressable: React.FC<TactilePressableProps> = ({
     if (disabled) return;
     Animated.spring(scaleAnim, {
       toValue: activeScale,
-      tension: 300,
-      friction: 20,
+      damping: 15,
+      stiffness: 200,
+      mass: 0.8,
       useNativeDriver: true,
     }).start();
 
@@ -54,8 +55,9 @@ export const TactilePressable: React.FC<TactilePressableProps> = ({
   const handlePressOut = (e: GestureResponderEvent) => {
     Animated.spring(scaleAnim, {
       toValue: 1,
-      tension: 350,
-      friction: 18,
+      damping: 15,
+      stiffness: 200,
+      mass: 0.8,
       useNativeDriver: true,
     }).start();
     onPressOut?.(e);

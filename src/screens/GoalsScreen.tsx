@@ -33,7 +33,7 @@ import { useKansya } from '../store/KansyaContext';
 import { NewProjectModal } from '../components/modals/NewProjectModal';
 import { QuickDepositModal } from '../components/modals/QuickDepositModal';
 import { JoinSquadModal } from '../components/modals/JoinSquadModal';
-import { ProgressiveCoin } from '../components/illustrations/ProgressiveCoin';
+import { ProgressiveAlkansya } from '../components/illustrations/ProgressiveAlkansya';
 import { TactilePressable } from '../components/ui/TactilePressable';
 import { formatPHP, getProjectProgress } from '../utils/calculations';
 import { WishlistProject, CollabGoal } from '../types';
@@ -208,8 +208,8 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
             {/* Header */}
             <View style={styles.header}>
               <View>
-                <Text style={[styles.headerSubtitle, { color: colors.accentEmerald }]}>WISHLIST CATALOG</Text>
-                <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Your Wishlist Goals</Text>
+                <Text style={[styles.headerSubtitle, { color: colors.accentEmerald }]}>SAVINGS GOALS</Text>
+                <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Your Active Goals</Text>
               </View>
               <TactilePressable
                 style={styles.addBtn}
@@ -270,13 +270,13 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.listContent}>
               {filteredProjects.length === 0 ? (
                 <View style={[styles.emptyContainer, { backgroundColor: colors.surfaceCard, borderColor: colors.border }]}>
-                  <View style={[styles.emptyIconBox, { backgroundColor: isDark ? '#102820' : colors.surfaceSubtle, borderColor: colors.border }]}>
-                    <Sparkles size={28} color={colors.accentEmerald} />
+                  <View style={[styles.emptyIconBox, { backgroundColor: 'transparent', borderColor: 'transparent' }]}>
+                    <ProgressiveAlkansya currentAmount={0} targetPrice={100} size={52} />
                   </View>
-                  <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No Wishlist Goals Yet</Text>
+                  <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No Active Goals Yet</Text>
                   <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
                     {filter === 'all'
-                      ? 'Clean slate! Tap "+ New Goal" to start saving for your dream items.'
+                      ? 'Clean slate! Tap "+ New Goal" to start saving for what matters most.'
                       : `No ${filter} goals found in your catalog.`}
                   </Text>
                   {filter === 'all' && (
@@ -315,8 +315,8 @@ export const GoalsScreen: React.FC<GoalsScreenProps> = ({ onOpenProjectDetail })
                     >
                       {/* Top Section */}
                       <View style={styles.cardHeaderRow}>
-                        <View style={styles.coinThumbnailContainer}>
-                          <ProgressiveCoin
+                        <View style={[styles.coinThumbnailContainer, { backgroundColor: 'transparent', borderWidth: 0 }]}>
+                          <ProgressiveAlkansya
                             currentAmount={proj.currentAmount}
                             targetPrice={proj.targetPrice}
                             size={46}

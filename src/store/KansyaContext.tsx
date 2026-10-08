@@ -23,6 +23,7 @@ import {
 } from './defaultData';
 import { getConstructionPhase, getProjectProgress } from '../utils/calculations';
 import { triggerSuccessHaptic, triggerMediumHaptic, triggerLightHaptic } from '../utils/haptics';
+import { playCoinSound, playGoalCompleteSound, playMilestoneSound } from '../services/audioService';
 import {
   generateSquadInviteCode,
   syncCollabGoalToCloud,
@@ -758,15 +759,7 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
 
     let currentProjects = projects;
     let project = currentProjects.find((p) => p.id === projectId);
-    if (!project) {
-      const mockup = KANSYA_MOCKUP_PROJECTS.find((p) => p.id === projectId);
-      if (mockup) {
-        currentProjects = [...KANSYA_MOCKUP_PROJECTS];
-        project = mockup;
-      } else {
-        return;
-      }
-    }
+    if (!project) return;
 
     const oldPhase = getConstructionPhase(project.currentAmount, project.targetPrice);
     const newAmount = project.currentAmount + amount;
@@ -774,6 +767,7 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
     const newPhase = getConstructionPhase(newAmount, project.targetPrice);
 
     triggerMediumHaptic();
+    playCoinSound();
 
     setFloatingDeposit({
       visible: true,
@@ -814,6 +808,7 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
     };
 
     unlockBadge('first_deposit');
+    unlockBadge('phase_0');
 
     const currentProgress = getProjectProgress(newAmount, project.targetPrice);
     const p = currentProgress.clampedPercent;
@@ -846,8 +841,10 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
     if (milestoneCrossed) {
       if (isNowComplete) {
         triggerSuccessHaptic();
+        playGoalCompleteSound();
       } else {
         triggerMediumHaptic();
+        playMilestoneSound();
       }
 
       setMilestoneCelebration({
@@ -897,33 +894,25 @@ export const KansyaProvider = ({ children }: { children: ReactNode }) => {
         timestamp: new Date().toISOString(),
       };
       await saveDeposits([initDeposit, ...deposits]);
-    }
 
-    const nextTrophies = [...trophies];
-    const deedIdx = nextTrophies.findIndex((t) => t.id === 'phase_0');
-    if (deedIdx !== -1 && !nextTrophies[deedIdx].unlockedAt) {
-      nextTrophies[deedIdx] = { ...nextTrophies[deedIdx], unlockedAt: new Date().toISOString() };
-      await saveTrophies(nextTrophies);
+      const nextTrophies = [...trophies];
+      const deedIdx = nextTrophies.findIndex((t) => t.id === 'phase_0');
+      if (deedIdx !== -1 && !nextTrophies[deedIdx].unlockedAt) {
+        nextTrophies[deedIdx] = { ...nextTrophies[deedIdx], unlockedAt: new Date().toISOString() };
+        await saveTrophies(nextTrophies);
+      }
     }
 
     return newProject;
   };
 
   const updateProject = async (id: string, updates: Partial<WishlistProject>) => {
-    let currentProjects = projects;
-    if (!currentProjects.some((p) => p.id === id) && KANSYA_MOCKUP_PROJECTS.some((p) => p.id === id)) {
-      currentProjects = [...KANSYA_MOCKUP_PROJECTS];
-    }
-    const nextProjects = currentProjects.map((p) => (p.id === id ? { ...p, ...updates } : p));
+    const nextProjects = projects.map((p) => (p.id === id ? { ...p, ...updates } : p));
     await saveProjects(nextProjects);
   };
 
   const deleteProject = async (id: string) => {
-    let currentProjects = projects;
-    if (!currentProjects.some((p) => p.id === id) && KANSYA_MOCKUP_PROJECTS.some((p) => p.id === id)) {
-      currentProjects = [...KANSYA_MOCKUP_PROJECTS];
-    }
-    const nextProjects = currentProjects.filter((p) => p.id !== id);
+    const nextProjects = projects.filter((p) => p.id !== id);
     const nextDeposits = deposits.filter((d) => d.projectId !== id);
     await Promise.all([saveProjects(nextProjects), saveDeposits(nextDeposits)]);
     if (activeProjectId === id) {

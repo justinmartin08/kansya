@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Platform,
   StatusBar,
+  Switch,
 } from 'react-native';
 import {
   Sliders,
@@ -21,6 +22,9 @@ import {
   Moon,
   Edit3,
   Cloud,
+  Volume2,
+  Music,
+  Trophy,
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useKansya } from '../store/KansyaContext';
@@ -34,6 +38,12 @@ import { getThemeColors } from '../utils/theme';
 import { formatPHP } from '../utils/calculations';
 import { confirmAction } from '../utils/dialog';
 import { PlantSprout } from '../components/illustrations/PlantSprout';
+import {
+  getSoundEffectsEnabled,
+  getMusicEnabled,
+  setSoundEffectsEnabled,
+  setMusicEnabled,
+} from '../services/audioService';
 
 export const SettingsScreen: React.FC = () => {
   const {
@@ -55,6 +65,18 @@ export const SettingsScreen: React.FC = () => {
   const [trophyModalVisible, setTrophyModalVisible] = useState(false);
   const [profileModalVisible, setProfileModalVisible] = useState(false);
   const [supabaseModalVisible, setSupabaseModalVisible] = useState(false);
+  const [sfxOn, setSfxOn] = useState(getSoundEffectsEnabled());
+  const [musicOn, setMusicOn] = useState(getMusicEnabled());
+
+  const handleToggleSfx = async (val: boolean) => {
+    setSfxOn(val);
+    await setSoundEffectsEnabled(val);
+  };
+
+  const handleToggleMusic = async (val: boolean) => {
+    setMusicOn(val);
+    await setMusicEnabled(val);
+  };
 
   const unlockedCount = trophies.filter((t) => !!t.unlockedAt).length;
 
@@ -154,15 +176,73 @@ export const SettingsScreen: React.FC = () => {
             </View>
             <View>
               <Text style={[styles.settingTitle, { color: colors.textPrimary }]}>
-                {isDark ? 'Dark Mode (Obsidian Navy)' : 'Light Mode (Crisp Porcelain)'}
+                {isDark ? 'Dark Mode' : 'Light Mode'}
               </Text>
               <Text style={[styles.settingSubtitle, { color: colors.textSecondary }]}>
-                {isDark ? 'Tap to switch to bright Light theme' : 'Tap to switch to dark Obsidian theme'}
+                {isDark ? 'Tap to switch to Light mode' : 'Tap to switch to Dark mode'}
               </Text>
             </View>
           </View>
           <ChevronRight size={18} color={colors.textMuted} />
         </TactilePressable>
+
+        {/* Section: Audio & Sound Controls */}
+        <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>SOUND & MUSIC</Text>
+        <View
+          style={[
+            styles.settingCard,
+            {
+              backgroundColor: colors.surfaceCard,
+              borderColor: colors.border,
+            },
+          ]}
+        >
+          <View style={styles.settingLeft}>
+            <View style={[styles.iconCircle, { backgroundColor: 'rgba(85, 217, 154, 0.15)' }]}>
+              <Volume2 size={18} color={colors.accentEmerald} />
+            </View>
+            <View>
+              <Text style={[styles.settingTitle, { color: colors.textPrimary }]}>Sound Effects</Text>
+              <Text style={[styles.settingSubtitle, { color: colors.textSecondary }]}>
+                Coin drops and tactile interaction sounds
+              </Text>
+            </View>
+          </View>
+          <Switch
+            value={sfxOn}
+            onValueChange={handleToggleSfx}
+            trackColor={{ false: isDark ? '#142F26' : '#CBD5E1', true: colors.accentEmerald }}
+            thumbColor={isDark ? '#07130F' : '#FFFFFF'}
+          />
+        </View>
+
+        <View
+          style={[
+            styles.settingCard,
+            {
+              backgroundColor: colors.surfaceCard,
+              borderColor: colors.border,
+            },
+          ]}
+        >
+          <View style={styles.settingLeft}>
+            <View style={[styles.iconCircle, { backgroundColor: 'rgba(235, 203, 114, 0.15)' }]}>
+              <Music size={18} color="#EBCB72" />
+            </View>
+            <View>
+              <Text style={[styles.settingTitle, { color: colors.textPrimary }]}>Background Music</Text>
+              <Text style={[styles.settingSubtitle, { color: colors.textSecondary }]}>
+                Calm ambient lo-fi loop for relaxation
+              </Text>
+            </View>
+          </View>
+          <Switch
+            value={musicOn}
+            onValueChange={handleToggleMusic}
+            trackColor={{ false: isDark ? '#142F26' : '#CBD5E1', true: colors.accentEmerald }}
+            thumbColor={isDark ? '#07130F' : '#FFFFFF'}
+          />
+        </View>
 
         {/* Section: Allowance Profile */}
         <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>FINANCIAL DISCIPLINE</Text>
@@ -208,7 +288,7 @@ export const SettingsScreen: React.FC = () => {
         >
           <View style={styles.settingLeft}>
             <View style={[styles.iconCircle, { backgroundColor: 'rgba(255, 184, 0, 0.15)' }]}>
-              <Sparkles size={18} color="#FFB800" />
+              <Trophy size={18} color="#FFB800" />
             </View>
             <View>
               <Text style={[styles.settingTitle, { color: colors.textPrimary }]}>Trophy Room & Badges</Text>
@@ -239,7 +319,7 @@ export const SettingsScreen: React.FC = () => {
               <Cloud size={18} color={isCloudSyncActive ? '#38BDF8' : colors.textMuted} />
             </View>
             <View>
-              <Text style={[styles.settingTitle, { color: colors.textPrimary }]}>Supabase Squad Sync (Option 3)</Text>
+              <Text style={[styles.settingTitle, { color: colors.textPrimary }]}>Squad Cloud Sync</Text>
               <Text style={[styles.settingSubtitle, { color: isCloudSyncActive ? '#38BDF8' : colors.textSecondary }]}>
                 {isCloudSyncActive ? 'Live Cloud Sync Active' : 'Offline Local Mode (Tap to configure)'}
               </Text>
@@ -283,7 +363,7 @@ export const SettingsScreen: React.FC = () => {
             <Text style={[styles.versionTitle, { color: colors.textPrimary }]}>KANSYA+ SAVINGS ENGINE</Text>
           </View>
           <Text style={[styles.versionText, { color: colors.textSecondary }]}>
-            Version 2.0.0 ({isDark ? 'Obsidian Navy Engine' : 'Crisp Porcelain Engine'})
+            Version 2.0.0
           </Text>
           <Text style={[styles.versionSubtext, { color: colors.textMuted }]}>
             100% Offline · Local Storage · Zero Trackers
