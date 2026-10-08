@@ -147,6 +147,15 @@ export async function setMusicEnabled(enabled: boolean): Promise<void> {
   musicEnabled = enabled;
   try {
     await AsyncStorage.setItem(STORAGE_KEYS.MUSIC_ENABLED, String(enabled));
+    if (enabled && !musicPlayer && Platform.OS !== 'web') {
+      try {
+        musicPlayer = createAudioPlayer(require('../../assets/sounds/ambient_loop.mp3'));
+        if (musicPlayer) {
+          musicPlayer.loop = true;
+          musicPlayer.volume = 0.45;
+        }
+      } catch (_) {}
+    }
     if (musicPlayer) {
       if (enabled) {
         musicPlayer.play();

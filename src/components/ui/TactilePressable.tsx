@@ -7,6 +7,7 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import { triggerLightHaptic } from '../../utils/haptics';
+import { playTapSound } from '../../services/audioService';
 
 interface TactilePressableProps {
   children: React.ReactNode;
@@ -48,6 +49,7 @@ export const TactilePressable: React.FC<TactilePressableProps> = ({
     if (haptic) {
       triggerLightHaptic();
     }
+    playTapSound();
 
     onPressIn?.(e);
   };

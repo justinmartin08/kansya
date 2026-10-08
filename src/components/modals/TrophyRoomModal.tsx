@@ -19,10 +19,10 @@ import {
   Hammer,
   Home,
   Palette,
-  Sparkles,
   Zap,
   Crown,
 } from 'lucide-react-native';
+import { Sparkles } from '../illustrations/CustomIcons';
 import { PlantSprout } from '../illustrations/PlantSprout';
 import { useKansya } from '../../store/KansyaContext';
 import { formatPHP } from '../../utils/calculations';

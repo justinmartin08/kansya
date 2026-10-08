@@ -16,7 +16,6 @@ import {
   Plus,
   CheckCircle2,
   ChevronRight,
-  Sparkles,
   Users,
   UserPlus,
   Send,
@@ -28,6 +27,7 @@ import {
   Calendar,
   KeyRound,
 } from 'lucide-react-native';
+import { Sparkles } from '../components/illustrations/CustomIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useKansya } from '../store/KansyaContext';
 import { NewProjectModal } from '../components/modals/NewProjectModal';

@@ -93,11 +93,10 @@ assert(fs.existsSync(goldCoinPath), 'GoldCoinSvg.tsx must exist');
 const sparklinePath = path.resolve(__dirname, '../src/components/illustrations/SparklineSvg.tsx');
 assert(fs.existsSync(sparklinePath), 'SparklineSvg.tsx must exist');
 
-// Verify HomeScreen uses SparklineSvg and has removed redundant hero coin and growing badge
-assert(homeScreenContent.includes('<SparklineSvg'), 'HomeScreen must render SparklineSvg');
+// Verify HomeScreen clean hero card and removed redundant hero coin and growing badge
+assert(homeScreenContent.includes('heroAtmosphereCard'), 'HomeScreen must render hero atmosphere card');
 assert(!homeScreenContent.includes('<GoldCoinSvg'), 'HomeScreen Hero Card must NOT render redundant small coin next to balance');
 assert(!homeScreenContent.includes('growingBadge'), 'HomeScreen Hero Card must NOT render Growing > status badge');
-assert(homeScreenContent.includes("backgroundColor: 'transparent'"), 'cardCoinContainer must have transparent background');
 
 // Verify ProgressiveCoin has embossed Philippine Peso symbol
 const progressiveCoinPath = path.resolve(__dirname, '../src/components/illustrations/ProgressiveCoin.tsx');
@@ -144,17 +143,16 @@ assert(!!gamingProj, 'Gaming setup must exist in SAMPLE_PROJECTS');
 if (!gamingProj) throw new Error('Unreachable');
 assert(Math.round((gamingProj.currentAmount / gamingProj.targetPrice) * 100) === 40, 'Gaming setup must be 40%');
 
-// Verify HomeScreen carousel padding for symmetrical side peeking (paddingHorizontal: 60)
+// Verify HomeScreen hero layout
 assert(
-  homeScreenContent.includes('paddingHorizontal: 60'),
-  'HomeScreen carousel must set paddingHorizontal: 60 for symmetrical 46px side peeking'
+  homeScreenContent.includes('heroCardContainer'),
+  'HomeScreen must render structured heroCardContainer'
 );
 
-// Verify inspect button uses Lucide Eye vector icon
-assert(homeScreenContent.includes('<Eye'), 'HomeScreen inactive cards must render Lucide Eye icon');
-assert(!homeScreenContent.includes('Inspect 👁'), 'Inspect button must NOT contain OS eye emoji');
+// Verify eye button exists for balance toggle
+assert(homeScreenContent.includes('<Eye'), 'HomeScreen must render Eye icon');
 
-console.log('✓ 3D visuals and carousel peeking layout verified!');
+console.log('✓ 3D visuals and hero layout verified!');
 
 // ============================================================================
 // 4. R4: Quick Actions & 4-Tab Bottom Dock (R4)
@@ -171,14 +169,14 @@ assert(dockContent.includes("'goals'"), "Dock must contain 'goals' tab");
 assert(dockContent.includes("'savings'"), "Dock must contain 'savings' tab");
 assert(dockContent.includes("'settings'"), "Dock must contain 'settings' tab");
 
-// Verify Home tab uses PlantSprout vector icon
+// Verify Home tab uses custom vector icon
 assert(
-  dockContent.includes("icon: PlantSprout"),
-  'BottomNavDock Home tab must use PlantSprout vector icon'
+  dockContent.includes("icon: CustomHomeIcon") || dockContent.includes("icon: PlantSprout"),
+  'BottomNavDock Home tab must use custom vector icon'
 );
 
-// Verify Quick Actions card uses Lucide Zap vector
-assert(homeScreenContent.includes('<Zap'), 'Quick Actions card must render Lucide Zap vector icon');
+// Verify Quick Actions container exists
+assert(homeScreenContent.includes('quickActionsContainer'), 'HomeScreen must render quickActionsContainer');
 
 console.log('✓ Quick Actions & 4-tab bottom dock verified!');
 

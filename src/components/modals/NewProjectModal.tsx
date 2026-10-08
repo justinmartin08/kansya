@@ -9,7 +9,8 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import { X, Sparkles } from 'lucide-react-native';
+import { X } from 'lucide-react-native';
+import { Sparkles } from '../illustrations/CustomIcons';
 import { WishlistProject } from '../../types';
 import { useKansya } from '../../store/KansyaContext';
 import { formatPHP, getDailyExcessRate, calculatePace } from '../../utils/calculations';

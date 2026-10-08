@@ -10,22 +10,23 @@ import {
   Switch,
 } from 'react-native';
 import {
-  Sliders,
-  Sparkles,
   ChevronRight,
-  User,
-  LogOut,
   Mail,
   AtSign,
+  Edit3,
+} from 'lucide-react-native';
+import {
+  Settings as Sliders,
+  User,
+  LogOut,
   ShieldCheck,
   Sun,
   Moon,
-  Edit3,
   Cloud,
   Volume2,
   Music,
   Trophy,
-} from 'lucide-react-native';
+} from '../components/illustrations/CustomIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useKansya } from '../store/KansyaContext';
 import { AllowanceModal } from '../components/modals/AllowanceModal';

@@ -22,12 +22,12 @@ import {
   Check,
   Eye,
   EyeOff,
-  Sparkles,
   HardDrive,
   RefreshCw,
   ChevronDown,
   ChevronUp,
 } from 'lucide-react-native';
+import { Sparkles } from '../illustrations/CustomIcons';
 import { useKansya } from '../../store/KansyaContext';
 import { AVATAR_OPTIONS, AvatarBadge, getAvatarById } from '../../utils/avatars';
 import { TactilePressable } from '../ui/TactilePressable';

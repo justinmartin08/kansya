@@ -12,13 +12,13 @@ import {
 import {
   ArrowLeft,
   Calendar,
-  Sparkles,
   TrendingUp,
   Clock,
   Trash2,
   Edit2,
   CheckCircle2,
 } from 'lucide-react-native';
+import { Sparkles } from '../components/illustrations/CustomIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useKansya } from '../store/KansyaContext';
 import { AnimatedDonutChart } from '../components/charts/AnimatedDonutChart';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { Sparkles, CheckCircle2 } from 'lucide-react-native';
+import { Sparkles, CheckCircle2 } from '../illustrations/CustomIcons';
 import { ConstructionPhase, WishlistProject } from '../../types';
 import { formatPHP } from '../../utils/calculations';
 import { PROJECT_IMAGES } from '../../utils/projectImages';

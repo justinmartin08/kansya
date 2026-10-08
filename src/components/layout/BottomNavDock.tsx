@@ -2,8 +2,8 @@ import React, { useRef } from 'react';
 import { View, Text, StyleSheet, Pressable, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CustomHomeIcon, CustomGoalIcon, CustomWishlistIcon, CustomMoreIcon } from '../illustrations/CustomIcons';
-import { PlantSprout } from '../illustrations/PlantSprout';
 import { triggerLightHaptic } from '../../utils/haptics';
+import { playTapSound } from '../../services/audioService';
 import { useKansya } from '../../store/KansyaContext';
 
 export type TabKey = 'home' | 'goals' | 'savings' | 'settings';
@@ -20,7 +20,7 @@ export const BottomNavDock: React.FC<BottomNavDockProps> = ({
   const { isDark } = useKansya();
   const insets = useSafeAreaInsets();
   const tabs: Array<{ key: TabKey; label: string; icon: any }> = [
-    { key: 'home', label: 'Home', icon: PlantSprout },
+    { key: 'home', label: 'Home', icon: CustomHomeIcon },
     { key: 'goals', label: 'Goals', icon: CustomGoalIcon },
     { key: 'savings', label: 'Wishlist', icon: CustomWishlistIcon },
     { key: 'settings', label: 'More', icon: CustomMoreIcon },
@@ -53,6 +53,7 @@ export const BottomNavDock: React.FC<BottomNavDockProps> = ({
 
   const handlePress = (tabKey: TabKey) => {
     triggerLightHaptic();
+    playTapSound();
     if (tabKey !== activeTab) {
       onTabChange(tabKey);
     }
@@ -101,6 +102,7 @@ export const BottomNavDock: React.FC<BottomNavDockProps> = ({
                     size={20}
                     color={isActive ? '#07130F' : '#64748B'}
                     strokeWidth={isActive ? 2.5 : 2}
+                    filled={isActive}
                   />
                 </View>
 

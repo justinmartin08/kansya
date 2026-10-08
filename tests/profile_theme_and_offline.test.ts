@@ -279,12 +279,12 @@ assert(
   'HomeScreen sectionHeaderTitle must adapt to colors.textPrimary'
 );
 assert(
-  homeContent.includes('styles.currentAmountText, { color: colors.textPrimary }'),
-  'HomeScreen currentAmountText must adapt to colors.textPrimary'
+  homeContent.includes('styles.heroAmountText, { color: colors.textPrimary }'),
+  'HomeScreen heroAmountText must adapt to colors.textPrimary'
 );
 assert(
-  homeContent.includes('styles.emptyCarouselCard, { backgroundColor: colors.surfaceCard'),
-  'HomeScreen emptyCarouselCard must adapt to colors.surfaceCard'
+  homeContent.includes('styles.heroAtmosphereCard,') && homeContent.includes('backgroundColor: colors.surfaceCard'),
+  'HomeScreen heroAtmosphereCard must adapt to colors.surfaceCard'
 );
 
 // Verify GoalsScreen themed elements

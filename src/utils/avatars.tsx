@@ -3,11 +3,11 @@ import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import {
   ShieldCheck,
   CircleDollarSign,
-  Sparkles,
   Zap,
   Crown,
   User,
 } from 'lucide-react-native';
+import { Sparkles } from '../components/illustrations/CustomIcons';
 import { PlantSprout } from '../components/illustrations/PlantSprout';
 import {
   AvatarIconKey,

@@ -9,11 +9,11 @@ import {
   Hammer,
   Home,
   Palette,
-  Sparkles,
   Zap,
   Crown,
   Award,
 } from 'lucide-react-native';
+import { Sparkles } from '../illustrations/CustomIcons';
 import { TrophyBadge } from '../../types';
 
 interface PixelBadgeProps {

@@ -10,15 +10,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {
-  Settings,
-  User,
-  Zap,
   ChevronRight,
   Eye,
   EyeOff,
-  Trophy,
-  Sun,
-  Moon,
   Plus,
   Target,
   Bookmark,
@@ -26,13 +20,16 @@ import {
   ArrowUpRight,
   ArrowDownLeft,
   Bell,
-  Sparkles,
 } from 'lucide-react-native';
+import {
+  Sun,
+  Moon,
+  Trophy,
+  User,
+  Settings,
+} from '../components/illustrations/CustomIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useKansya } from '../store/KansyaContext';
-import { PlantSprout } from '../components/illustrations/PlantSprout';
-import { SparklineSvg } from '../components/illustrations/SparklineSvg';
-import { ProgressiveCoin } from '../components/illustrations/ProgressiveCoin';
 import { ProgressiveAlkansya } from '../components/illustrations/ProgressiveAlkansya';
 import { PlusCoinIcon } from '../components/illustrations/PlusCoinIcon';
 import { TargetCoinIcon, WishlistCoinIcon, HistoryCoinIcon } from '../components/illustrations/QuickActionIcons';
@@ -244,11 +241,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               { backgroundColor: colors.surfaceCard, borderColor: colors.border },
             ]}
           >
-            {/* Sparkline integration for test & financial overview */}
-            <View style={styles.heroSparklineHidden}>
-              <SparklineSvg width={60} height={20} strokeColor={colors.accentEmerald} />
-            </View>
-
             {/* Piggy Mascot Artwork on Right */}
             <View style={styles.piggyContainer}>
               <Image
@@ -468,11 +460,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </TouchableOpacity>
         </View>
 
-        {/* Hidden Zap element to ensure test assertion compatibility */}
-        <View style={styles.hiddenZap}>
-          <Zap size={10} color={colors.accentEmerald} />
-        </View>
-
         {/* ================================================================ */}
         {/* 4. MY GOALS SECTION (Compact, scannable rows) */}
         {/* ================================================================ */}
@@ -562,18 +549,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 );
               })
             )}
-          </View>
-        </View>
-
-        {/* Hidden paddingHorizontal: 60 container for test carousel layout compatibility */}
-        <View style={styles.carouselContainerGuard}>
-          <View style={styles.carouselSidePaddingGuard} />
-          {/* Transparent container for ProgressiveAlkansya & empty card requirement */}
-          <View style={[styles.emptyCarouselCard, { backgroundColor: colors.surfaceCard, display: 'none' }]}>
-            <Text style={[styles.currentAmountText, { color: colors.textPrimary }]}>₱0</Text>
-            <View style={styles.cardCoinContainer}>
-              <ProgressiveAlkansya currentAmount={0} targetPrice={100} size={50} />
-            </View>
           </View>
         </View>
 
@@ -805,7 +780,7 @@ const styles = StyleSheet.create({
   heroBalanceSection: {
     maxWidth: '62%',
     marginBottom: 20,
-    minHeight: 115,
+    minHeight: 124,
     justifyContent: 'center',
   },
   heroLabel: {
@@ -849,12 +824,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#55D99A',
   },
-  heroSparklineHidden: {
-    position: 'absolute',
-    right: 16,
-    bottom: 16,
-    opacity: 0.01,
-  },
 
   /* Current Goal Subcard inside Hero */
   currentGoalSubCard: {
@@ -863,7 +832,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(20, 47, 38, 0.9)',
     padding: 14,
-    marginTop: 16,
+    marginTop: 18,
     zIndex: 3,
     shadowColor: '#55D99A',
     shadowOffset: { width: 0, height: 4 },
@@ -1009,9 +978,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
   },
-  hiddenZap: {
-    display: 'none',
-  },
 
   /* 4. Section Common */
   sectionContainer: {
@@ -1099,23 +1065,6 @@ const styles = StyleSheet.create({
     color: '#55D99A',
     minWidth: 26,
     textAlign: 'right',
-  },
-
-  /* Carousel Guards for Test Assertions */
-  carouselContainerGuard: {
-    display: 'none',
-  },
-  carouselSidePaddingGuard: {
-    paddingHorizontal: 60,
-  },
-  emptyCarouselCard: {
-    padding: 10,
-  },
-  currentAmountText: {
-    fontSize: 12,
-  },
-  cardCoinContainer: {
-    backgroundColor: 'transparent',
   },
 
   /* 5. Recent Activity List */
